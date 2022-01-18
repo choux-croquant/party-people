@@ -1,3 +1,4 @@
+// 파티 룸 카드 컴포넌트
 <template>
   <el-card :body-style="{ padding: '0px' }">
     <div class="image-wrapper">

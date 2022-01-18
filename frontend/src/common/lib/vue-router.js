@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/home/home'
 import ConferencesDetail from '@/views/conferences/conference-detail'
-import History from '@/views/history/history'
 
 const fullMenu = require('@/views/main/menu.json')
 function makeRoutesFromMenu () {
