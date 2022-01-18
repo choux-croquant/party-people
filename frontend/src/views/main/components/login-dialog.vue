@@ -1,3 +1,4 @@
+// 밑에 로직만 참고
 <template>
   <el-dialog custom-class="login-dialog" title="로그인" v-model="state.dialogVisible" @close="handleClose">
     <el-form :model="state.form" :rules="state.rules" ref="loginForm" :label-position="state.form.align">
