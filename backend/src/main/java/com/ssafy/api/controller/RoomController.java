@@ -53,6 +53,7 @@ public class RoomController {
 		List<User> userList = roomService.getRoomUserListByRoomId(roomId);
 		return ResponseEntity.status(201).body(RoomUserListRes.of(201, "Success", roomId, userList));
 	}
+
 	@PostMapping("/host/{room_id}")
 	@ApiOperation(value = "파티룸 호스트 변경", notes = "파티룸의 호스트를 변경한다.")
 	@ApiResponses({
