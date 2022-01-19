@@ -1,10 +1,5 @@
 <template>
-  <main-header :height="`70px`"/>
-  <ul class="infinite-list" v-infinite-scroll="load" style="overflow:auto">
-    <li v-for="i in state.count" @click="clickConference(i)" class="infinite-list-item" :key="i" >
-      <conference />
-    </li>
-  </ul>
+  <div>홈페이지?</div>
 </template>
 <style>
 .infinite-list {
@@ -32,8 +27,7 @@
 }
 </style>
 <script>
-import Conference from './components/conference'
-import MainHeader from './components/main-header.vue'
+
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -41,8 +35,7 @@ export default {
   name: 'Home',
 
   components: {
-    Conference,
-    MainHeader
+    
   },
 
   setup () {
