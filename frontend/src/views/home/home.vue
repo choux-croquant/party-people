@@ -1,8 +1,8 @@
 <template>
-  <div>홈페이지?</div>
+  <main-header />
 </template>
 <style>
-.infinite-list {
+/* .infinite-list {
   padding-left: 0;
   max-height: calc(100% - 35px);
 }
@@ -24,17 +24,19 @@
   max-width: 25%;
   display: inline-block;
   cursor: pointer;
-}
+} */
 </style>
 <script>
 
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import MainHeader from './components/main-header.vue'
 
 export default {
   name: 'Home',
 
   components: {
+    MainHeader
     
   },
 
