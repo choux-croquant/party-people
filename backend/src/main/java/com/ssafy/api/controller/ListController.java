@@ -1,17 +1,15 @@
 package com.ssafy.api.controller;
 
-import com.ssafy.api.request.UserSignUpPostReq;
-import com.ssafy.api.response.UserRes;
+import com.ssafy.api.response.RoomListRes;
 import com.ssafy.api.service.ListService;
-import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
-import com.ssafy.db.entity.User;
+import com.ssafy.db.entity.Room;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 파티룸 리스트, 태그 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -22,6 +20,28 @@ import springfox.documentation.annotations.ApiIgnore;
 public class ListController {
 	
 	@Autowired
-	ListService ListService;
+	private ListService listService;
 
+	@GetMapping("/room")
+	@ApiOperation(value = "미팅 룸 정보 조회", notes = "page, size 파라메터를 사용하여 미팅 룸 정보를 조회한다.")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "성공")
+	})
+	public ResponseEntity<? extends BaseResponseBody> getRoomList(final Pageable pageable) {
+		Page<Room> roomList = listService.getRoomList(pageable);
+		return ResponseEntity.status(200).body(RoomListRes.of(200, "Success", roomList));
+	}
+
+	@GetMapping("/roomsearch")
+	@ApiOperation(value = "미팅 룸 정보 검색", notes = "word, include, page, size 파라메터를 사용하여 미팅 룸 정보를 조회한다.")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "성공")
+	})
+	public ResponseEntity<? extends BaseResponseBody> getRoomListByWord(
+		@RequestParam @ApiParam(value = "검색어", required = true) String word,
+		@RequestParam @ApiParam(value = "검색 키워드", required = true)  String include,
+		final Pageable pageable) {
+		Page<Room> roomList = listService.getRoomListByWord(word, include, pageable);
+		return ResponseEntity.status(200).body(RoomListRes.of(200, "Success", roomList));
+	}
 }
