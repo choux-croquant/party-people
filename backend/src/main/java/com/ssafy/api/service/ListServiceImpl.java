@@ -1,10 +1,14 @@
 package com.ssafy.api.service;
 
+import com.ssafy.db.entity.Room;
 import com.ssafy.db.repository.ListRepository;
 import com.ssafy.db.repository.ListRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  *	미팅룸 리스트, 태그 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -12,11 +16,19 @@ import org.springframework.stereotype.Service;
 @Service("listService")
 public class ListServiceImpl implements ListService {
 	@Autowired
-	ListRepository listRepository;
+	private ListRepository listRepository;
 	
 	@Autowired
-	ListRepositorySupport listRepositorySupport;
-	
-	@Autowired
-	PasswordEncoder passwordEncoder;
+	private ListRepositorySupport listRepositorySupport;
+
+	@Override
+	public Page<Room> getRoomList(Pageable pageable) {
+		return listRepository.findAll(pageable);
+	}
+
+	@Override
+	public Page<Room> getRoomListByWord(String word, String include, Pageable pageable) {
+		if(include.equals("title")) return listRepository.getRoomByTitle(word, pageable);
+		return listRepository.getRoomByDescription(word, pageable);
+	}
 }
