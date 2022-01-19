@@ -1,19 +1,24 @@
 <template>
-  <router-view></router-view>
+  <img alt="Vue logo" src="./assets/logo.png">
+  <div class="bg-red-500">메인페이지</div>
 </template>
 
 <script>
-import Main from './views/main/main.vue'
 
 export default {
   name: 'App',
-
   components: {
-    Main,
-  },
-
-  data: () => ({
-    //
-  }),
+  }
 }
 </script>
+
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+</style>

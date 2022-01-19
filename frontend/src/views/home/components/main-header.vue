@@ -14,7 +14,7 @@
           </el-input>
         </div>
         <div class="button-wrapper">
-          <el-button>회원가입</el-button>
+          <el-button round type="primary">회원가입</el-button>
           <el-button type="primary" @click="clickLogin">로그인</el-button>
         </div>
       </div>
