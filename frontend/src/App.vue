@@ -1,6 +1,5 @@
 <template>
-  <!-- main 으로 시작 -->
-  <Main/>
+  <router-view></router-view>
 </template>
 
 <script>

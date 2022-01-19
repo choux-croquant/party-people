@@ -55,7 +55,7 @@ export default {
 
     const clickConference = function (id) {
       router.push({
-        name: 'conference-detail',
+        name: 'ConferenceDetail',
         params: {
           conferenceId: id
         }
