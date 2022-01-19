@@ -1,4 +1,6 @@
 <template>
+  <img alt="Vue logo" src="./assets/logo.png">
+  <div class="bg-tc-100">메인페이지</div>
   <router-view></router-view>
 </template>
 
