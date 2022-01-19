@@ -1,6 +1,7 @@
 package com.ssafy.db.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.db.entity.QRoom;
 import com.ssafy.db.entity.QUser;
 import com.ssafy.db.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,5 +15,6 @@ import java.util.Optional;
 @Repository
 public class ListRepositorySupport {
     @Autowired
-    private JPAQueryFactory jpaQueryFactory;
+    JPAQueryFactory jpaQueryFactory;
+    QRoom qRoom = QRoom.room;
 }
