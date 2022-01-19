@@ -20,7 +20,6 @@ public class RoomServiceImpl implements RoomService{
         room.setThumbnailUrl(roomCreatePostReq.getThumbnail_url());
         room.setCapacity(roomCreatePostReq.getCapacity());
         room.setPassword(roomCreatePostReq.getPassword());
-        room.setStartTime(roomCreatePostReq.getStart_time());
         room.setActive(roomCreatePostReq.getIs_active());
         room.setLocked(roomCreatePostReq.getIs_locked());
 
