@@ -86,10 +86,12 @@ public class RoomController {
 		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
-		String userId = userDetails.getUsername();
+		Long userId = userDetails.getUser().getId();
 		Long roomId = Long.parseLong(requestRoomId);
 
-		roomService.updateSessionEndTime(userId, roomId);
+		roomService.updateSessionEndTime(roomId, userId);
+        if (!roomService.checkRoomUserExist(roomId)) roomService.deleteRoom();
+
 		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
 	}
 
