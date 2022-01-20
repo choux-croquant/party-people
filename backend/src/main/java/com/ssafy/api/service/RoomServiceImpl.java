@@ -49,7 +49,6 @@ public class RoomServiceImpl implements RoomService{
         return sessionRepositorysupport.findSessionByRoomId(roomId);
     }
 
-
     @Override
     public void updateRoomHostInfo(Long roomId, List<RoomHostUpdateReq> updateHostReq) {
         for (RoomHostUpdateReq host : updateHostReq) {
@@ -60,9 +59,21 @@ public class RoomServiceImpl implements RoomService{
         }
     }
 
+    // TODO: 2022-01-20  setEndTime() 인자로 종료 시간 새롭게 설정해야함
     @Override
-    public void updateSessionEndTime(String userid, Long roomId) {
+    public void updateSessionEndTime(Long roomId, Long userId) {
+        Session updatedSession = sessionRepositorysupport.findSessionByRoomIdAndUserId(roomId, userId);
+        updatedSession.setEndTime();
+        sessionRepository.save(updatedSession);
+    }
 
+    @Override
+    public boolean checkRoomUserExist(Long roomId) {
+        List<Session> sessions = getSessionsByRoomId(roomId);
+        for (Session session : sessions) {
+            if (session.getEndTime()==null) return true;
+        }
+        return false;
     }
 
     @Override
