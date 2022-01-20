@@ -44,12 +44,10 @@ public class RoomController {
 	public ResponseEntity<? extends BaseResponseBody> getRoomUserList(@ApiIgnore Authentication authentication,
 															  @PathVariable(name = "room_id")  @ApiParam(value="접속한 방 id", required = true) String requestRoomId) {
 
-		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
-		String userId = userDetails.getUsername();
-		User user = userService.getUserByUserid(userId);
-		Long roomId = Long.parseLong(requestRoomId);
-		if (user==null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
+		// 토큰이 없는 사용자가 파티룸 사용자 리스트를 요청한 경우 : 401(Unauthorized Error반환)
+		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
+		Long roomId = Long.parseLong(requestRoomId);
 		List<User> userList = roomService.getRoomUserListByRoomId(roomId);
 		return ResponseEntity.status(201).body(RoomUserListRes.of(201, "Success", roomId, userList));
 	}
@@ -65,12 +63,10 @@ public class RoomController {
 																	  @PathVariable(name = "room_id")  @ApiParam(value="접속한 방 id", required = true) String requestRoomId,
 																	  @RequestBody @ApiParam(value="파티룸 내 사용자 호스트 등록 여부 정보", required = true) List<RoomHostUpdateReq> hostReq) {
 
-		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
-		String userId = userDetails.getUsername();
-		User user = userService.getUserByUserid(userId);
-		Long roomId = Long.parseLong(requestRoomId);
-		if (user==null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
+		// 토큰이 없는 사용자가 파티룸 호스트 변경을 요청한 경우 : 401(Unauthorized Error반환)
+		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
+		Long roomId = Long.parseLong(requestRoomId);
 		List<User> hostList = roomService.updateRoomHostInfo(hostReq);
 		return ResponseEntity.status(201).body(RoomUserListRes.of(201, "Success", roomId, hostList));
 	}
@@ -85,11 +81,12 @@ public class RoomController {
 	public ResponseEntity<? extends BaseResponseBody> exitRoom(@ApiIgnore Authentication authentication,
 																	  @PathVariable(name = "room_id")  @ApiParam(value="접속한 방 id", required = true) String requestRoomId) {
 
+		// 토큰이 없는 사용자가 파티룸 퇴장을 요청한 경우 : 401(Unauthorized Error반환)
+		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
+
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 		String userId = userDetails.getUsername();
-		User user = userService.getUserByUserid(userId);
 		Long roomId = Long.parseLong(requestRoomId);
-		if (user==null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
 		roomService.updateSessionEndTime(userId, roomId);
 		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
