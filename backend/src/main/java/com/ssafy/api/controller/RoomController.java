@@ -99,9 +99,12 @@ public class RoomController {
 			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<UserLoginPostRes> createRoom(
+	public ResponseEntity<? extends BaseResponseBody> createRoom(
 			@RequestBody @ApiParam(value = "파티룸 정보", required = true) RoomCreatePostReq req,
 			@ApiIgnore Authentication authentication) {
+
+		// 토큰이 없는 사용자가 파티룸 생성을 요청한 경우 : 401(Unauthorized Error반환)
+		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
 		roomService.createRoom(req);
 		// TODO : 파티룸 생성 후 입장 방법 정하기, 프론트에서 POST 입장 한번 더 보내줄지, 여기서 처리할 지
@@ -116,9 +119,13 @@ public class RoomController {
 			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<UserLoginPostRes> deleteRoom(
+	public ResponseEntity<? extends BaseResponseBody> deleteRoom(
 			@ApiIgnore Authentication authentication,
 			@PathVariable(name = "room_id") @ApiParam(value = "파티룸 번호", required = true) long roomId) {
+
+		// 토큰이 없는 사용자가 파티룸 삭제를 요청한 경우 : 401(Unauthorized Error반환)
+		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
+
 		roomService.deleteRoom(roomId);
 		// TODO: 강제 삭제하면, 세션 안에 있는 사람도 다 endtime 찍어내기
 
@@ -136,6 +143,10 @@ public class RoomController {
 	public ResponseEntity<? extends BaseResponseBody> roomLinkEntry(
 			@ApiIgnore Authentication authentication,
 			@PathVariable(name = "room_id") @ApiParam(value = "파티룸 번호", required = true)  Long roomId) {
+
+		// 토큰이 없는 사용자가 파티룸 입장(링크 접속)을 요청한 경우 : 401(Unauthorized Error반환)
+		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
+
 		Room room = roomService.findByRoomId(roomId);
 		return ResponseEntity.status(201).body(RoomEntryLinkRes.of(200, "Success", room));
 	}
@@ -151,6 +162,9 @@ public class RoomController {
             @ApiIgnore Authentication authentication,
             @PathVariable(name = "room_id") @ApiParam(value = "파티룸 번호", required = true)  Long roomId,
             @RequestBody @ApiParam(value = "파티룸 비밀번호", required = true) RoomEntryPostReq req) {
+
+		// 토큰이 없는 사용자가 파티룸 입장(비밀번호 입력 접속) 경우 : 401(Unauthorized Error반환)
+		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 		User user = userDetails.getUser();
