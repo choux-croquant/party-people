@@ -83,7 +83,7 @@ public class RoomServiceImpl implements RoomService{
     // TODO: 2022-01-20  setEndTime() 인자로 종료 시간 새롭게 설정해야함
     @Override
     public void updateSessionEndTime(Long roomId, Long userId) {
-        Session updatedSession = sessionRepositorysupport.findSessionByRoomIdAndUserId(roomId, userId);
+        Session updatedSession = sessionRepositorySupport.findSessionByRoomIdAndUserId(roomId, userId);
         updatedSession.setEndTime();
         sessionRepository.save(updatedSession);
     }
