@@ -7,7 +7,6 @@ import com.ssafy.api.response.RoomUserListRes;
 import com.ssafy.api.request.RoomCreatePostReq;
 import com.ssafy.api.response.UserLoginPostRes;
 import com.ssafy.api.service.RoomService;
-import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Room;
@@ -123,6 +122,8 @@ public class RoomController {
 			@ApiIgnore Authentication authentication,
 			@PathVariable(name = "room_id") @ApiParam(value = "파티룸 번호", required = true) long roomId) {
 
+		// TODO: 호스트인지 확인하는 코드 추가
+
 		// 토큰이 없는 사용자가 파티룸 삭제를 요청한 경우 : 401(Unauthorized Error반환)
 		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
@@ -162,6 +163,8 @@ public class RoomController {
             @ApiIgnore Authentication authentication,
             @PathVariable(name = "room_id") @ApiParam(value = "파티룸 번호", required = true)  Long roomId,
             @RequestBody @ApiParam(value = "파티룸 비밀번호", required = true) RoomEntryPostReq req) {
+
+		// TODO: 호스트인지 확인하는 코드 추가
 
 		// 토큰이 없는 사용자가 파티룸 입장(비밀번호 입력 접속) 경우 : 401(Unauthorized Error반환)
 		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
