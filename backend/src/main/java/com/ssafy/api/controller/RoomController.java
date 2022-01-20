@@ -2,10 +2,10 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.request.RoomEntryPostReq;
 import com.ssafy.api.request.RoomHostUpdateReq;
+import com.ssafy.api.response.RoomEntryLinkRes;
 import com.ssafy.api.response.RoomUserListRes;
 import com.ssafy.api.request.RoomCreatePostReq;
 import com.ssafy.api.response.UserLoginPostRes;
-import com.ssafy.api.response.UserRes;
 import com.ssafy.api.service.RoomService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
@@ -108,9 +108,23 @@ public class RoomController {
 
         return ResponseEntity.status(200).body(null);
     }
+	@GetMapping("/{room_id}")
+	@ApiOperation(value = "파티룸 링크 입장", notes = "<strong>파티룸</strong> 링크 입장시 비밀번호 여부값을 응답한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
+			@ApiResponse(code = 403, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+	})
+	public ResponseEntity<? extends BaseResponseBody> roomLinkEntry(
+			// @ApiIgnore Authentication authentication,
+			@PathVariable(name = "room_id") @ApiParam(value = "파티룸 번호", required = true)  Long roomId) {
+		Room room = roomService.findByRoomId(roomId);
+		return ResponseEntity.status(201).body(RoomEntryLinkRes.of(200, "Success", room));
+	}
+
 
     @PostMapping("/{room_id}")
-    @ApiOperation(value = "파티룸 입장 비밀번호 확인", notes = "<strong>파티룸</strong>입장시 비밀번호를 확인한다.")
+    @ApiOperation(value = "파티룸 입장", notes = "<strong>파티룸</strong>입장시 비밀번호를 확인하고 입장한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
             @ApiResponse(code = 403, message = "인증 실패", response = BaseResponseBody.class),
@@ -121,7 +135,7 @@ public class RoomController {
             @PathVariable(name = "room_id") @ApiParam(value = "파티룸 번호", required = true)  Long roomId,
             @RequestBody @ApiParam(value = "파티룸 비밀번호", required = true) RoomEntryPostReq req) {
 
-        if(roomService.roomEntryPassword(roomId, req.getPassword())) {
+        if(roomService.roomEntry(roomId, req.getPassword())) {
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 		}
         return ResponseEntity.status(200).body(BaseResponseBody.of(403, "Failed"));
