@@ -13,10 +13,6 @@
         </div>
       </div>
       
-      <!-- <button type="button" class="flex-none rounded-full shadow-lg w-10 h-10 bg-main-200">
-         <svg class="fill-current text-main-100 ml-3 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/> </svg>
-      </button> -->
-      
       <div class="dropdown inline-block flex-none relative">
         <button class="flex-none rounded-full shadow-lg w-10 h-10 bg-main-200">
           <svg class="fill-current text-main-100 ml-3 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/> </svg>
@@ -30,13 +26,21 @@
 
       <div class="flex-none hidden md:block w-1/6"></div>
       <div class="flex-none hidden md:block">
-        <button class="rounded-full w-32 h-10 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Login</button>
-        <button class="rounded-full w-32 h-10 ml-4 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Sign-Up</button>  
+        <button data-modal-toggle="LoginModal" class="rounded-full w-32 h-10 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Login</button>
+        <button data-modal-toggle="SignupModal" class="rounded-full w-32 h-10 ml-4 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Sign-Up</button>  
       </div>
     </div>
   </nav>
 
-  
+
+  <!-- Login modal -->
+  <div id="LoginModal" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center h-modal md:h-full md:inset-0">
+    <login-modal />
+  </div>
+  <!-- Signup modal -->
+  <div id="SignupModal" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center h-modal md:h-full md:inset-0">
+    <signup-modal />
+  </div>
   
   <!-- <el-row
     class="main-header"
@@ -90,10 +94,15 @@
 import { reactive } from 'vue'
 // import { useStore } from 'vuex'
 // import { useRouter } from 'vue-router'
-
+import LoginModal from './login-modal.vue'
+import SignupModal from './signup-modal.vue'
 export default {
   name: 'main-header',
 
+  components: {
+    LoginModal,
+    SignupModal
+  },
   props: {
     // height: {
     //   type: String,
