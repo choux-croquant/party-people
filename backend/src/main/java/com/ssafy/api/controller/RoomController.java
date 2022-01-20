@@ -5,12 +5,10 @@ import com.ssafy.api.request.RoomHostUpdateReq;
 import com.ssafy.api.response.RoomUserListRes;
 import com.ssafy.api.request.RoomCreatePostReq;
 import com.ssafy.api.response.UserLoginPostRes;
-import com.ssafy.api.response.UserRes;
 import com.ssafy.api.service.RoomService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
-import com.ssafy.db.entity.Room;
 import com.ssafy.db.entity.User;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,12 +95,15 @@ public class RoomController {
     @PostMapping("/")
     @ApiOperation(value = "파티룸 생성", notes = "<strong>파티룸</strong>을 생성한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
+            @ApiResponse(code = 201, message = "성공", response = UserLoginPostRes.class),
             @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<UserLoginPostRes> createPartyRoom(@RequestBody @ApiParam(value = "파티룸 정보", required = true) RoomCreatePostReq roomCreatePostReq) {
-        roomService.createRoom(roomCreatePostReq);
+    public ResponseEntity<UserLoginPostRes> createPartyRoom(@RequestBody @ApiParam(value = "파티룸 정보", required = true) RoomCreatePostReq roomCreatePostReq, @ApiIgnore Authentication authentication) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String userId = userDetails.getUsername();
+        User user = userService.getUserByUserid(userId);
+        roomService.createRoom(roomCreatePostReq, user);
 
         return ResponseEntity.status(200).body(null);
     }
@@ -125,5 +126,21 @@ public class RoomController {
         roomService.roomEntryPassword(user, roomId, req);
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+    }
+
+    @DeleteMapping("/del/{room_id}")
+    @ApiOperation(value = "파티룸 삭제", notes = "<strong>파티룸</strong>을 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "성공", response = UserLoginPostRes.class),
+            @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<UserLoginPostRes> deletePartyRoom(@ApiIgnore Authentication authentication, @PathVariable long roomId) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String userId = userDetails.getUsername();
+        User user = userService.getUserByUserid(userId);
+        roomService.deleteRoom(roomId, user);
+
+        return ResponseEntity.status(200).body(null);
     }
 }
