@@ -148,7 +148,7 @@ public class RoomController {
 		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
 		Room room = roomService.findByRoomId(roomId);
-		return ResponseEntity.status(201).body(RoomEntryLinkRes.of(200, "Success", room));
+		return ResponseEntity.status(200).body(RoomEntryLinkRes.of(200, "Success", room));
 	}
 
     @PostMapping("/{room_id}")
@@ -172,6 +172,6 @@ public class RoomController {
         if(roomService.roomEntry(user, roomId, req.getPassword())) {
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 		}
-        return ResponseEntity.status(200).body(BaseResponseBody.of(403, "Failed"));
+        return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Failed"));
     }
 }
