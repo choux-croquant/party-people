@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service("roomService")
 public class RoomServiceImpl implements RoomService{
@@ -55,20 +54,25 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
+    public Room createRoom(RoomCreatePostReq roomCreatePostReq) {
+        return null;
+    }
+
+    @Override
     public List<User> getRoomUserListByRoomId(Long roomId) {
-        return sessionRepositorysupport.findUsersByRoomId(roomId);
+        return sessionRepositorySupport.findUsersByRoomId(roomId);
     }
 
     @Override
     public List<Session> getSessionsByRoomId(Long roomId) {
-        return sessionRepositorysupport.findSessionByRoomId(roomId);
+        return sessionRepositorySupport.findSessionByRoomId(roomId);
     }
 
 
     @Override
     public void updateRoomHostInfo(Long roomId, List<RoomHostUpdateReq> updateHostReq) {
         for (RoomHostUpdateReq host : updateHostReq) {
-            Session updatedSession = sessionRepositorysupport.findSessionByRoomIdAndUserId(roomId, host.getId());
+            Session updatedSession = sessionRepositorySupport.findSessionByRoomIdAndUserId(roomId, host.getId());
             if (host.getAction()==0) updatedSession.setHost(false);
             else updatedSession.setHost(true);
             sessionRepository.save(updatedSession);
