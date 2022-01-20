@@ -7,6 +7,7 @@ import com.ssafy.db.entity.Room;
 import com.ssafy.db.entity.Session;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.RoomRepository;
+import com.ssafy.db.repository.SessionRepository;
 import com.ssafy.db.repository.SessionRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,9 @@ public class RoomServiceImpl implements RoomService{
     @Autowired
     RoomRepository roomRepository;
     @Autowired
-    SessionRepositorySupport sessionRepository;
+    SessionRepository sessionRepository;
+    @Autowired
+    SessionRepositorySupport sessionRepositorysupport;
 
     @Override
     public Room createRoom(RoomCreatePostReq roomCreatePostReq) {
@@ -38,12 +41,23 @@ public class RoomServiceImpl implements RoomService{
 
     @Override
     public List<User> getRoomUserListByRoomId(Long roomId) {
-        return sessionRepository.findUsersByRoomId(roomId);
+        return sessionRepositorysupport.findUsersByRoomId(roomId);
     }
 
     @Override
-    public List<User> updateRoomHostInfo(List<RoomHostUpdateReq> updateHostReq) {
-        return null;
+    public List<Session> getSessionsByRoomId(Long roomId) {
+        return sessionRepositorysupport.findSessionByRoomId(roomId);
+    }
+
+
+    @Override
+    public void updateRoomHostInfo(Long roomId, List<RoomHostUpdateReq> updateHostReq) {
+        for (RoomHostUpdateReq host : updateHostReq) {
+            Session updatedSession = sessionRepositorysupport.findSessionByRoomIdAndUserId(roomId, host.getId());
+            if (host.getAction()==0) updatedSession.setHost(false);
+            else updatedSession.setHost(true);
+            sessionRepository.save(updatedSession);
+        }
     }
 
     @Override

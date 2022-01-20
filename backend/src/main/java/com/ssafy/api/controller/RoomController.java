@@ -13,7 +13,6 @@ import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Room;
 import com.ssafy.db.entity.User;
 import io.swagger.annotations.*;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -54,7 +53,7 @@ public class RoomController {
         return ResponseEntity.status(201).body(RoomUserListRes.of(201, "Success", roomId, userList));
     }
 
-	@PostMapping("/host/{room_id}")
+	@PatchMapping("/host/{room_id}")
 	@ApiOperation(value = "파티룸 호스트 변경", notes = "파티룸의 호스트를 변경한다.")
 	@ApiResponses({
 			@ApiResponse(code = 201, message = "성공", response = UserLoginPostRes.class),
@@ -69,8 +68,8 @@ public class RoomController {
 		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
 		Long roomId = Long.parseLong(requestRoomId);
-		List<User> hostList = roomService.updateRoomHostInfo(hostReq);
-		return ResponseEntity.status(201).body(RoomUserListRes.of(201, "Success", roomId, hostList));
+		roomService.updateRoomHostInfo(roomId, hostReq);
+		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
 	}
 
 	@PatchMapping("/exit/{room_id}")
