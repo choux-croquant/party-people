@@ -17,7 +17,7 @@ public class RoomUserRes {
 
     public static RoomUserRes of(User user) {
         RoomUserRes res = new RoomUserRes();
-        res.setUserid(user.getUserid());
+        res.setUserid(user.getAccountId());
         res.setNickname(user.getNickname());
         return res;
     }

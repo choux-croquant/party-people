@@ -30,9 +30,6 @@ import java.util.List;
 public class RoomController {
 
     @Autowired
-    UserService userService;
-
-    @Autowired
     RoomService roomService;
 
     @GetMapping("/users/{room_id}")
@@ -42,14 +39,15 @@ public class RoomController {
             @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> getRoomUserList(@ApiIgnore Authentication authentication,
-                                                                      @PathVariable(name = "room_id")  @ApiParam(value="접속한 방 id", required = true) String requestRoomId) {
+    public ResponseEntity<? extends BaseResponseBody> getRoomUserList(
+			@ApiIgnore Authentication authentication,
+			@PathVariable(name = "room_id")  @ApiParam(value="접속한 방 id", required = true) Long roomId) {
 
         // 토큰이 없는 사용자가 파티룸 사용자 리스트를 요청한 경우 : 401(Unauthorized Error반환)
         if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
-        Long roomId = Long.parseLong(requestRoomId);
         List<User> userList = roomService.getRoomUserListByRoomId(roomId);
+		// TODO: RoomUserListRes List return 확인
         return ResponseEntity.status(201).body(RoomUserListRes.of(201, "Success", roomId, userList));
     }
 
@@ -60,15 +58,15 @@ public class RoomController {
 			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<? extends BaseResponseBody> updateRoomHosts(@ApiIgnore Authentication authentication,
-																	  @PathVariable(name = "room_id")  @ApiParam(value="접속한 방 id", required = true) String requestRoomId,
-																	  @RequestBody @ApiParam(value="파티룸 내 사용자 호스트 등록 여부 정보", required = true) List<RoomHostUpdateReq> hostReq) {
+	public ResponseEntity<? extends BaseResponseBody> updateRoomHosts(
+			@ApiIgnore Authentication authentication,
+			@PathVariable(name = "room_id")  @ApiParam(value="접속한 방 id", required = true) Long roomId,
+			@RequestBody @ApiParam(value="파티룸 내 사용자 호스트 등록 여부 정보", required = true) List<RoomHostUpdateReq> req) {
 
 		// 토큰이 없는 사용자가 파티룸 호스트 변경을 요청한 경우 : 401(Unauthorized Error반환)
 		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
-		Long roomId = Long.parseLong(requestRoomId);
-		roomService.updateRoomHostInfo(roomId, hostReq);
+		roomService.updateRoomHostInfo(roomId, req);
 		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
 	}
 
@@ -79,35 +77,52 @@ public class RoomController {
 			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<? extends BaseResponseBody> exitRoom(@ApiIgnore Authentication authentication,
-																	  @PathVariable(name = "room_id")  @ApiParam(value="접속한 방 id", required = true) String requestRoomId) {
+	public ResponseEntity<? extends BaseResponseBody> exitRoom(
+			@ApiIgnore Authentication authentication,
+			@PathVariable(name = "room_id")  @ApiParam(value="접속한 방 id", required = true) Long roomId) {
 
 		// 토큰이 없는 사용자가 파티룸 퇴장을 요청한 경우 : 401(Unauthorized Error반환)
 		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 		Long userId = userDetails.getUser().getId();
-		Long roomId = Long.parseLong(requestRoomId);
 
 		roomService.updateSessionEndTime(roomId, userId);
-        if (!roomService.checkRoomUserExist(roomId)) roomService.deleteRoom();
-
+        if (!roomService.checkRoomUserExist(roomId)) roomService.deleteRoom(roomId);
 		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
 	}
 
+	@PostMapping("/")
+	@ApiOperation(value = "파티룸 생성", notes = "<strong>파티룸</strong>을 생성한다.")
+	@ApiResponses({
+			@ApiResponse(code = 201, message = "성공", response = UserLoginPostRes.class),
+			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+	})
+	public ResponseEntity<UserLoginPostRes> createRoom(
+			@RequestBody @ApiParam(value = "파티룸 정보", required = true) RoomCreatePostReq req,
+			@ApiIgnore Authentication authentication) {
 
-    @PostMapping("/")
-    @ApiOperation(value = "파티룸 생성", notes = "<strong>파티룸</strong>을 생성한다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
-            @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
-            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
-    })
-    public ResponseEntity<UserLoginPostRes> createPartyRoom(@RequestBody @ApiParam(value = "파티룸 정보", required = true) RoomCreatePostReq roomCreatePostReq) {
-        roomService.createRoom(roomCreatePostReq);
+		roomService.createRoom(req);
+		// TODO : 파티룸 생성 후 입장 방법 정하기, 프론트에서 POST 입장 한번 더 보내줄지, 여기서 처리할 지
+		// TODO: 응답 값, 메소드 응답 값 수정
+		return ResponseEntity.status(200).body(null);
+	}
 
-        return ResponseEntity.status(200).body(null);
-    }
+	@DeleteMapping("/del/{room_id}")
+	@ApiOperation(value = "파티룸 삭제", notes = "<strong>파티룸</strong>을 삭제한다.")
+	@ApiResponses({
+			@ApiResponse(code = 201, message = "성공", response = UserLoginPostRes.class),
+			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+	})
+	public ResponseEntity<UserLoginPostRes> deletePartyRoom(@ApiIgnore Authentication authentication, @PathVariable long roomId) {
+		roomService.deleteRoom(roomId);
+		// TODO: 강제 삭제하면, 세션 안에 있는 사람도 다 endtime 찍어내기
+
+		// TODO: 응답 값, 메소드 응답 값 수정
+		return ResponseEntity.status(200).body(null);
+	}
 
 	@GetMapping("/{room_id}")
 	@ApiOperation(value = "파티룸 링크 입장", notes = "<strong>파티룸</strong> 링크 입장시 비밀번호 여부값을 응답한다.")
@@ -117,7 +132,7 @@ public class RoomController {
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<? extends BaseResponseBody> roomLinkEntry(
-			// @ApiIgnore Authentication authentication,
+			@ApiIgnore Authentication authentication,
 			@PathVariable(name = "room_id") @ApiParam(value = "파티룸 번호", required = true)  Long roomId) {
 		Room room = roomService.findByRoomId(roomId);
 		return ResponseEntity.status(201).body(RoomEntryLinkRes.of(200, "Success", room));
@@ -130,8 +145,8 @@ public class RoomController {
             @ApiResponse(code = 403, message = "인증 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> roomEntryPassword(
-            // @ApiIgnore Authentication authentication,
+    public ResponseEntity<? extends BaseResponseBody> roomEntry(
+            @ApiIgnore Authentication authentication,
             @PathVariable(name = "room_id") @ApiParam(value = "파티룸 번호", required = true)  Long roomId,
             @RequestBody @ApiParam(value = "파티룸 비밀번호", required = true) RoomEntryPostReq req) {
 

@@ -15,11 +15,12 @@ import java.util.Optional;
  */
 public interface RoomService {
 	Room createRoom(RoomCreatePostReq roomCreatePostReq);
-	Optional<Room> deleteRoom(long roomId, User user);
+	Room deleteRoom(long roomId);
 	List<User> getRoomUserListByRoomId(Long roomId);
 	List<Session> getSessionsByRoomId(Long roomId);
 	void updateRoomHostInfo(Long roomId, List<RoomHostUpdateReq> updateHostReq);
-	void updateSessionEndTime(String userid, Long roomId);
-    void roomEntryPassword(User user, Long roomId, RoomEntryPostReq req);
-	void updateRoomEndTime(Long roomId);
+	void updateSessionEndTime(Long roomId, Long userId);
+	Room findByRoomId(Long roomId);
+	boolean roomEntry(Long roomId, String password);
+	boolean checkRoomUserExist(Long roomId);
 }
