@@ -7,13 +7,12 @@
       <div class="flex flex-row justify-between">
         <span class="font-bold text-xl mb-2">{{ title }}</span>
         <div class="inline">
-          <span>lock<i class="fas fa-lock"></i></span>
-          <span class="rounded-full main-bg-color ml-3 px-3 py-1 text-white">{{currentUserCount}} / {{maxUserCount}}</span>
+          <span class="rounded-full main-bg-color ml-3 px-3 py-1 text-white h-8">{{currentUserCount}} / {{maxUserCount}}</span>
         </div>
       </div>
       <p class="text-gray-700 text-base line-clamp-3 card-description">{{ desc }}</p>
     </div>
-    <div class="px-6 pt-4 pb-2 flex flex-row flex-wrap">
+    <div class="px-6 pt-4 pb-2 flex flex-row flex-wrap bg-gradient-to-r from-main-200 to-sub-200">
       <span class="inline-block partyroom-tag rounded-full px-3 py-1 text-sm font-semibold text-white mr-2 mb-2">#파티</span>
       <span class="inline-block partyroom-tag rounded-full px-3 py-1 text-sm font-semibold text-white mr-2 mb-2">#파티</span>
       <span class="inline-block partyroom-tag rounded-full px-3 py-1 text-sm font-semibold text-white mr-2 mb-2">#파티</span>
