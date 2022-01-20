@@ -119,8 +119,9 @@ public class RoomController {
             @PathVariable(name = "room_id") @ApiParam(value = "파티룸 번호", required = true)  Long roomId,
             @RequestBody @ApiParam(value = "파티룸 비밀번호", required = true) RoomEntryPostReq req) {
 
-
-        if(roomService.roomEntryPassword(roomId, req.getPassword())) return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        if(roomService.roomEntryPassword(roomId, req.getPassword())) {
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+		}
         return ResponseEntity.status(200).body(BaseResponseBody.of(403, "Failed"));
     }
 }
