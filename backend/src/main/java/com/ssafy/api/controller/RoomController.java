@@ -112,7 +112,7 @@ public class RoomController {
 		return ResponseEntity.status(200).body(null);
 	}
 
-	@DeleteMapping("/del/{room_id}")
+	@PatchMapping("/del/{room_id}")
 	@ApiOperation(value = "파티룸 삭제", notes = "<strong>파티룸</strong>을 삭제한다.")
 	@ApiResponses({
 			@ApiResponse(code = 201, message = "성공", response = UserLoginPostRes.class),
