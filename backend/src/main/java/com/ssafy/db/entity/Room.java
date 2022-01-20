@@ -31,9 +31,11 @@ public class Room extends BaseEntity{
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "room")
     private List<Session> sessions;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "room")
     private List<RoomTag> roomTags;
 }
