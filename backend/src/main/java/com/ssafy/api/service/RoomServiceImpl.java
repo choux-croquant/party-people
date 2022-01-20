@@ -1,7 +1,6 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.RoomCreatePostReq;
-import com.ssafy.api.request.RoomEntryPostReq;
 import com.ssafy.api.request.RoomHostUpdateReq;
 import com.ssafy.db.entity.Room;
 import com.ssafy.db.entity.Session;
@@ -12,6 +11,8 @@ import com.ssafy.db.repository.SessionRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service("roomService")
@@ -24,16 +25,17 @@ public class RoomServiceImpl implements RoomService{
     SessionRepositorySupport sessionRepositorySupport;
 
     @Override
-    public Room createRoom(RoomCreatePostReq roomCreatePostReq) {
+    public Room createRoom(RoomCreatePostReq req) {
         Room room = new Room();
 
-        room.setTitle(roomCreatePostReq.getTitle());
-        room.setDescription(roomCreatePostReq.getDescription());
-        room.setThumbnailUrl(roomCreatePostReq.getThumbnail_url());
-        room.setCapacity(roomCreatePostReq.getCapacity());
-        room.setPassword(roomCreatePostReq.getPassword());
-        room.setActive(roomCreatePostReq.getIs_active());
-        room.setLocked(roomCreatePostReq.getIs_locked());
+        room.setTitle(req.getTitle());
+        room.setDescription(req.getDescription());
+        room.setThumbnailUrl(req.getThumbnail_url());
+        room.setCapacity(req.getCapacity());
+        if(req.getPassword() != null) {
+            room.setPassword(req.getPassword());
+            room.setLocked(true);
+        }
 
         return roomRepository.save(room);
     }
@@ -49,20 +51,21 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
-    public void updateRoomHostInfo(Long roomId, List<RoomHostUpdateReq> updateHostReq) {
-        for (RoomHostUpdateReq host : updateHostReq) {
+    public void updateRoomHostInfo(Long roomId, List<RoomHostUpdateReq> req) {
+        for (RoomHostUpdateReq host : req) {
             Session updatedSession = sessionRepositorySupport.findSessionByRoomIdAndUserId(roomId, host.getId());
-            if (host.getAction()==0) updatedSession.setHost(false);
+            if (host.getAction() == 0) updatedSession.setHost(false);
             else updatedSession.setHost(true);
             sessionRepository.save(updatedSession);
         }
     }
 
-    // TODO: 2022-01-20  setEndTime() 인자로 종료 시간 새롭게 설정해야함
     @Override
     public void updateSessionEndTime(Long roomId, Long userId) {
         Session updatedSession = sessionRepositorySupport.findSessionByRoomIdAndUserId(roomId, userId);
-        updatedSession.setEndTime();
+        LocalDateTime curDateTime = LocalDateTime.now();
+        curDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        updatedSession.setEndTime(curDateTime);
         sessionRepository.save(updatedSession);
     }
 
@@ -70,7 +73,7 @@ public class RoomServiceImpl implements RoomService{
     public boolean checkRoomUserExist(Long roomId) {
         List<Session> sessions = getSessionsByRoomId(roomId);
         for (Session session : sessions) {
-            if (session.getEndTime()==null) return true;
+            if (session.getEndTime() == null) return true;
         }
         return false;
     }
@@ -81,14 +84,35 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
-    public boolean roomEntry(Long roomId, String password) {
+    public boolean roomEntry(User user, Long roomId, String password) {
         Room room = roomRepository.findById(roomId).get();
-        if(room.getPassword().isEmpty()) {
+        // TODO: capacity 확인
+        if(room.getPassword() == null) {
+            Session session = new Session();
+            session.setUser(user);
+            session.setRoom(room);
+            sessionRepository.save(session);
             return true;
         }
         if(room.getPassword().equals(password)) {
+            Session session = new Session();
+            session.setUser(user);
+            session.setRoom(room);
+            sessionRepository.save(session);
             return true;
         }
+
         return false;
+    }
+
+    @Override
+    public Room deleteRoom(long roomId) {
+        // 파티룸 삭제
+        //TODO: findbyid를 가장 최근 값 하나만 찾아내기
+        Room room = roomRepository.findById(roomId).get();
+        LocalDateTime curDateTime = LocalDateTime.now();
+        curDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        room.setEndTime(curDateTime);
+        return roomRepository.save(room);
     }
 }

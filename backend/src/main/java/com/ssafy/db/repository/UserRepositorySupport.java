@@ -18,10 +18,4 @@ public class UserRepositorySupport {
     private JPAQueryFactory jpaQueryFactory;
     QUser qUser = QUser.user;
 
-    public Optional<User> findUserByUserid(String userid) {
-        User user = jpaQueryFactory.select(qUser).from(qUser)
-                .where(qUser.userid.eq(userid)).fetchOne();
-        if(user == null) return Optional.empty();
-        return Optional.ofNullable(user);
-    }
 }

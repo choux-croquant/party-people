@@ -22,6 +22,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final QBaseEntity _super = new QBaseEntity(this);
 
+    public final StringPath accountId = createString("accountId");
+
     public final StringPath email = createString("email");
 
     //inherited
@@ -34,8 +36,6 @@ public class QUser extends EntityPathBase<User> {
     public final ListPath<Session, QSession> sessions = this.<Session, QSession>createList("sessions", Session.class, QSession.class, PathInits.DIRECT2);
 
     public final StringPath tel = createString("tel");
-
-    public final StringPath userid = createString("userid");
 
     public final ListPath<UserTag, QUserTag> userTags = this.<UserTag, QUserTag>createList("userTags", UserTag.class, QUserTag.class, PathInits.DIRECT2);
 

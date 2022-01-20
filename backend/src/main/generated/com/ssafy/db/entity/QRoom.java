@@ -26,20 +26,20 @@ public class QRoom extends EntityPathBase<Room> {
 
     public final StringPath description = createString("description");
 
-    public final StringPath endTime = createString("endTime");
+    public final DateTimePath<java.time.LocalDateTime> endTime = createDateTime("endTime", java.time.LocalDateTime.class);
 
     //inherited
     public final NumberPath<Long> id = _super.id;
-
-    public final BooleanPath isActive = createBoolean("isActive");
 
     public final BooleanPath isLocked = createBoolean("isLocked");
 
     public final StringPath password = createString("password");
 
+    public final ListPath<RoomTag, QRoomTag> roomTags = this.<RoomTag, QRoomTag>createList("roomTags", RoomTag.class, QRoomTag.class, PathInits.DIRECT2);
+
     public final ListPath<Session, QSession> sessions = this.<Session, QSession>createList("sessions", Session.class, QSession.class, PathInits.DIRECT2);
 
-    public final StringPath startTime = createString("startTime");
+    public final DateTimePath<java.time.LocalDateTime> startTime = createDateTime("startTime", java.time.LocalDateTime.class);
 
     public final StringPath thumbnailUrl = createString("thumbnailUrl");
 

@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -22,15 +23,19 @@ public class Room extends BaseEntity{
     private String description;
     private String thumbnailUrl;
     private String capacity;
-    private String startTime;
-    private String endTime;
-    private boolean isActive;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private boolean isLocked;
 
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "room")
     private List<Session> sessions;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "room")
+    private List<RoomTag> roomTags;
 }

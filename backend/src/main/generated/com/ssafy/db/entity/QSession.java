@@ -24,18 +24,16 @@ public class QSession extends EntityPathBase<Session> {
 
     public final QBaseEntity _super = new QBaseEntity(this);
 
-    public final StringPath endTime = createString("endTime");
+    public final DateTimePath<java.time.LocalDateTime> endTime = createDateTime("endTime", java.time.LocalDateTime.class);
 
     //inherited
     public final NumberPath<Long> id = _super.id;
-
-    public final BooleanPath isActive = createBoolean("isActive");
 
     public final BooleanPath isHost = createBoolean("isHost");
 
     public final QRoom room;
 
-    public final StringPath startTime = createString("startTime");
+    public final DateTimePath<java.time.LocalDateTime> startTime = createDateTime("startTime", java.time.LocalDateTime.class);
 
     public final QUser user;
 

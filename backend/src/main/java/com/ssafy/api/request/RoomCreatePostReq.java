@@ -19,14 +19,8 @@ public class RoomCreatePostReq {
 	String description;
 	@ApiModelProperty(name="썸네일 경로", example="썸네일 경로")
 	String thumbnail_url;
-	@ApiModelProperty(name="최대 인원수", example="100")
+	@ApiModelProperty(name="최대 인원수", example="8")
 	String capacity;
 	@ApiModelProperty(name="비밀번호", example="비밀번호")
 	String password;
-	@ApiModelProperty(name="시작시간", example="2020-01-01")
-	String start_time;
-	@ApiModelProperty(name="활성 여부", example="is_active")
-	Boolean is_active;
-	@ApiModelProperty(name="잠금 여부", example="is_locked")
-	Boolean is_locked;
 }
