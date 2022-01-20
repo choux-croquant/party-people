@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service("roomService")
 public class RoomServiceImpl implements RoomService{
@@ -89,5 +90,46 @@ public class RoomServiceImpl implements RoomService{
     @Override
     public void roomEntryPassword(User user, Long roomId, RoomEntryPostReq req) {
         Session session = new Session();
+    }
+
+    @Override
+    public Optional<Room> deleteRoom(long roomId, User user) {
+        // 해당 미팅룸 호스트 인지?
+        Optional<Session> session = Optional.ofNullable(sessionRepositorySupport.findSessionByRoomIdAndUserId(roomId, user.getId()));
+
+        // 현재 파티룸에 참여한 상태가 아닌 경우
+        if (session.isEmpty())
+            return Optional.empty();
+
+        // 현재 파티룸의 호스트가 아닌 경우
+        if (!session.get().isHost())
+            return Optional.empty();
+
+        // 파티룸 삭제
+        Room targetRoom = session.get().getRoom();
+        roomRepository.delete(targetRoom);
+
+        // 해당 파티룸에 들어가 있는 세션을 전부 종료
+        for(User tenent : getRoomUserListByRoomId(roomId)){
+            // this.updateSessionEndTime(roomId, tenent);
+        }
+
+        // 파티 룸 종료시간 업데이트
+        this.updateRoomEndTime(roomId);
+
+        return null;
+    }
+
+    @Override
+    public void updateRoomEndTime(Long roomId) {
+        Optional<Room> room = roomRepository.findById(roomId);
+
+        if (room.isEmpty())
+            return;
+
+        Room changedRoom = room.get();
+        changedRoom.setEndTime();    // 종료 시간 설정
+
+        roomRepository.save(changedRoom);   // 종료시간 업데이트
     }
 }
