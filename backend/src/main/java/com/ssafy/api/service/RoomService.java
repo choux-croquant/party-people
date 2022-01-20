@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.RoomCreatePostReq;
+import com.ssafy.api.request.RoomEntryPostReq;
 import com.ssafy.api.request.RoomHostUpdateReq;
 import com.ssafy.db.entity.Room;
 import com.ssafy.db.entity.User;
@@ -15,4 +16,5 @@ public interface RoomService {
 	List<User>  getRoomUserListByRoomId(Long roomId);
 	List<User> updateRoomHostInfo(List<RoomHostUpdateReq> updateHostReq);
 	void updateSessionEndTime(String userid, Long roomId);
+    void roomEntryPassword(User user, Long roomId, RoomEntryPostReq req);
 }

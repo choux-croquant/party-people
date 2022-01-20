@@ -1,8 +1,10 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.RoomCreatePostReq;
+import com.ssafy.api.request.RoomEntryPostReq;
 import com.ssafy.api.request.RoomHostUpdateReq;
 import com.ssafy.db.entity.Room;
+import com.ssafy.db.entity.Session;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.RoomRepository;
 import com.ssafy.db.repository.SessionRepositorySupport;
@@ -47,5 +49,10 @@ public class RoomServiceImpl implements RoomService{
     @Override
     public void updateSessionEndTime(String userid, Long roomId) {
 
+    }
+
+    @Override
+    public void roomEntryPassword(User user, Long roomId, RoomEntryPostReq req) {
+        Session session = new Session();
     }
 }
