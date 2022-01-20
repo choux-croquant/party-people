@@ -17,13 +17,13 @@ import org.springframework.data.domain.Page;
 @ApiModel("RoomListResponse")
 public class RoomListRes extends BaseResponseBody {
     @ApiModelProperty(name="파티룸 리스트")
-    private Page<Room> roomList;
+    private Page<Room> contents;
 
     public static RoomListRes of(Integer statusCode, String message, Page<Room> roomList) {
         RoomListRes res = new RoomListRes();
         res.setStatusCode(statusCode);
         res.setMessage(message);
-        res.setRoomList(roomList);
+        res.setContents(roomList);
         return res;
     }
 }
