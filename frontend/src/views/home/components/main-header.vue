@@ -1,5 +1,44 @@
 <template>
-  <el-row
+  <nav class="bg-white border-gray-200 px-4 py-5">
+    <div class="flex flex-wrap justify-between items-center w-full my-0">
+      <a href="#" class="flex-none ml-2 mr-6">
+        <img class="w-10 h-10" src="@/assets/logo.png"/>
+      </a>
+      <div class="flex-auto">
+        <div class="relative mr-3">
+          <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+            <svg class="w-5 h-5 text-tc-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
+          </div>
+          <input type="text" id="party-room-search" class="block rounded-full shadow-md h-10 p-2 pl-10 w-full text-tc-200 bg-main-300 sm:text-sm focus:outline-none focus:border-main-100 focus:ring-2 focus:ring-main-100" placeholder="Search for party room">
+        </div>
+      </div>
+      
+      <!-- <button type="button" class="flex-none rounded-full shadow-lg w-10 h-10 bg-main-200">
+         <svg class="fill-current text-main-100 ml-3 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/> </svg>
+      </button> -->
+      
+      <div class="dropdown inline-block flex-none relative">
+        <button class="flex-none rounded-full shadow-lg w-10 h-10 bg-main-200">
+          <svg class="fill-current text-main-100 ml-3 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/> </svg>
+        </button>
+        <ul class="dropdown-menu absolute hidden right-0 w-40 text-gray-700">
+          <li class=""><a class="rounded-t bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap" href="#">호스트</a></li>
+          <li class=""><a class="bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap" href="#">제목</a></li>
+          <li class=""><a class="rounded-b bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap" href="#">내용</a></li>
+        </ul>
+      </div>
+
+      <div class="flex-none hidden md:block w-1/6"></div>
+      <div class="flex-none hidden md:block">
+        <button class="rounded-full w-32 h-10 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Login</button>
+        <button class="rounded-full w-32 h-10 ml-4 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Sign-Up</button>  
+      </div>
+    </div>
+  </nav>
+
+  
+  
+  <!-- <el-row
     class="main-header"
     :gutter="10"
     :style="{ 'height': height }">
@@ -45,204 +84,81 @@
         <div class="mobile-sidebar-backdrop" @click="changeCollapse"></div>
       </div>
     </div>
-  </el-row>
+  </el-row> -->
 </template>
 <script>
-import { reactive, computed } from 'vue'
-import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { reactive } from 'vue'
+// import { useStore } from 'vuex'
+// import { useRouter } from 'vue-router'
 
 export default {
   name: 'main-header',
 
   props: {
-    height: {
-      type: String,
-      default: '70px'
-    }
+    // height: {
+    //   type: String,
+    //   default: '70px'
+    // }
   },
 
-  setup(props, { emit }) {
-    const store = useStore()
-    const router = useRouter()
+  setup() {
+    // const store = useStore()
+    // const router = useRouter()
     const state = reactive({
       searchValue: null,
-      isCollapse: true,
-      menuItems: computed(() => {
-        const MenuItems = store.getters['root/getMenus']
-        let keys = Object.keys(MenuItems)
-        let menuArray = []
-        for (let i = 0; i < keys.length; ++i) {
-          let menuObject = {}
-          menuObject.icon = MenuItems[keys[i]].icon
-          menuObject.title = MenuItems[keys[i]].name
-          menuArray.push(menuObject)
-        }
-        return menuArray
-      }),
-      activeIndex: computed(() => store.getters['root/getActiveMenuIndex'])
+      // isCollapse: true,
+      // menuItems: computed(() => {
+      //   const MenuItems = store.getters['root/getMenus']
+      //   let keys = Object.keys(MenuItems)
+      //   let menuArray = []
+      //   for (let i = 0; i < keys.length; ++i) {
+      //     let menuObject = {}
+      //     menuObject.icon = MenuItems[keys[i]].icon
+      //     menuObject.title = MenuItems[keys[i]].name
+      //     menuArray.push(menuObject)
+      //   }
+      //   return menuArray
+      // }),
+      // activeIndex: computed(() => store.getters['root/getActiveMenuIndex'])
     })
 
-    if (state.activeIndex === -1) {
-      state.activeIndex = 0
-      store.commit('root/setMenuActive', 0)
-    }
+    // if (state.activeIndex === -1) {
+    //   state.activeIndex = 0
+    //   store.commit('root/setMenuActive', 0)
+    // }
 
-    const menuSelect = function (param) {
-      store.commit('root/setMenuActive', param)
-      const MenuItems = store.getters['root/getMenus']
-      let keys = Object.keys(MenuItems)
-      router.push({
-        name: keys[param]
-      })
-    }
+    // const menuSelect = function (param) {
+    //   store.commit('root/setMenuActive', param)
+    //   const MenuItems = store.getters['root/getMenus']
+    //   let keys = Object.keys(MenuItems)
+    //   router.push({
+    //     name: keys[param]
+    //   })
+    // }
 
-    const clickLogo = () => {
-      store.commit('root/setMenuActive', 0)
-      const MenuItems = store.getters['root/getMenus']
-      let keys = Object.keys(MenuItems)
-      router.push({
-        name: keys[0]
-      })
-    }
+    // const clickLogo = () => {
+    //   store.commit('root/setMenuActive', 0)
+    //   const MenuItems = store.getters['root/getMenus']
+    //   let keys = Object.keys(MenuItems)
+    //   router.push({
+    //     name: keys[0]
+    //   })
+    // }
 
-    const clickLogin = () => {
-      emit('openLoginDialog')
-    }
+    // const clickLogin = () => {
+    //   emit('openLoginDialog')
+    // }
 
-    const changeCollapse = () => {
-      state.isCollapse = !state.isCollapse
-    }
+    // const changeCollapse = () => {
+    //   state.isCollapse = !state.isCollapse
+    // }
 
-    return { state, menuSelect, clickLogo, clickLogin, changeCollapse }
+    return { state }
   }
 }
 </script>
 <style>
-  .main-header {
-    padding: 10px 20px;
-  }
-  /*Mobile, Tablet*/
-  .menu-icon-wrapper {
-    display: inline-block;
-    vertical-align: top;
-    position: relative;
-    top: 14px;
-  }
-  
-  .main-header .hide-on-big .logo-wrapper {
-    display: inline-block;
-    margin: 0 calc(50% - 51px)
-  }
-  .main-header .hide-on-big .logo-wrapper .ic.ic-logo {
-    width: 70px;
-    height: 50px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-image: url('../../../assets/images/ssafy-logo.png');
-  }
-  .mobile-sidebar-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-  .mobile-sidebar-wrapper .mobile-sidebar {
-    width: 240px; height: calc(100vh - 1px);
-    display: inline-block;
-    background-color: white;
-    padding: 0 10px;
-    vertical-align: top;
-  }
-  .mobile-sidebar-wrapper .mobile-sidebar .mobile-sidebar-tool-wrapper {
-    padding-bottom: 20px;
-  }
-  .mobile-sidebar-wrapper .mobile-sidebar .mobile-sidebar-btn {
-    display: block;
-    margin: 0 auto;
-    margin-top: 25px;
-    height: 30px;
-    width: 100%;
-  }
-  .mobile-sidebar-wrapper .mobile-sidebar .mobile-sidebar-btn.login-btn {
-    color: white;
-  }
-  .mobile-sidebar-wrapper .mobile-sidebar .logo-wrapper {
-    display: block
-  }
-  .mobile-sidebar-wrapper .mobile-sidebar .logo-wrapper .ic.ic-logo {
-    width: 70px;
-    height: 50px;
-    margin: 0 auto;
-    margin-top: 30px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-image: url('../../../assets/images/ssafy-logo.png');
-  }
-  .mobile-sidebar-wrapper .mobile-sidebar-backdrop {
-    width: calc(100% - 260px); height: calc(100vh - 1px);
-    background-color: black;
-    display: inline-block;
-    opacity: 0.3;
-  }
-  .mobile-sidebar-wrapper .el-menu{
-    margin-top: 0;
-    padding-left: 0;
-    height: calc(100% - 235px);
-  }
-  .mobile-sidebar-wrapper .el-menu .el-menu-item {
-    cursor: pointer;
-  }
-  .mobile-sidebar-wrapper .el-menu .el-menu-item .ic {
-    margin-right: 5px;
-  }
-
-  /*Desktop - Need to add Class if Need*/
-  .main-header .hide-on-small .logo-wrapper {
-    cursor: pointer;
-    display: inline-block;
-  }
-  .main-header .hide-on-small .logo-wrapper .ic.ic-logo {
-    width: 70px;
-    height: 50px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-image: url('../../../assets/images/ssafy-logo.png');
-  }
-  .main-header .hide-on-small .tool-wrapper {
-    width: 50%;
-    float: right;
-  }
-  .main-header .hide-on-small .tool-wrapper .button-wrapper {
-    width: 45%;
-    float: right;
-  }
-  .main-header .hide-on-small .tool-wrapper .button-wrapper .el-button {
-    width: 45%;
-    height: 50px;
-    cursor: pointer;
-    margin-right: 1%;
-  }
-  .main-header .hide-on-small .tool-wrapper .search-field {
-    width: 50%;
-    height: 50px;
-    max-width: 400px;
-    margin-right: 2%;
-    display: inline-block;
-    background-color: white;
-  }
-  .main-header .hide-on-small .tool-wrapper .search-field .el-input {
-    width: 100%;
-    height: 100%;
-  }
-  .main-header .hide-on-small .tool-wrapper .search-field .el-input .el-input__inner {
-    width: 88%;
-    height: 50px;
-    margin-right: 1%;
-  }
-  .main-header .hide-on-small .tool-wrapper .search-field .el-input .el-input__prefix {
-    top: 5px;
-  }
-
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
 </style>

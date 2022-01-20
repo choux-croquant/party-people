@@ -1,7 +1,7 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <div class="bg-tc-100">메인페이지</div>
   <router-view></router-view>
+  <!-- <img alt="Vue logo" src="./assets/logo.png">
+  <div class="bg-tc-100">메인페이지</div> -->
 </template>
 
 <script>
@@ -20,6 +20,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
