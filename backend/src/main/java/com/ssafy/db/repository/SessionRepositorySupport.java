@@ -2,6 +2,7 @@ package com.ssafy.db.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.db.entity.QSession;
+import com.ssafy.db.entity.Session;
 import com.ssafy.db.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -21,5 +22,17 @@ public class SessionRepositorySupport {
         List<User> users = jpaQueryFactory.select(qSession.user).from(qSession)
                 .where(qSession.room.id.eq(roomId)).fetch();
         return users;
+    }
+
+    public List<Session> findSessionByRoomId(Long roomId) {
+        List<Session> sessions = jpaQueryFactory.select(qSession).from(qSession)
+                .where(qSession.room.id.eq(roomId)).fetch();
+        return sessions;
+    }
+
+    public Session findSessionByRoomIdAndUserId(Long roomId, Long userId) {
+        Session session = jpaQueryFactory.select(qSession).from(qSession)
+                .where(qSession.room.id.eq(roomId).and(qSession.user.id.eq(userId))).fetchOne();
+        return session;
     }
 }
