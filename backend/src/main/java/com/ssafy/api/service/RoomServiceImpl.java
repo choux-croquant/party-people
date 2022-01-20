@@ -84,11 +84,14 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
-    public boolean roomEntry(Long roomId, String password) {
+    public boolean roomEntry(User user, Long roomId, String password) {
         Room room = roomRepository.findById(roomId).get();
         // TODO: capacity 확인
         if(room.getPassword() == null) {
-            // TODO: 세션 테이블 업데이트
+            Session session = new Session();
+            session.setUser(user);
+            session.setRoom(room);
+            sessionRepository.save(session);
             return true;
         }
         if(room.getPassword().equals(password)) {
