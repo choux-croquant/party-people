@@ -87,7 +87,11 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
-    public void roomEntryPassword(User user, Long roomId, RoomEntryPostReq req) {
-        Session session = new Session();
+    public boolean roomEntryPassword(Long roomId, String password) {
+        Room room = roomRepository.findById(roomId).get();
+
+        if(room.getPassword() == null) return true;
+        if(!room.getPassword().equals(password)) return false;
+        return true;
     }
 }

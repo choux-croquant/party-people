@@ -115,15 +115,13 @@ public class RoomController {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> roomEntryPassword(
-            @ApiIgnore Authentication authentication,
+            // @ApiIgnore Authentication authentication,
             @PathVariable(name = "room_id") @ApiParam(value = "파티룸 번호", required = true)  Long roomId,
             @RequestBody @ApiParam(value = "파티룸 비밀번호", required = true) RoomEntryPostReq req) {
 
-        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-        User user = userDetails.getUser();
-
-        roomService.roomEntryPassword(user, roomId, req);
-
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        if(roomService.roomEntryPassword(roomId, req.getPassword())) {
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+		}
+        return ResponseEntity.status(200).body(BaseResponseBody.of(403, "Failed"));
     }
 }
