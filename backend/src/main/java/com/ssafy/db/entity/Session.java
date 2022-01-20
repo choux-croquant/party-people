@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicInsert;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.time.LocalDateTime;
 
 /**
  * 세션 모델 정의.
@@ -26,8 +27,7 @@ public class Session extends BaseEntity{
     @JoinColumn(name = "room_id")
     private Room room;
 
-    private String startTime;
-    private String endTime;
-    private boolean isActive;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private boolean isHost;
 }
