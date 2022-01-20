@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.RoomCreatePostReq;
+import com.ssafy.api.request.RoomEntryPostReq;
 import com.ssafy.api.request.RoomHostUpdateReq;
 import com.ssafy.db.entity.Room;
 import com.ssafy.db.entity.Session;
@@ -55,16 +56,32 @@ public class RoomServiceImpl implements RoomService{
 
     @Override
     public List<User> getRoomUserListByRoomId(Long roomId) {
-        return sessionRepositorySupport.findUsersByRoomId(roomId);
+        return sessionRepositorysupport.findUsersByRoomId(roomId);
     }
 
     @Override
-    public List<User> updateRoomHostInfo(List<RoomHostUpdateReq> updateHostReq) {
-        return null;
+    public List<Session> getSessionsByRoomId(Long roomId) {
+        return sessionRepositorysupport.findSessionByRoomId(roomId);
+    }
+
+
+    @Override
+    public void updateRoomHostInfo(Long roomId, List<RoomHostUpdateReq> updateHostReq) {
+        for (RoomHostUpdateReq host : updateHostReq) {
+            Session updatedSession = sessionRepositorysupport.findSessionByRoomIdAndUserId(roomId, host.getId());
+            if (host.getAction()==0) updatedSession.setHost(false);
+            else updatedSession.setHost(true);
+            sessionRepository.save(updatedSession);
+        }
     }
 
     @Override
     public void updateSessionEndTime(String userid, Long roomId) {
 
+    }
+
+    @Override
+    public void roomEntryPassword(User user, Long roomId, RoomEntryPostReq req) {
+        Session session = new Session();
     }
 }
