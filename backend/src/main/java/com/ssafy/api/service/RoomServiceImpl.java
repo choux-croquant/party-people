@@ -7,23 +7,31 @@ import com.ssafy.db.entity.Room;
 import com.ssafy.db.entity.Session;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.RoomRepository;
+import com.ssafy.db.repository.SessionRepository;
 import com.ssafy.db.repository.SessionRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service("roomService")
 public class RoomServiceImpl implements RoomService{
     @Autowired
     RoomRepository roomRepository;
     @Autowired
-    SessionRepositorySupport sessionRepository;
+    SessionRepository sessionRepository;
+    @Autowired
+    SessionRepositorySupport sessionRepositorySupport;
 
     @Override
-    public Room createRoom(RoomCreatePostReq roomCreatePostReq) {
+    public Room roomEntry(Room room) {
+        return null;
+    }
+
+    @Override
+    public Room createRoom(RoomCreatePostReq roomCreatePostReq, User user) {
         Room room = new Room();
+        Session session = new Session();
 
         room.setTitle(roomCreatePostReq.getTitle());
         room.setDescription(roomCreatePostReq.getDescription());
@@ -33,17 +41,42 @@ public class RoomServiceImpl implements RoomService{
         room.setActive(roomCreatePostReq.getIs_active());
         room.setLocked(roomCreatePostReq.getIs_locked());
 
+        /*session.setUser(user);
+        session.setRoom(room);
+        session.setActive(roomCreatePostReq.getIs_active());
+        session.setHost(true);
+
+        sessionRepository.save(session);
+
+        this.roomEntry();*/
+
         return roomRepository.save(room);
     }
 
     @Override
-    public List<User> getRoomUserListByRoomId(Long roomId) {
-        return sessionRepository.findUsersByRoomId(roomId);
+    public Room createRoom(RoomCreatePostReq roomCreatePostReq) {
+        return null;
     }
 
     @Override
-    public List<User> updateRoomHostInfo(List<RoomHostUpdateReq> updateHostReq) {
-        return null;
+    public List<User> getRoomUserListByRoomId(Long roomId) {
+        return sessionRepositorySupport.findUsersByRoomId(roomId);
+    }
+
+    @Override
+    public List<Session> getSessionsByRoomId(Long roomId) {
+        return sessionRepositorySupport.findSessionByRoomId(roomId);
+    }
+
+
+    @Override
+    public void updateRoomHostInfo(Long roomId, List<RoomHostUpdateReq> updateHostReq) {
+        for (RoomHostUpdateReq host : updateHostReq) {
+            Session updatedSession = sessionRepositorySupport.findSessionByRoomIdAndUserId(roomId, host.getId());
+            if (host.getAction()==0) updatedSession.setHost(false);
+            else updatedSession.setHost(true);
+            sessionRepository.save(updatedSession);
+        }
     }
 
     @Override
