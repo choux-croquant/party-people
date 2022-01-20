@@ -95,7 +95,10 @@ public class RoomServiceImpl implements RoomService{
             return true;
         }
         if(room.getPassword().equals(password)) {
-            // TODO: 세션 테이블 업데이트
+            Session session = new Session();
+            session.setUser(user);
+            session.setRoom(room);
+            sessionRepository.save(session);
             return true;
         }
 
@@ -105,6 +108,7 @@ public class RoomServiceImpl implements RoomService{
     @Override
     public Room deleteRoom(long roomId) {
         // 파티룸 삭제
+        //TODO: findbyid를 가장 최근 값 하나만 찾아내기
         Room room = roomRepository.findById(roomId).get();
         LocalDateTime curDateTime = LocalDateTime.now();
         curDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
