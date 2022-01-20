@@ -41,7 +41,9 @@ public class RoomServiceImpl implements RoomService{
         room.setActive(roomCreatePostReq.getIs_active());
         room.setLocked(roomCreatePostReq.getIs_locked());
 
-        /*session.setUser(user);
+        /*
+        // session테이블과 room테이블과의 join을 실행하기 위해 room 테이블에서 room_id 가져올 필요있음
+        session.setUser(user);
         session.setRoom(room);
         session.setActive(roomCreatePostReq.getIs_active());
         session.setHost(true);
