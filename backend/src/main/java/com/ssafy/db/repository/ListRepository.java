@@ -14,6 +14,6 @@ import java.util.List;
 @Repository
 public interface ListRepository extends JpaRepository<Room, Long> {
     // 아래와 같이, Query Method 인터페이스(반환값, 메소드명, 인자) 정의를 하면 자동으로 Query Method 구현됨.
-    Page<Room> getRoomByTitle(String title, Pageable pageable);
-    Page<Room> getRoomByDescription(String description, Pageable pageable);
+    Page<Room> findByTitleContaining(String title, Pageable pageable);
+    Page<Room> findByDescriptionContaining(String description, Pageable pageable);
 }
