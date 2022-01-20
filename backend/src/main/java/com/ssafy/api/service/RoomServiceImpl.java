@@ -24,14 +24,8 @@ public class RoomServiceImpl implements RoomService{
     SessionRepositorySupport sessionRepositorySupport;
 
     @Override
-    public Room roomEntry(Room room) {
-        return null;
-    }
-
-    @Override
-    public Room createRoom(RoomCreatePostReq roomCreatePostReq, User user) {
+    public Room createRoom(RoomCreatePostReq roomCreatePostReq) {
         Room room = new Room();
-        Session session = new Session();
 
         room.setTitle(roomCreatePostReq.getTitle());
         room.setDescription(roomCreatePostReq.getDescription());
@@ -41,23 +35,7 @@ public class RoomServiceImpl implements RoomService{
         room.setActive(roomCreatePostReq.getIs_active());
         room.setLocked(roomCreatePostReq.getIs_locked());
 
-        /*
-        // session테이블과 room테이블과의 join을 실행하기 위해 room 테이블에서 room_id 가져올 필요있음
-        session.setUser(user);
-        session.setRoom(room);
-        session.setActive(roomCreatePostReq.getIs_active());
-        session.setHost(true);
-
-        sessionRepository.save(session);
-
-        this.roomEntry();*/
-
         return roomRepository.save(room);
-    }
-
-    @Override
-    public Room createRoom(RoomCreatePostReq roomCreatePostReq) {
-        return null;
     }
 
     @Override
@@ -98,11 +76,13 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
-    public boolean roomEntryPassword(Long roomId, String password) {
-        Room room = roomRepository.findById(roomId).get();
+    public Room findByRoomId(Long roomId) {
+        return roomRepository.findById(roomId).get();
+    }
 
-        if(room.getPassword() == null) return true;
-        if(!room.getPassword().equals(password)) return false;
+    @Override
+    public boolean roomEntry(Long roomId, String password) {
+        Room room = roomRepository.findById(roomId).get();
         return true;
     }
 }
