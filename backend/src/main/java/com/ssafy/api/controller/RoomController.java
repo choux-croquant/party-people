@@ -108,6 +108,7 @@ public class RoomController {
 
         return ResponseEntity.status(200).body(null);
     }
+
 	@GetMapping("/{room_id}")
 	@ApiOperation(value = "파티룸 링크 입장", notes = "<strong>파티룸</strong> 링크 입장시 비밀번호 여부값을 응답한다.")
 	@ApiResponses({
@@ -121,7 +122,6 @@ public class RoomController {
 		Room room = roomService.findByRoomId(roomId);
 		return ResponseEntity.status(201).body(RoomEntryLinkRes.of(200, "Success", room));
 	}
-
 
     @PostMapping("/{room_id}")
     @ApiOperation(value = "파티룸 입장", notes = "<strong>파티룸</strong>입장시 비밀번호를 확인하고 입장한다.")
