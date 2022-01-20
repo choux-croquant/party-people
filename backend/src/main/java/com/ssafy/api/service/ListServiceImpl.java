@@ -28,7 +28,7 @@ public class ListServiceImpl implements ListService {
 
 	@Override
 	public Page<Room> getRoomListByWord(String word, String include, Pageable pageable) {
-		if(include.equals("title")) return listRepository.getRoomByTitle(word, pageable);
-		return listRepository.getRoomByDescription(word, pageable);
+		if(include.equals("title")) return listRepository.findByTitleContaining(word, pageable);
+		return listRepository.findByDescriptionContaining(word, pageable);
 	}
 }

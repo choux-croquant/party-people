@@ -41,6 +41,7 @@ public class ListController {
 		@RequestParam @ApiParam(value = "검색어", required = true) String word,
 		@RequestParam @ApiParam(value = "검색 키워드", required = true)  String include,
 		final Pageable pageable) {
+
 		Page<Room> roomList = listService.getRoomListByWord(word, include, pageable);
 		return ResponseEntity.status(200).body(RoomListRes.of(200, "Success", roomList));
 	}
