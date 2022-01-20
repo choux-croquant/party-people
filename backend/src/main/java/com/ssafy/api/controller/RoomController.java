@@ -116,7 +116,9 @@ public class RoomController {
 			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<UserLoginPostRes> deletePartyRoom(@ApiIgnore Authentication authentication, @PathVariable long roomId) {
+	public ResponseEntity<UserLoginPostRes> deleteRoom(
+			@ApiIgnore Authentication authentication,
+			@PathVariable(name = "room_id") @ApiParam(value = "파티룸 번호", required = true) long roomId) {
 		roomService.deleteRoom(roomId);
 		// TODO: 강제 삭제하면, 세션 안에 있는 사람도 다 endtime 찍어내기
 
