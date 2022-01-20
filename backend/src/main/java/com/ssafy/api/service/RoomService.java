@@ -22,5 +22,6 @@ public interface RoomService {
 	List<Session> getSessionsByRoomId(Long roomId);
 	void updateRoomHostInfo(Long roomId, List<RoomHostUpdateReq> updateHostReq);
 	void updateSessionEndTime(String userid, Long roomId);
-    boolean roomEntryPassword(Long roomId, String password);
+	void updateSessionEndTime(Long roomId, Long userId);
+	boolean checkRoomUserExist(Long roomId);
 }
