@@ -28,33 +28,46 @@ import java.util.List;
 @RequestMapping("/api/v1/rooms")
 public class RoomController {
 
-    @Autowired
-    RoomService roomService;
+	@Autowired
+	RoomService roomService;
 
-    @GetMapping("/users/{room_id}")
-    @ApiOperation(value = "파티룸 접속 사용자 리스트 조회", notes = "사용자 닉네임을 포함하는 파티룸 내 사용자 객체 리스트를 반환한다.")
-    @ApiResponses({
-            @ApiResponse(code = 201, message = "성공", response = RoomUserListRes.class),
-            @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
-            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
-    })
-    public ResponseEntity<? extends BaseResponseBody> getRoomUserList(
+	@GetMapping("/users/{room_id}")
+	@ApiOperation(value = "파티룸 접속 사용자 리스트 조회", notes = "사용자 닉네임을 포함하는 파티룸 내 사용자 객체 리스트를 반환한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공", response = RoomUserListRes.class),
+			@ApiResponse(code = 401, message = "인증 토큰 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 403, message = "조회 권한 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "세션 데이터 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+	})
+	public ResponseEntity<? extends BaseResponseBody> getRoomUserList(
 			@ApiIgnore Authentication authentication,
 			@PathVariable(name = "room_id")  @ApiParam(value="접속한 방 id", required = true) Long roomId) {
 
-        // 토큰이 없는 사용자가 파티룸 사용자 리스트를 요청한 경우 : 401(Unauthorized Error반환)
-        if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
+		// 토큰이 없는 사용자가 요청한 경우 : 401(인증 토큰 없음)
+		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "인증 토큰 없음"));
 
-        List<User> userList = roomService.getRoomUserListByRoomId(roomId);
-		// TODO: RoomUserListRes List return 확인
-        return ResponseEntity.status(201).body(RoomUserListRes.of(201, "Success", roomId, userList));
-    }
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		Long userId = userDetails.getUser().getId();
+
+		// 해당 방에 접속하지 않은 사용자가 요청한 경우 : 403(조회 권한 없음)
+		if(roomService.isUserNotInCurrentSession(roomId, userId)) return ResponseEntity.status(403).body(BaseResponseBody.of(403, "조회 권한 없음"));
+
+		// 존재하지 않는 세션을 요청한 경우 : 404(세션 데이터 없음)
+		if (roomService.isNotSessionExist(roomId)) return ResponseEntity.status(404).body(BaseResponseBody.of(404, "세션 데이터 없음"));
+
+		List<User> userList = roomService.getRoomUserListByRoomId(roomId);
+		return ResponseEntity.status(200).body(RoomUserListRes.of(200, "Success", roomId, userList));
+	}
 
 	@PatchMapping("/host/{room_id}")
 	@ApiOperation(value = "파티룸 호스트 변경", notes = "파티룸의 호스트를 변경한다.")
 	@ApiResponses({
-			@ApiResponse(code = 201, message = "성공", response = UserLoginPostRes.class),
-			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 201, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 400, message = "요청 형식 오류", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 토큰 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 403, message = "변경 권한 없음 / 호스트 권한 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "세션 데이터 없음", response = BaseResponseBody.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<? extends BaseResponseBody> updateRoomHosts(
@@ -65,6 +78,21 @@ public class RoomController {
 		// 토큰이 없는 사용자가 파티룸 호스트 변경을 요청한 경우 : 401(Unauthorized Error반환)
 		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		Long userId = userDetails.getUser().getId();
+
+		// 해당 방에 접속하지 않은 사용자가 요청한 경우 : 403(변경 권한 없음)
+		if(roomService.isUserNotInCurrentSession(roomId, userId)) return ResponseEntity.status(403).body(BaseResponseBody.of(403, "변경 권한 없음"));
+
+		// 현재 유저가 해당 방의 호스트가 아닌 경우 : 403(호스트 권한 없음)
+		if (roomService.isNotQualifiedHost(roomId, userId)) return ResponseEntity.status(403).body(BaseResponseBody.of(403, "호스트 권한 없음"));
+
+		// 종료된 파티룸 요청한 경우 : 404(세션 데이터 없음)
+		if(roomService.isSessionClosed(roomId))return ResponseEntity.status(404).body(BaseResponseBody.of(404, "세션 데이터 없음"));
+
+		// 호스트로 선택된 사용자가 한명도 없을 경우 : 400(요청 형식 오류)
+		if (roomService.isSelectedHostIsNone(req)) return ResponseEntity.status(400).body(BaseResponseBody.of(400, "요청 형식 오류"));
+
 		roomService.updateRoomHostInfo(roomId, req);
 		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
 	}
@@ -72,22 +100,34 @@ public class RoomController {
 	@PatchMapping("/exit/{room_id}")
 	@ApiOperation(value = "파티룸 퇴장", notes = "파티룸 소켓 통신을 끊고 접속한 파티룸에서 퇴장한다.")
 	@ApiResponses({
-			@ApiResponse(code = 201, message = "성공", response = UserLoginPostRes.class),
-			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 201, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 토큰 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 403, message = "퇴장 권한 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "세션 데이터 없음", response = BaseResponseBody.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<? extends BaseResponseBody> exitRoom(
 			@ApiIgnore Authentication authentication,
 			@PathVariable(name = "room_id")  @ApiParam(value="접속한 방 id", required = true) Long roomId) {
 
-		// 토큰이 없는 사용자가 파티룸 퇴장을 요청한 경우 : 401(Unauthorized Error반환)
-		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
+		// 토큰이 없는 사용자가 요청한 경우 : 401(인증 토큰 없음)
+		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "인증 토큰 없음"));
 
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 		Long userId = userDetails.getUser().getId();
 
+		// 해당 방에 접속하지 않은 사용자가 요청한 경우 : 403(퇴장 권한 없음)
+		if(roomService.isUserNotInCurrentSession(roomId, userId)) return ResponseEntity.status(403).body(BaseResponseBody.of(403, "퇴장 권한 없음"));
+
+		// 종료된 파티룸 요청한 경우 : 404(세션 데이터 없음)
+		if(roomService.isSessionClosed(roomId))return ResponseEntity.status(404).body(BaseResponseBody.of(404, "세션 데이터 없음"));
+
 		roomService.updateSessionEndTime(roomId, userId);
-        if (!roomService.checkRoomUserExist(roomId)) roomService.deleteRoom(roomId);
+		// 현재 퇴장하는 사용자가 마지막 사용자이거나 호스트인 경우 파티룸 삭제 처리
+		if (!roomService.checkRoomUserExist(roomId) || !roomService.isNotQualifiedHost(roomId, userId)) {
+			roomService.deleteRoom(roomId);
+			roomService.closeAllUserSession(roomId);
+		}
 		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
 	}
 
@@ -105,9 +145,22 @@ public class RoomController {
 		// 토큰이 없는 사용자가 파티룸 생성을 요청한 경우 : 401(Unauthorized Error반환)
 		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
-		roomService.createRoom(req);
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		Long userId = userDetails.getUser().getId();
+
+		// 이미 세션에 접속한 사용자
+		if (roomService.isUserAccessOtherSession(userId))
+			return ResponseEntity.status(403).body(null);
+
 		// TODO : 파티룸 생성 후 입장 방법 정하기, 프론트에서 POST 입장 한번 더 보내줄지, 여기서 처리할 지
 		// TODO: 응답 값, 메소드 응답 값 수정
+		roomService.createRoom(req);
+		/*
+		프로그램 흐름 제어 : 백에서 파티룸 생성 후 프론트에서 파티룸 입장 post 요청 보냄
+		Room room = roomService.createRoom(req);
+		roomService.createSession(room.getId(), userId, true);
+		 */
+
 		return ResponseEntity.status(200).body(null);
 	}
 
@@ -127,11 +180,22 @@ public class RoomController {
 		// 토큰이 없는 사용자가 파티룸 삭제를 요청한 경우 : 401(Unauthorized Error반환)
 		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
-		roomService.deleteRoom(roomId);
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		Long userId = userDetails.getUser().getId();
+
+		// 현재 유저가 해당 방의 호스트가 아닌 경우 : 403(호스트 권한 없음)
+		if (roomService.isNotQualifiedHost(roomId, userId))
+			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "호스트 권한 없음"));
+
+		// 종료된 파티룸 요청한 경우 : 403(세션 데이터 없음)
+		if(roomService.isSessionClosed(4L))
+			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "세션 권한 없음, 이미 삭제된 방"));
+
+		// roomService.deleteRoom(roomId);
 		// TODO: 강제 삭제하면, 세션 안에 있는 사람도 다 endtime 찍어내기
 
 		// TODO: 응답 값, 메소드 응답 값 수정
-		return ResponseEntity.status(200).body(null);
+		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "성공"));
 	}
 
 	@GetMapping("/{room_id}")
@@ -148,21 +212,33 @@ public class RoomController {
 		// 토큰이 없는 사용자가 파티룸 입장(링크 접속)을 요청한 경우 : 401(Unauthorized Error반환)
 		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
+		// 이미 세션이 종료된 파티룸에 입장을 시도하는 경우
+		if(roomService.isSessionClosed(roomId))
+			return ResponseEntity.status(404).body(BaseResponseBody.of(403, "세션 생성 금지"));
+
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		User user = userDetails.getUser();
+
+		// 이미 세션에 접속한 사용자
+		if (roomService.isUserAccessOtherSession(user.getId()))
+			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "세션 생성 금지"));
+
+
 		Room room = roomService.findByRoomId(roomId);
 		return ResponseEntity.status(200).body(RoomEntryLinkRes.of(200, "Success", room));
 	}
 
-    @PostMapping("/{room_id}")
-    @ApiOperation(value = "파티룸 입장", notes = "<strong>파티룸</strong>입장시 비밀번호를 확인하고 입장한다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
-            @ApiResponse(code = 403, message = "인증 실패", response = BaseResponseBody.class),
-            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
-    })
-    public ResponseEntity<? extends BaseResponseBody> roomEntry(
-            @ApiIgnore Authentication authentication,
-            @PathVariable(name = "room_id") @ApiParam(value = "파티룸 번호", required = true)  Long roomId,
-            @RequestBody @ApiParam(value = "파티룸 비밀번호", required = true) RoomEntryPostReq req) {
+	@PostMapping("/{room_id}")
+	@ApiOperation(value = "파티룸 입장", notes = "<strong>파티룸</strong>입장시 비밀번호를 확인하고 입장한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
+			@ApiResponse(code = 403, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+	})
+	public ResponseEntity<? extends BaseResponseBody> roomEntry(
+			@ApiIgnore Authentication authentication,
+			@PathVariable(name = "room_id") @ApiParam(value = "파티룸 번호", required = true)  Long roomId,
+			@RequestBody @ApiParam(value = "파티룸 비밀번호", required = true) RoomEntryPostReq req) {
 
 		// TODO: 호스트인지 확인하는 코드 추가
 
@@ -172,9 +248,9 @@ public class RoomController {
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 		User user = userDetails.getUser();
 
-        if(roomService.roomEntry(user, roomId, req.getPassword())) {
+		if(roomService.roomEntry(user, roomId, req.getPassword())) {
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 		}
-        return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Failed"));
-    }
+		return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Failed"));
+	}
 }

@@ -9,25 +9,28 @@
           <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
             <svg class="w-5 h-5 text-tc-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
           </div>
-          <input type="text" id="party-room-search" class="block rounded-full shadow-md h-10 p-2 pl-10 w-full text-tc-200 bg-main-300 sm:text-sm focus:outline-none focus:border-main-100 focus:ring-2 focus:ring-main-100" placeholder="Search for party room">
+          <input v-model="state.searchValue" @keyup.enter="roomSearch()" type="text" id="party-room-search" class="block border-0 appearance-none rounded-full shadow-md h-10 p-2 pl-10 w-full text-tc-200 bg-main-300 sm:text-sm focus:outline-none focus:border-main-100 focus:ring-2 focus:ring-main-100" placeholder="Search for party room">
         </div>
       </div>
       
       <div class="dropdown inline-block flex-none relative">
         <button class="flex-none rounded-full shadow-lg w-10 h-10 bg-main-200">
-          <svg class="fill-current text-main-100 ml-3 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/> </svg>
+          <svg class="fill-current text-tc-500 ml-3 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/> </svg>
         </button>
         <ul class="dropdown-menu absolute hidden right-0 w-40 text-gray-700">
-          <li class=""><a class="rounded-t bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap" href="#">호스트</a></li>
-          <li class=""><a class="bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap" href="#">제목</a></li>
-          <li class=""><a class="rounded-b bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap" href="#">내용</a></li>
+          <button @click="changeOption('title')" class="rounded-full w-32 h-10 mt-2 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">제목</button>
+          <button @click="changeOption('des')" class="rounded-full w-32 h-10 mt-2 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">내용</button>
         </ul>
       </div>
 
       <div class="flex-none hidden md:block w-1/6"></div>
-      <div class="flex-none hidden md:block">
+      <div v-if="!state.loginState" class="flex-none hidden md:block">
         <button data-modal-toggle="LoginModal" class="rounded-full w-32 h-10 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Login</button>
         <button data-modal-toggle="SignupModal" class="rounded-full w-32 h-10 ml-4 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Sign-Up</button>  
+      </div>
+      <div v-else class="flex-none hidden md:block">
+        <button class="rounded-full w-32 h-10 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Add+</button>
+        <button @click="clickLogout()" class="rounded-full w-32 h-10 ml-4 font-bold shadow-lg bg-alert-200 text-tc-500 hover:bg-alert-100" type="button">Log-Out</button>  
       </div>
     </div>
   </nav>
@@ -91,9 +94,9 @@
   </el-row> -->
 </template>
 <script>
-import { reactive } from 'vue'
-// import { useStore } from 'vuex'
-// import { useRouter } from 'vue-router'
+import { computed, reactive } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 import LoginModal from './login-modal.vue'
 import SignupModal from './signup-modal.vue'
 export default {
@@ -104,33 +107,43 @@ export default {
     SignupModal
   },
   props: {
-    // height: {
-    //   type: String,
-    //   default: '70px'
-    // }
+    
   },
 
   setup() {
-    // const store = useStore()
-    // const router = useRouter()
+    const store = useStore()
+    const router = useRouter()
+
     const state = reactive({
+      loginState : computed(() => store.getters['root/getLoginState']),
       searchValue: null,
-      // isCollapse: true,
-      // menuItems: computed(() => {
-      //   const MenuItems = store.getters['root/getMenus']
-      //   let keys = Object.keys(MenuItems)
-      //   let menuArray = []
-      //   for (let i = 0; i < keys.length; ++i) {
-      //     let menuObject = {}
-      //     menuObject.icon = MenuItems[keys[i]].icon
-      //     menuObject.title = MenuItems[keys[i]].name
-      //     menuArray.push(menuObject)
-      //   }
-      //   return menuArray
-      // }),
-      // activeIndex: computed(() => store.getters['root/getActiveMenuIndex'])
+      searchOption: 'title'
     })
 
+    const clickLogout = () => {
+      localStorage.removeItem('access_token')
+      store.commit('root/setLoginState', false)
+      router.push({ name: 'Home' })
+    }
+
+    const changeOption = (option) => {
+      state.searchOption = option
+    }
+
+    const roomSearch = () => {
+      console.log(state.searchValue)
+      store.dispatch('root/roomSearch', {
+        include: state.searchOption,
+        word: state.searchValue
+      })
+      .then((result) => {
+        console.log(result)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      state.searchValue = null
+    }
     // if (state.activeIndex === -1) {
     //   state.activeIndex = 0
     //   store.commit('root/setMenuActive', 0)
@@ -142,17 +155,10 @@ export default {
     //   let keys = Object.keys(MenuItems)
     //   router.push({
     //     name: keys[param]
+    
     //   })
     // }
 
-    // const clickLogo = () => {
-    //   store.commit('root/setMenuActive', 0)
-    //   const MenuItems = store.getters['root/getMenus']
-    //   let keys = Object.keys(MenuItems)
-    //   router.push({
-    //     name: keys[0]
-    //   })
-    // }
 
     // const clickLogin = () => {
     //   emit('openLoginDialog')
@@ -162,7 +168,7 @@ export default {
     //   state.isCollapse = !state.isCollapse
     // }
 
-    return { state }
+    return { state, clickLogout, changeOption, roomSearch }
   }
 }
 </script>

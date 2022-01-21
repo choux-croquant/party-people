@@ -1,14 +1,22 @@
 <template>
-  {{ $route.params.conferenceId + '번 방 상세 보기 페이지' }}
+  <div class="h-screen w-screen flex bg-tc-500">
+    <room-sidebar></room-sidebar>
+    <room-chat></room-chat>
+  </div>
 </template>
 <style>
 </style>
 <script>
+  
 import { reactive, onMounted, onUnmounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
+import roomSidebar from './components/room-sidebar.vue'
+import RoomChat from './components/room-chat.vue'
+
 
 export default {
+  components: { roomSidebar, RoomChat },
   name: 'conference-detail',
 
   setup () {

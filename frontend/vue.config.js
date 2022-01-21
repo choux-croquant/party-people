@@ -1,3 +1,4 @@
+
 // Vue3 관련 설정 파일
 module.exports = {
   devServer: {
@@ -12,9 +13,27 @@ module.exports = {
     historyApiFallback: true,
     hot: true
   },
+  // configureWebpack: {
+  //   module: {
+  //     rules: [
+  //       {
+  //         test: /\.css$/,
+  //         use: ['postcss-loader']
+  //       }
+  //     ]
+  //   }
+  // },
   css: {
-    requireModuleExtension: false // import 시에 경로에 .module 포함 안해도 됨.
+    loaderOptions: {
+      postcss: {
+        ident: 'postcss',
+        plugins: [require('tailwindcss')],
+      },
+    },
   },
+  // transpileDependencies: [
+  //   'tailwind-css'
+  // ],
   lintOnSave: false,
   outputDir: '../backend/src/main/resources/dist'
 }

@@ -10,7 +10,7 @@
         </div>
         <img class="w-40 h-24 mb-4 rounded mx-auto" alt="Vue logo" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg">
         <div class="mb-4">
-          <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="유저아이디" v-model="state.form.userid">
+          <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="유저아이디" v-model="state.form.accountId">
         </div>
         <div class="mb-1">
           <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="비밀번호" v-model="state.form.password">
@@ -30,21 +30,6 @@
       </p>
     </div>
   </div>
-  <!-- <el-dialog custom-class="login-dialog" title="로그인" v-model="state.dialogVisible" @close="handleClose">
-    <el-form :model="state.form" :rules="state.rules" ref="loginForm" :label-position="state.form.align">
-      <el-form-item prop="id" label="아이디" :label-width="state.formLabelWidth" >
-        <el-input v-model="state.form.id" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item prop="password" label="비밀번호" :label-width="state.formLabelWidth">
-        <el-input v-model="state.form.password" autocomplete="off" show-password></el-input>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button type="primary" @click="clickLogin">로그인</el-button>
-      </span>
-    </template>
-  </el-dialog> -->
 </template>
 <style>
 
@@ -63,7 +48,7 @@ export default {
     const router = useRouter()
     const state = reactive({
       form: {
-        userid: '',
+        accountId: '',
         password: '',
       },
       loginErr: false
@@ -72,14 +57,15 @@ export default {
     const login = function () {
       console.log(state.form)
       store.dispatch('root/requestLogin', {
-        userid: state.form.userid,
+        accountId: state.form.accountId,
         password: state.form.password
       })
       .then((result) => {
-        console.log(result)
+        console.log(result, 'asdf')
+        console.log(result.data.accessToken)
         localStorage.setItem('access_token', result.data.accessToken)
         store.commit('root/setLoginState', true)
-        state.form.userid = ''
+        state.form.accountId = ''
         state.form.password = ''
         state.loginErr = false
         router.push({ name: 'Home' })
