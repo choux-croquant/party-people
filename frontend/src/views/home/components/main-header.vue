@@ -31,7 +31,7 @@
       </div>
       <div v-else class="flex-none hidden md:block">
         <button class="rounded-full w-32 h-10 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Add+</button>
-        <button class="rounded-full w-32 h-10 ml-4 font-bold shadow-lg bg-alert-200 text-tc-500 hover:bg-alert-100" type="button">Log-Out</button>  
+        <button @click="logOut()" class="rounded-full w-32 h-10 ml-4 font-bold shadow-lg bg-alert-200 text-tc-500 hover:bg-alert-100" type="button">Log-Out</button>  
       </div>
     </div>
   </nav>
@@ -97,7 +97,7 @@
 <script>
 import { computed, reactive } from 'vue'
 import { useStore } from 'vuex'
-// import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import LoginModal from './login-modal.vue'
 import SignupModal from './signup-modal.vue'
 export default {
@@ -113,26 +113,18 @@ export default {
 
   setup() {
     const store = useStore()
-    // const router = useRouter()
+    const router = useRouter()
+
     const state = reactive({
       loginState : computed(() => store.getters['root/getLoginState']),
       searchValue: null,
-      // isCollapse: true,
-      // menuItems: computed(() => {
-      //   const MenuItems = store.getters['root/getMenus']
-      //   let keys = Object.keys(MenuItems)
-      //   let menuArray = []
-      //   for (let i = 0; i < keys.length; ++i) {
-      //     let menuObject = {}
-      //     menuObject.icon = MenuItems[keys[i]].icon
-      //     menuObject.title = MenuItems[keys[i]].name
-      //     menuArray.push(menuObject)
-      //   }
-      //   return menuArray
-      // }),
-      // activeIndex: computed(() => store.getters['root/getActiveMenuIndex'])
     })
 
+    const logOut = () => {
+      localStorage.removeItem('access_token')
+      store.commit('root/setLoginState', false)
+      router.push({ name: 'Home' })
+    }
     // if (state.activeIndex === -1) {
     //   state.activeIndex = 0
     //   store.commit('root/setMenuActive', 0)
@@ -144,17 +136,10 @@ export default {
     //   let keys = Object.keys(MenuItems)
     //   router.push({
     //     name: keys[param]
+    
     //   })
     // }
 
-    // const clickLogo = () => {
-    //   store.commit('root/setMenuActive', 0)
-    //   const MenuItems = store.getters['root/getMenus']
-    //   let keys = Object.keys(MenuItems)
-    //   router.push({
-    //     name: keys[0]
-    //   })
-    // }
 
     // const clickLogin = () => {
     //   emit('openLoginDialog')
@@ -164,7 +149,7 @@ export default {
     //   state.isCollapse = !state.isCollapse
     // }
 
-    return { state }
+    return { state, logOut }
   }
 }
 </script>
