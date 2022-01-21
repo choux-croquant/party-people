@@ -146,4 +146,10 @@ public class RoomServiceImpl implements RoomService{
         return session == null;
     }
 
+    @Override
+    // 이미 세션에 접속한 사용자가 다른 세션에 접근할 때 예외처리
+    public boolean isUserAccessOtherSession(Long userId){
+        return sessionRepositorySupport.isUserAccessOtherSession(userId);
+    }
+
 }
