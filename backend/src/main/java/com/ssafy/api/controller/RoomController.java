@@ -82,13 +82,13 @@ public class RoomController {
 		Long userId = userDetails.getUser().getId();
 
 		// 해당 방에 접속하지 않은 사용자가 요청한 경우 : 403(변경 권한 없음)
-		if(roomService.isUserNotInCurrentSession(roomId, userId)) return ResponseEntity.status(403).body(BaseResponseBody.of(403, "퇴장 권한 없음"));
-
-		// 존재하지 않는 세션을 요청한 경우 : 404(세션 데이터 없음)
-		if (roomService.isNotSessionExist(roomId)) return ResponseEntity.status(404).body(BaseResponseBody.of(404, "세션 데이터 없음"));
+		if(roomService.isUserNotInCurrentSession(roomId, userId)) return ResponseEntity.status(403).body(BaseResponseBody.of(403, "변경 권한 없음"));
 
 		// 현재 유저가 해당 방의 호스트가 아닌 경우 : 403(호스트 권한 없음)
 		if (roomService.isNotQualifiedHost(roomId, userId)) return ResponseEntity.status(403).body(BaseResponseBody.of(403, "호스트 권한 없음"));
+
+		// 종료된 파티룸 요청한 경우 : 404(세션 데이터 없음)
+		if(roomService.isSessionClosed(roomId))return ResponseEntity.status(404).body(BaseResponseBody.of(404, "세션 데이터 없음"));
 
 		// 호스트로 선택된 사용자가 한명도 없을 경우 : 400(요청 형식 오류)
 		if (roomService.isSelectedHostIsNone(req)) return ResponseEntity.status(400).body(BaseResponseBody.of(400, "요청 형식 오류"));
@@ -124,7 +124,10 @@ public class RoomController {
 
 		roomService.updateSessionEndTime(roomId, userId);
 		// 현재 퇴장하는 사용자가 마지막 사용자이거나 호스트인 경우 파티룸 삭제 처리
-		if (!roomService.checkRoomUserExist(roomId) || !roomService.isNotQualifiedHost(roomId, userId)) roomService.deleteRoom(roomId);
+		if (!roomService.checkRoomUserExist(roomId) || !roomService.isNotQualifiedHost(roomId, userId)) {
+			roomService.deleteRoom(roomId);
+			roomService.closeAllUserSession(roomId);
+		}
 		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
 	}
 
