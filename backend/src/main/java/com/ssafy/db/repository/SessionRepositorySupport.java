@@ -44,4 +44,12 @@ public class SessionRepositorySupport {
 
         return session != null;
     }
+
+    // 해당 방에 접속해있는 사용자인지 확인
+    public boolean isUserNotInCurrentSession(Long roomId, Long userId){
+        Session session = jpaQueryFactory.select(qSession).from(qSession)
+                .where(qSession.room.id.eq(roomId).and(qSession.user.id.eq(userId))).fetchOne();
+
+        return session != null;
+    }
 }
