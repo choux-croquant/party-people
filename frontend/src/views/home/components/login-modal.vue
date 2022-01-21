@@ -10,7 +10,7 @@
         </div>
         <img class="w-40 h-24 mb-4 rounded mx-auto" alt="Vue logo" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg">
         <div class="mb-4">
-          <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="유저아이디" v-model="state.form.id">
+          <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="유저아이디" v-model="state.form.accountId">
         </div>
         <div class="mb-6">
           <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="비밀번호" v-model="state.form.password">
@@ -62,7 +62,7 @@ export default {
     const router = useRouter()
     const state = reactive({
       form: {
-        userid: '',
+        accountId: '',
         password: '',
       }
     })
@@ -70,7 +70,7 @@ export default {
     const login = function () {
       console.log(state.form)
       store.dispatch('root/requestLogin', {
-        userid: state.form.userid,
+        accountId: state.form.accountId,
         password: state.form.password
       })
       .then((result) => {
@@ -78,7 +78,7 @@ export default {
         localStorage.setItem('access_token', result.data.accessToken)
         alert('access_token', result.data.accessToken)
         store.commit('root/setLoginState', true)
-        state.form.userid = ''
+        state.form.accountId = ''
         state.form.password = ''
         router.push({ name: 'Home' })
       })
