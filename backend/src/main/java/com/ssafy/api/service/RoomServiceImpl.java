@@ -40,6 +40,7 @@ public class RoomServiceImpl implements RoomService{
         room.setTitle(req.getTitle());
         room.setDescription(req.getDescription());
         room.setThumbnailUrl(req.getThumbnail_url());
+        // Todo: 썸네일 경로 중복없이 생성  /roomid/thum.png
         room.setCapacity(req.getCapacity());
         if(req.getPassword() != null) {
             room.setPassword(req.getPassword());
