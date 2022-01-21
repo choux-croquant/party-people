@@ -39,7 +39,7 @@ public class ListController {
 	})
 	public ResponseEntity<? extends BaseResponseBody> getRoomListByWord(
 		@RequestParam @ApiParam(value = "검색어", required = true) String word,
-		@RequestParam @ApiParam(value = "검색 키워드", required = true)  String include,
+		@RequestParam @ApiParam(value = "검색 키워드(제목 : title, 내용 : des)", required = true)  String include,
 		final Pageable pageable) {
 
 		Page<Room> roomList = listService.getRoomListByWord(word, include, pageable);

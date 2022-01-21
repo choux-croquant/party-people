@@ -23,12 +23,12 @@ public class ListServiceImpl implements ListService {
 
 	@Override
 	public Page<Room> getRoomList(Pageable pageable) {
-		return listRepository.findAll(pageable);
+		return listRepository.findByEndTime(null, pageable);
 	}
 
 	@Override
 	public Page<Room> getRoomListByWord(String word, String include, Pageable pageable) {
-		if(include.equals("title")) return listRepository.findByTitleContaining(word, pageable);
-		return listRepository.findByDescriptionContaining(word, pageable);
+		if(include.equals("title")) return listRepository.findByTitleContainingAndEndTimeIsNull(word, pageable);
+		return listRepository.findByDescriptionContainingAndEndTimeIsNull(word, pageable);
 	}
 }
