@@ -63,8 +63,11 @@ public class RoomController {
 	@PatchMapping("/host/{room_id}")
 	@ApiOperation(value = "파티룸 호스트 변경", notes = "파티룸의 호스트를 변경한다.")
 	@ApiResponses({
-			@ApiResponse(code = 201, message = "성공", response = UserLoginPostRes.class),
-			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 201, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 400, message = "요청 형식 오류", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 토큰 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 403, message = "변경 권한 없음 / 호스트 권한 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "세션 데이터 없음", response = BaseResponseBody.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<? extends BaseResponseBody> updateRoomHosts(
@@ -74,6 +77,21 @@ public class RoomController {
 
 		// 토큰이 없는 사용자가 파티룸 호스트 변경을 요청한 경우 : 401(Unauthorized Error반환)
 		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
+
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		Long userId = userDetails.getUser().getId();
+
+		// 해당 방에 접속하지 않은 사용자가 요청한 경우 : 403(변경 권한 없음)
+		if(roomService.isUserNotInCurrentSession(roomId, userId)) return ResponseEntity.status(403).body(BaseResponseBody.of(403, "퇴장 권한 없음"));
+
+		// 존재하지 않는 세션을 요청한 경우 : 404(세션 데이터 없음)
+		if (roomService.isNotSessionExist(roomId)) return ResponseEntity.status(404).body(BaseResponseBody.of(404, "세션 데이터 없음"));
+
+		// 현재 유저가 해당 방의 호스트가 아닌 경우 : 403(호스트 권한 없음)
+		if (roomService.isNotQualifiedHost(roomId, userId)) return ResponseEntity.status(403).body(BaseResponseBody.of(403, "호스트 권한 없음"));
+
+		// 호스트로 선택된 사용자가 한명도 없을 경우 : 400(요청 형식 오류)
+		if (roomService.isSelectedHostIsNone(req)) return ResponseEntity.status(400).body(BaseResponseBody.of(400, "요청 형식 오류"));
 
 		roomService.updateRoomHostInfo(roomId, req);
 		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
