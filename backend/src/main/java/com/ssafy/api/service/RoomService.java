@@ -26,4 +26,5 @@ public interface RoomService {
 	boolean isNotSessionExist(Long roomId);
 	boolean isSessionClosed(Long roomId);
 	boolean isNotQualifiedHost(Long roomId, Long userId);
+	boolean isUserNotInCurrentSession(Long roomId, Long userId);
 }

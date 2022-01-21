@@ -146,4 +146,10 @@ public class RoomServiceImpl implements RoomService{
         return session == null;
     }
 
+    @Override
+    // 해당 방에 접속해있는 사용자인지 확인
+    public boolean isUserNotInCurrentSession(Long roomId, Long userId){
+        return sessionRepositorySupport.isUserNotInCurrentSession(roomId, userId);
+    }
+
 }
