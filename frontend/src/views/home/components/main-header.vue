@@ -9,7 +9,7 @@
           <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
             <svg class="w-5 h-5 text-tc-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
           </div>
-          <input type="text" id="party-room-search" class="block border-0 appearance-none rounded-full shadow-md h-10 p-2 pl-10 w-full text-tc-200 bg-main-300 sm:text-sm focus:outline-none focus:border-main-100 focus:ring-2 focus:ring-main-100" placeholder="Search for party room">
+          <input v-model="state.searchValue" @keyup.enter="roomSearch()" type="text" id="party-room-search" class="block border-0 appearance-none rounded-full shadow-md h-10 p-2 pl-10 w-full text-tc-200 bg-main-300 sm:text-sm focus:outline-none focus:border-main-100 focus:ring-2 focus:ring-main-100" placeholder="Search for party room">
         </div>
       </div>
       
@@ -18,9 +18,8 @@
           <svg class="fill-current text-tc-500 ml-3 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/> </svg>
         </button>
         <ul class="dropdown-menu absolute hidden right-0 w-40 text-gray-700">
-          <button class="rounded-full w-32 h-10 mt-2 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">제목</button>
-          <button class="rounded-full w-32 h-10 mt-2 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">내용</button>
-          <button class="rounded-full w-32 h-10 mt-2 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">호스트</button>
+          <button @click="changeOption('title')" class="rounded-full w-32 h-10 mt-2 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">제목</button>
+          <button @click="changeOption('des')" class="rounded-full w-32 h-10 mt-2 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">내용</button>
         </ul>
       </div>
 
@@ -31,7 +30,7 @@
       </div>
       <div v-else class="flex-none hidden md:block">
         <button class="rounded-full w-32 h-10 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Add+</button>
-        <button @click="logOut()" class="rounded-full w-32 h-10 ml-4 font-bold shadow-lg bg-alert-200 text-tc-500 hover:bg-alert-100" type="button">Log-Out</button>  
+        <button @click="clickLogout()" class="rounded-full w-32 h-10 ml-4 font-bold shadow-lg bg-alert-200 text-tc-500 hover:bg-alert-100" type="button">Log-Out</button>  
       </div>
     </div>
   </nav>
@@ -118,12 +117,32 @@ export default {
     const state = reactive({
       loginState : computed(() => store.getters['root/getLoginState']),
       searchValue: null,
+      searchOption: 'title'
     })
 
-    const logOut = () => {
+    const clickLogout = () => {
       localStorage.removeItem('access_token')
       store.commit('root/setLoginState', false)
       router.push({ name: 'Home' })
+    }
+
+    const changeOption = (option) => {
+      state.searchOption = option
+    }
+
+    const roomSearch = () => {
+      console.log(state.searchValue)
+      store.dispatch('root/roomSearch', {
+        include: state.searchOption,
+        word: state.searchValue
+      })
+      .then((result) => {
+        console.log(result)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      state.searchValue = null
     }
     // if (state.activeIndex === -1) {
     //   state.activeIndex = 0
@@ -149,7 +168,7 @@ export default {
     //   state.isCollapse = !state.isCollapse
     // }
 
-    return { state, logOut }
+    return { state, clickLogout, changeOption, roomSearch }
   }
 }
 </script>
