@@ -14,3 +14,10 @@ export function requestSignup ({ state }, payload) {
   let body = payload
   return $axios.post(url, body)
 }
+
+export function roomSearch ({ state }, payload) {
+  console.log('roomSearch', state, payload)
+  const url = '/list/roomSearch'
+  let body = payload
+  return $axios.get(url, body) 
+}
