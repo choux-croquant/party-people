@@ -145,11 +145,22 @@ public class RoomController {
 		// 토큰이 없는 사용자가 파티룸 삭제를 요청한 경우 : 401(Unauthorized Error반환)
 		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
-		roomService.deleteRoom(roomId);
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		Long userId = userDetails.getUser().getId();
+
+		// 현재 유저가 해당 방의 호스트가 아닌 경우 : 403(호스트 권한 없음)
+		if (roomService.isNotQualifiedHost(roomId, userId))
+			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "호스트 권한 없음"));
+
+		// 종료된 파티룸 요청한 경우 : 403(세션 데이터 없음)
+		if(roomService.isSessionClosed(4L))
+			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "세션 권한 없음, 이미 삭제된 방"));
+
+		// roomService.deleteRoom(roomId);
 		// TODO: 강제 삭제하면, 세션 안에 있는 사람도 다 endtime 찍어내기
 
 		// TODO: 응답 값, 메소드 응답 값 수정
-		return ResponseEntity.status(200).body(null);
+		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "성공"));
 	}
 
 	@GetMapping("/{room_id}")
