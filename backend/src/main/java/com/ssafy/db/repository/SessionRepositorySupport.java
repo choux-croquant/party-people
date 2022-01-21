@@ -42,8 +42,6 @@ public class SessionRepositorySupport {
         Session session = jpaQueryFactory.select(qSession).from(qSession)
                 .where(qSession.user.id.eq(userId)).fetchOne();
 
-        System.out.println(session == null);
-
         return session == null;
     }
 }
