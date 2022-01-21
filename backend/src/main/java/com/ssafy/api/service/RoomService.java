@@ -28,4 +28,5 @@ public interface RoomService {
 	boolean isNotQualifiedHost(Long roomId, Long userId);
 	boolean isUserAccessOtherSession(Long userId);
 	boolean isUserNotInCurrentSession(Long roomId, Long userId);
+	boolean isSelectedHostIsNone(List<RoomHostUpdateReq> req);
 }

@@ -153,4 +153,12 @@ public class RoomServiceImpl implements RoomService {
         return sessionRepositorySupport.isUserNotInCurrentSession(roomId, userId);
     }
 
+    @Override
+    public boolean isSelectedHostIsNone(List<RoomHostUpdateReq> req) {
+        for (RoomHostUpdateReq request : req) {
+            if (request.getAction() == 1) return false;
+        }
+        return true;
+    }
+
 }
