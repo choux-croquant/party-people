@@ -52,4 +52,11 @@ public class SessionRepositorySupport {
 
         return session != null;
     }
+
+    // 유저 아이디로 해당 방 호스트인지 확인
+    public Session getSessionByRoomIdAndHostId(Long roomId, Long userId) {
+        Session session = jpaQueryFactory.select(qSession).from(qSession)
+                .where(qSession.room.id.eq(roomId).and(qSession.user.id.eq(userId)).and(qSession.isHost.isTrue())).fetchFirst();
+        return session;
+    }
 }
