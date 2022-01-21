@@ -10,7 +10,7 @@
       </div>
       <img class="w-40 h-24 mb-4 rounded mx-auto" alt="Vue logo" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg">
       <div class="mb-4">
-        <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="유저아이디" v-model="state.form.userid">
+        <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="유저아이디" v-model="state.form.accountId">
       </div>
       <div class="mb-4">
         <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="닉네임" v-model="state.form.nickname">
@@ -25,7 +25,7 @@
         <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="이메일" v-model="state.form.email">
       </div>
       <div class="mb-6">
-        <input class="shadow appearance-none border rounded-full w-full py-2 px-3 mb-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="전화번호" v-model="state.form.phonenumber">
+        <input class="shadow appearance-none border rounded-full w-full py-2 px-3 mb-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="전화번호" v-model="state.form.tel">
       </div>
       <div class="flex items-center justify-center">
         <button data-modal-toggle="SignupModal" class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold h-10 py-1 px-24 rounded-full focus:outline-none focus:shadow-outline" type="button" @click="signup">
@@ -54,33 +54,33 @@ export default {
     const router = useRouter()
     const state = reactive({
       form: {
-        userid: '',
+        accountId: '',
         nickname: '',
         password: '',
         passwordconfirm: '',
         email: '',
-        phonenumber: ''
+        tel: ''
       }
     })
 
     const signup = function () {
       console.log(state.form)
       store.dispatch('root/requestSignup', {
-        userid: state.form.userid,
+        accountId: state.form.accountId,
         nickname: state.form.nickname,
         password: state.form.password,
-        passwordconfirm: state.form.passwordconfirm,
+        // passwordconfirm: state.form.passwordconfirm,
         email: state.form.email,
-        phonenumber: state.form.phonenumber
+        tel: state.form.tel
       })
       .then((result) => {
         console.log(result)
-        state.form.userid = ''
+        state.form.accountId = ''
         state.form.nickname = ''
         state.form.password = ''
         state.form.passwordconfirm = ''
         state.form.email = ''
-        state.form.phonenumber = ''
+        state.form.tel = ''
         router.push({ name: 'Home' })
       })
       .catch((err) => {
