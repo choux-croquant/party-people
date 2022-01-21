@@ -24,4 +24,6 @@ public interface RoomService {
 	boolean roomEntry(User user, Long roomId, String password);
 	boolean checkRoomUserExist(Long roomId);
 	boolean isNotSessionExist(Long roomId);
+	boolean isSessionClosed(Long roomId);
+	boolean isNotQualifiedHost(Long roomId, Long userId);
 }

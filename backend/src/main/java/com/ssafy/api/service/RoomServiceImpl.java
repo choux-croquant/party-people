@@ -134,4 +134,10 @@ public class RoomServiceImpl implements RoomService{
         return room != null;
     }
 
+    @Override
+    public boolean isNotQualifiedHost(Long roomId, Long userId) {
+        Session session = sessionRepositorySupport.getSessionByRoomIdAndHostId(roomId, userId);
+        return session == null;
+    }
+
 }
