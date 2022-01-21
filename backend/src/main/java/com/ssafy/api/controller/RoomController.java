@@ -82,22 +82,31 @@ public class RoomController {
 	@PatchMapping("/exit/{room_id}")
 	@ApiOperation(value = "파티룸 퇴장", notes = "파티룸 소켓 통신을 끊고 접속한 파티룸에서 퇴장한다.")
 	@ApiResponses({
-			@ApiResponse(code = 201, message = "성공", response = UserLoginPostRes.class),
-			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 201, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 토큰 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 403, message = "퇴장 권한 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "세션 데이터 없음", response = BaseResponseBody.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<? extends BaseResponseBody> exitRoom(
 			@ApiIgnore Authentication authentication,
 			@PathVariable(name = "room_id")  @ApiParam(value="접속한 방 id", required = true) Long roomId) {
 
-		// 토큰이 없는 사용자가 파티룸 퇴장을 요청한 경우 : 401(Unauthorized Error반환)
-		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
+		// 토큰이 없는 사용자가 요청한 경우 : 401(인증 토큰 없음)
+		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "인증 토큰 없음"));
 
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 		Long userId = userDetails.getUser().getId();
 
+		// 해당 방에 접속하지 않은 사용자가 요청한 경우 : 403(퇴장 권한 없음)
+		if(roomService.isUserNotInCurrentSession(roomId, userId)) return ResponseEntity.status(403).body(BaseResponseBody.of(403, "퇴장 권한 없음"));
+
+		// 종료된 파티룸 요청한 경우 : 404(세션 데이터 없음)
+		if(roomService.isSessionClosed(roomId))return ResponseEntity.status(404).body(BaseResponseBody.of(404, "세션 데이터 없음"));
+
 		roomService.updateSessionEndTime(roomId, userId);
-        if (!roomService.checkRoomUserExist(roomId)) roomService.deleteRoom(roomId);
+		// 현재 퇴장하는 사용자가 마지막 사용자이거나 호스트인 경우 파티룸 삭제 처리
+		if (!roomService.checkRoomUserExist(roomId) || !roomService.isNotQualifiedHost(roomId, userId)) roomService.deleteRoom(roomId);
 		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
 	}
 
