@@ -154,8 +154,12 @@ public class RoomController {
 
 		// TODO : 파티룸 생성 후 입장 방법 정하기, 프론트에서 POST 입장 한번 더 보내줄지, 여기서 처리할 지
 		// TODO: 응답 값, 메소드 응답 값 수정
+		roomService.createRoom(req);
+		/*
+		프로그램 흐름 제어 : 백에서 파티룸 생성 후 프론트에서 파티룸 입장 post 요청 보냄
 		Room room = roomService.createRoom(req);
 		roomService.createSession(room.getId(), userId, true);
+		 */
 
 		return ResponseEntity.status(200).body(null);
 	}
