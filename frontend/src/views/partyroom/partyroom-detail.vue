@@ -1,7 +1,9 @@
 <template>
   <div class="h-screen w-screen flex bg-tc-500">
-    <room-sidebar></room-sidebar>
-    <room-chat></room-chat>
+    <div class="fixed inset-0 flex z-40">
+      <room-sidebar></room-sidebar>
+      <room-chat></room-chat>
+    </div>
   </div>
 </template>
 <style>
