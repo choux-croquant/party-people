@@ -79,6 +79,14 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
+    public boolean isNotSessionExist(Long roomId) {
+        List<Session> list = sessionRepository.findByRoomId(roomId);
+
+        if(list.isEmpty()) return true;
+        return false;
+    }
+
+    @Override
     public Room findByRoomId(Long roomId) {
         return roomRepository.findById(roomId).get();
     }
