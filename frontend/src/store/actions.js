@@ -5,6 +5,7 @@ export function requestLogin ({ state }, payload) {
   console.log('requestLogin', state, payload)
   const url = '/auth/login'
   let body = payload
+  console.log(url)
   return $axios.post(url, body)
 }
 
