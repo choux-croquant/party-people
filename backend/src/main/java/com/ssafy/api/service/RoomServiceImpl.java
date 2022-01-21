@@ -29,13 +29,8 @@ public class RoomServiceImpl implements RoomService {
     SessionRepositorySupport sessionRepositorySupport;
 
     @Override
-    public Room createRoom(RoomCreatePostReq req, Long userId) {
+    public Room createRoom(RoomCreatePostReq req) {
         Room room = new Room();
-
-        // 이미 세션에 접속한 사용자(session 테이블에 데이터가 존재하고 end_time이 null인 데이터가 있음)가 또 다른 파티룸을 생성할 경우 예외처리
-        if (sessionRepositorySupport.isUserAccessOtherSession(userId)) {
-            return null;
-        }
 
         room.setTitle(req.getTitle());
         room.setDescription(req.getDescription());

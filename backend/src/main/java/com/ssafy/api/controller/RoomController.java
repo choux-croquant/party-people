@@ -118,10 +118,13 @@ public class RoomController {
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 		Long userId = userDetails.getUser().getId();
 
+		// 이미 세션에 접속한 사용자
+		if (roomService.isUserAccessOtherSession(userId))
+			return ResponseEntity.status(403).body(null);
+
 		// TODO : 파티룸 생성 후 입장 방법 정하기, 프론트에서 POST 입장 한번 더 보내줄지, 여기서 처리할 지
 		// TODO: 응답 값, 메소드 응답 값 수정
-		if (roomService.createRoom(req, userId) == null)
-			return ResponseEntity.status(403).body(null);
+		roomService.createRoom(req);
 
 		return ResponseEntity.status(200).body(null);
 	}
@@ -162,6 +165,18 @@ public class RoomController {
 
 		// 토큰이 없는 사용자가 파티룸 입장(링크 접속)을 요청한 경우 : 401(Unauthorized Error반환)
 		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
+
+		// 이미 세션이 종료된 파티룸에 입장을 시도하는 경우
+		if(roomService.isSessionClosed(roomId))
+			return ResponseEntity.status(404).body(BaseResponseBody.of(403, "세션 생성 금지"));
+
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		User user = userDetails.getUser();
+
+		// 이미 세션에 접속한 사용자
+		if (roomService.isUserAccessOtherSession(user.getId()))
+			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "세션 생성 금지"));
+
 
 		Room room = roomService.findByRoomId(roomId);
 		return ResponseEntity.status(200).body(RoomEntryLinkRes.of(200, "Success", room));
