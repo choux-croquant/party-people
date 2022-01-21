@@ -75,6 +75,14 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    public void closeAllUserSession(Long roomId) {
+        List<User> userList = getRoomUserListByRoomId(roomId);
+        for (User user : userList) {
+            updateSessionEndTime(roomId, user.getId());
+        }
+    }
+
+    @Override
     public boolean checkRoomUserExist(Long roomId) {
         List<Session> sessions = getSessionsByRoomId(roomId);
         for (Session session : sessions) {

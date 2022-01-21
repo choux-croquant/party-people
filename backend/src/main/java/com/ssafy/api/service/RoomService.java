@@ -20,6 +20,7 @@ public interface RoomService {
 	List<Session> getSessionsByRoomId(Long roomId);
 	void updateRoomHostInfo(Long roomId, List<RoomHostUpdateReq> updateHostReq);
 	void updateSessionEndTime(Long roomId, Long userId);
+	void closeAllUserSession(Long roomId);
 	Room findByRoomId(Long roomId);
 	boolean roomEntry(User user, Long roomId, String password);
 	boolean checkRoomUserExist(Long roomId);
