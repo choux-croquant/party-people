@@ -108,9 +108,11 @@ public class RoomController {
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 		Long userId = userDetails.getUser().getId();
 
-		roomService.createRoom(req, userId);
 		// TODO : 파티룸 생성 후 입장 방법 정하기, 프론트에서 POST 입장 한번 더 보내줄지, 여기서 처리할 지
 		// TODO: 응답 값, 메소드 응답 값 수정
+		if (roomService.createRoom(req, userId) == null)
+			return ResponseEntity.status(403).body(null);
+
 		return ResponseEntity.status(200).body(null);
 	}
 
