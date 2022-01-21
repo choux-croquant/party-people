@@ -5,24 +5,27 @@ import com.ssafy.api.request.RoomHostUpdateReq;
 import com.ssafy.db.entity.Room;
 import com.ssafy.db.entity.Session;
 import com.ssafy.db.entity.User;
-import com.ssafy.db.repository.RoomRepository;
-import com.ssafy.db.repository.SessionRepository;
-import com.ssafy.db.repository.SessionRepositorySupport;
+import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Service("roomService")
-public class RoomServiceImpl implements RoomService{
+public class RoomServiceImpl implements RoomService {
     @Autowired
     RoomRepository roomRepository;
+    @Autowired
+    RoomRepositorySupport roomRepositorySupport;
     @Autowired
     SessionRepository sessionRepository;
     @Autowired
     SessionRepositorySupport sessionRepositorySupport;
+    @Autowired
+    UserRepository userRepository;
 
     @Override
     public Room createRoom(RoomCreatePostReq req) {
@@ -31,8 +34,9 @@ public class RoomServiceImpl implements RoomService{
         room.setTitle(req.getTitle());
         room.setDescription(req.getDescription());
         room.setThumbnailUrl(req.getThumbnail_url());
+        // Todo: 썸네일 경로 중복없이 생성  /roomid/thum.png
         room.setCapacity(req.getCapacity());
-        if(req.getPassword() != null) {
+        if (req.getPassword() != null) {
             room.setPassword(req.getPassword());
             room.setLocked(true);
         }
@@ -70,6 +74,14 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
+    public void closeAllUserSession(Long roomId) {
+        List<User> userList = getRoomUserListByRoomId(roomId);
+        for (User user : userList) {
+            updateSessionEndTime(roomId, user.getId());
+        }
+    }
+
+    @Override
     public boolean checkRoomUserExist(Long roomId) {
         List<Session> sessions = getSessionsByRoomId(roomId);
         for (Session session : sessions) {
@@ -82,7 +94,7 @@ public class RoomServiceImpl implements RoomService{
     public boolean isNotSessionExist(Long roomId) {
         List<Session> list = sessionRepository.findByRoomId(roomId);
 
-        if(list.isEmpty()) return true;
+        if (list.isEmpty()) return true;
         return false;
     }
 
@@ -95,14 +107,14 @@ public class RoomServiceImpl implements RoomService{
     public boolean roomEntry(User user, Long roomId, String password) {
         Room room = roomRepository.findById(roomId).get();
         // TODO: capacity 확인
-        if(room.getPassword() == null) {
+        if (room.getPassword() == null) {
             Session session = new Session();
             session.setUser(user);
             session.setRoom(room);
             sessionRepository.save(session);
             return true;
         }
-        if(room.getPassword().equals(password)) {
+        if (room.getPassword().equals(password)) {
             Session session = new Session();
             session.setUser(user);
             session.setRoom(room);
@@ -122,5 +134,54 @@ public class RoomServiceImpl implements RoomService{
         curDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         room.setEndTime(curDateTime);
         return roomRepository.save(room);
+    }
+
+    @Override
+    public boolean isSessionClosed(Long roomId) {
+        Room room = roomRepositorySupport.getActiveRoomByRoomId(roomId);
+        return room != null;
+    }
+
+    @Override
+    public boolean isNotQualifiedHost(Long roomId, Long userId) {
+        Session session = sessionRepositorySupport.getSessionByRoomIdAndHostId(roomId, userId);
+        return session == null;
+    }
+
+    @Override
+    // 이미 세션에 접속한 사용자가 다른 세션에 접근할 때 예외처리
+    public boolean isUserAccessOtherSession(Long userId) {
+        return sessionRepositorySupport.isUserAccessOtherSession(userId);
+    }
+
+    @Override
+    // 해당 방에 접속해있는 사용자인지 확인
+    public boolean isUserNotInCurrentSession(Long roomId, Long userId) {
+        return sessionRepositorySupport.isUserNotInCurrentSession(roomId, userId);
+    }
+
+    @Override
+    public boolean isSelectedHostIsNone(List<RoomHostUpdateReq> req) {
+        for (RoomHostUpdateReq request : req) {
+            if (request.getAction() == 1) return false;
+        }
+        return true;
+    }
+
+    @Override
+    // 사용자가 방에 입장
+    public void createSession(Long roomId, Long userId, boolean isHost) {
+        Room room = roomRepository.findById(roomId).get();
+        User user = userRepository.findByAccountId(Long.toString(userId));
+        Session session = new Session();
+
+        if(room == null || user == null)
+            return;
+
+        session.setRoom(room);
+        session.setUser(user);
+        session.setHost(isHost);
+
+        sessionRepository.save(session);
     }
 }

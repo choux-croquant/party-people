@@ -2,7 +2,7 @@
 <template>
   <div class="flex justify-center">
     <div class="w-full max-w-xs">
-      <form class="bg-main-300 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <form class="bg-main-300 shadow-md rounded px-8 pt-6 pb-8 mb-4" >
         <div class="flex justify-between items-start rounded-t border-b bg-main-300">
           <button type="button" class="text-tc-500 bg-alert-200 hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="LoginModal">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
@@ -12,9 +12,10 @@
         <div class="mb-4">
           <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="유저아이디" v-model="state.form.accountId">
         </div>
-        <div class="mb-6">
+        <div class="mb-1">
           <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="비밀번호" v-model="state.form.password">
         </div>
+        <p class="mb-6 text-red-600" v-if="state.loginErr"> * 아이디나 비밀번호를 확인해주세요.</p>
         <div class="flex items-center justify-center">
           <button data-modal-toggle="LoginModal" @click="login" class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold h-10 py-1 px-24 rounded-full focus:outline-none focus:shadow-outline" type="button" >
             로그인
@@ -29,21 +30,6 @@
       </p>
     </div>
   </div>
-  <!-- <el-dialog custom-class="login-dialog" title="로그인" v-model="state.dialogVisible" @close="handleClose">
-    <el-form :model="state.form" :rules="state.rules" ref="loginForm" :label-position="state.form.align">
-      <el-form-item prop="id" label="아이디" :label-width="state.formLabelWidth" >
-        <el-input v-model="state.form.id" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item prop="password" label="비밀번호" :label-width="state.formLabelWidth">
-        <el-input v-model="state.form.password" autocomplete="off" show-password></el-input>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button type="primary" @click="clickLogin">로그인</el-button>
-      </span>
-    </template>
-  </el-dialog> -->
 </template>
 <style>
 
@@ -64,7 +50,8 @@ export default {
       form: {
         accountId: '',
         password: '',
-      }
+      },
+      loginErr: false
     })
     
     const login = function () {
@@ -74,16 +61,18 @@ export default {
         password: state.form.password
       })
       .then((result) => {
-        console.log(result)
+        console.log(result, 'asdf')
+        console.log(result.data.accessToken)
         localStorage.setItem('access_token', result.data.accessToken)
-        alert('access_token', result.data.accessToken)
         store.commit('root/setLoginState', true)
         state.form.accountId = ''
         state.form.password = ''
+        state.loginErr = false
         router.push({ name: 'Home' })
       })
       .catch((err) => {
         console.log(err)
+        state.loginErr = true
       })
     }
 
