@@ -16,7 +16,7 @@
           <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="비밀번호" v-model="state.form.password">
         </div>
         <div class="flex items-center justify-center">
-          <button data-modal-toggle="LoginModal" @click="clickLogin" class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold h-10 py-1 px-24 rounded-full focus:outline-none focus:shadow-outline" type="button" >
+          <button data-modal-toggle="LoginModal" @click="login" class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold h-10 py-1 px-24 rounded-full focus:outline-none focus:shadow-outline" type="button" >
             로그인
           </button>
           <!-- <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
@@ -52,12 +52,14 @@
 <script>
 import { reactive } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 export default {
   name: 'LoginModal',
 
   setup() {
     const store = useStore()
+    const router = useRouter()
     const state = reactive({
       form: {
         userid: '',
@@ -72,11 +74,13 @@ export default {
         password: state.form.password
       })
       .then((result) => {
-        console.alog(result)
+        console.log(result)
         localStorage.setItem('access_token', result.data.accessToken)
         alert('access_token', result.data.accessToken)
+        store.commit('root/setLoginState', true)
         state.form.userid = ''
         state.form.password = ''
+        router.push({ name: 'Home' })
       })
       .catch((err) => {
         console.log(err)
