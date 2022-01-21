@@ -40,7 +40,7 @@ public class SessionRepositorySupport {
     // 이미 세션에 접속한 사용자가 다른 세션에 접근할 때 예외처리
     public boolean isUserAccessOtherSession(Long userId){
         Session session = jpaQueryFactory.select(qSession).from(qSession)
-                .where(qSession.user.id.eq(userId)).fetchOne();
+                .where(qSession.user.id.eq(userId).and(qSession.endTime.isNull())).fetchOne();
 
         return session != null;
     }

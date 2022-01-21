@@ -105,7 +105,10 @@ public class RoomController {
 		// 토큰이 없는 사용자가 파티룸 생성을 요청한 경우 : 401(Unauthorized Error반환)
 		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
 
-		roomService.createRoom(req);
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		Long userId = userDetails.getUser().getId();
+
+		roomService.createRoom(req, userId);
 		// TODO : 파티룸 생성 후 입장 방법 정하기, 프론트에서 POST 입장 한번 더 보내줄지, 여기서 처리할 지
 		// TODO: 응답 값, 메소드 응답 값 수정
 		return ResponseEntity.status(200).body(null);
