@@ -14,7 +14,7 @@ import java.util.Optional;
  *	유저 관련 비즈니스 로직 처리를 위한 서비스 인터페이스 정의.
  */
 public interface RoomService {
-	Room createRoom(RoomCreatePostReq roomCreatePostReq, Long userId);
+	Room createRoom(RoomCreatePostReq roomCreatePostReq);
 	Room deleteRoom(long roomId);
 	List<User> getRoomUserListByRoomId(Long roomId);
 	List<Session> getSessionsByRoomId(Long roomId);
@@ -26,4 +26,6 @@ public interface RoomService {
 	boolean isNotSessionExist(Long roomId);
 	boolean isSessionClosed(Long roomId);
 	boolean isNotQualifiedHost(Long roomId, Long userId);
+	boolean isUserAccessOtherSession(Long userId);
+	boolean isUserNotInCurrentSession(Long roomId, Long userId);
 }

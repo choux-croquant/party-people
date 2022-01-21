@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service("roomService")
-public class RoomServiceImpl implements RoomService{
+public class RoomServiceImpl implements RoomService {
     @Autowired
     RoomRepository roomRepository;
     @Autowired
@@ -29,20 +29,15 @@ public class RoomServiceImpl implements RoomService{
     SessionRepositorySupport sessionRepositorySupport;
 
     @Override
-    public Room createRoom(RoomCreatePostReq req, Long userId) {
+    public Room createRoom(RoomCreatePostReq req) {
         Room room = new Room();
-
-        // 이미 세션에 접속한 사용자(session 테이블에 데이터가 존재하고 end_time이 null인 데이터가 있음)가 또 다른 파티룸을 생성할 경우 예외처리
-        if (sessionRepositorySupport.isUserAccessOtherSession(userId)){
-            return null;
-        }
 
         room.setTitle(req.getTitle());
         room.setDescription(req.getDescription());
         room.setThumbnailUrl(req.getThumbnail_url());
         // Todo: 썸네일 경로 중복없이 생성  /roomid/thum.png
         room.setCapacity(req.getCapacity());
-        if(req.getPassword() != null) {
+        if (req.getPassword() != null) {
             room.setPassword(req.getPassword());
             room.setLocked(true);
         }
@@ -92,7 +87,7 @@ public class RoomServiceImpl implements RoomService{
     public boolean isNotSessionExist(Long roomId) {
         List<Session> list = sessionRepository.findByRoomId(roomId);
 
-        if(list.isEmpty()) return true;
+        if (list.isEmpty()) return true;
         return false;
     }
 
@@ -105,14 +100,14 @@ public class RoomServiceImpl implements RoomService{
     public boolean roomEntry(User user, Long roomId, String password) {
         Room room = roomRepository.findById(roomId).get();
         // TODO: capacity 확인
-        if(room.getPassword() == null) {
+        if (room.getPassword() == null) {
             Session session = new Session();
             session.setUser(user);
             session.setRoom(room);
             sessionRepository.save(session);
             return true;
         }
-        if(room.getPassword().equals(password)) {
+        if (room.getPassword().equals(password)) {
             Session session = new Session();
             session.setUser(user);
             session.setRoom(room);
@@ -144,6 +139,18 @@ public class RoomServiceImpl implements RoomService{
     public boolean isNotQualifiedHost(Long roomId, Long userId) {
         Session session = sessionRepositorySupport.getSessionByRoomIdAndHostId(roomId, userId);
         return session == null;
+    }
+
+    @Override
+    // 이미 세션에 접속한 사용자가 다른 세션에 접근할 때 예외처리
+    public boolean isUserAccessOtherSession(Long userId) {
+        return sessionRepositorySupport.isUserAccessOtherSession(userId);
+    }
+
+    @Override
+    // 해당 방에 접속해있는 사용자인지 확인
+    public boolean isUserNotInCurrentSession(Long roomId, Long userId) {
+        return sessionRepositorySupport.isUserNotInCurrentSession(roomId, userId);
     }
 
 }
