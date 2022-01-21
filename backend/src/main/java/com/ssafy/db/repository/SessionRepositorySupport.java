@@ -50,7 +50,7 @@ public class SessionRepositorySupport {
         Session session = jpaQueryFactory.select(qSession).from(qSession)
                 .where(qSession.room.id.eq(roomId).and(qSession.user.id.eq(userId))).fetchOne();
 
-        return session != null;
+        return session == null;
     }
 
     // 유저 아이디로 해당 방 호스트인지 확인
