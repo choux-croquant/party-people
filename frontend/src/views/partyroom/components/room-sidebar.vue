@@ -9,7 +9,7 @@
         <!-- toggle button -->
         <button
           @click.prevent="toggle"
-          class="w-6 h-48 p-0 my-auto rounded-r-full text-white bg-main-200 text-center focus:outline-none hover:bg-gray-500 transition-color duration-300"
+          class="w-6 h-48 p-0 my-auto rounded-r-full cursor-pointer text-white bg-main-200 text-center focus:outline-none hover:bg-gray-500 transition-color duration-300"
         >
           <svg class="p-0" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="40" height="40" fill="white" fill-opacity="0.01"/>
@@ -25,7 +25,7 @@
         >
 
           <!-- contents button -->
-          <div class="hover:bg-sub-300 w-full" v-show="showContentBtn" @click="clickContentBtn">
+          <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showContentBtn" @click="clickContentBtn">
             <a
               class="h-24 px-6 flex flex-col justify-center items-center w-full"
             >
@@ -58,7 +58,7 @@
           </div>
 
           <!-- video customizing button -->
-          <div class="hover:bg-sub-300 w-full" v-show="showVideoBtn">
+          <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showVideoBtn">
             <a 
               class="h-24 px-6 flex flex-col justify-center items-center w-full"
             >
@@ -70,7 +70,7 @@
           </div>
 
           <!-- room customizing button -->
-          <div class="hover:bg-sub-300 w-full" v-show="showRoomBtn">
+          <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showRoomBtn">
             <a 
               class="h-24 px-6 flex flex-col justify-center items-center w-full"
             >
@@ -88,7 +88,7 @@
           </div>
 
           <!-- link button -->
-          <div class="hover:bg-sub-300 w-full" v-show="showLinkBtn">
+          <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showLinkBtn" @click="clickLinkBtn">
             <a 
               class="h-24 px-6 flex flex-col justify-center items-center w-full"
             >
@@ -110,7 +110,7 @@
           </div>
 
           <!-- timer button -->
-          <div class="hover:bg-sub-300 w-full" v-show="showTimerBtn" @click="clickTimerBtn">
+          <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showTimerBtn" @click="clickTimerBtn">
             <a
               class="h-24 px-6 flex flex-col justify-center items-center w-full"
             >
@@ -125,7 +125,7 @@
           </div>
 
           <!-- roulette button -->
-          <div class="hover:bg-sub-300 w-full" v-show="showRouletteBtn" @click="clickRouletteBtn">
+          <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showRouletteBtn" @click="clickRouletteBtn">
             <a
               class="h-24 px-6 flex flex-col justify-center items-center w-full"
             >
@@ -182,7 +182,7 @@
           </div>
 
           <!-- whiteboard button -->
-          <div class="hover:bg-sub-300 w-full" v-show="showWhiteboardBtn" @click="clickWhiteboardBtn">
+          <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showWhiteboardBtn" @click="clickWhiteboardBtn">
             <a
               class="h-24 px-6 flex flex-col justify-center items-center w-full"
             >
@@ -198,7 +198,7 @@
           </div>
 
           <!-- vote button -->
-          <div class="hover:bg-sub-300 w-full" v-show="showVoteBtn" @click="clickVoteBtn">
+          <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showVoteBtn" @click="clickVoteBtn">
             <a
               class="h-24 px-6 flex flex-col justify-center items-center w-full"
             >
@@ -210,7 +210,7 @@
           </div>
 
           <!-- back button -->
-          <div class="hover:bg-sub-300 w-full" v-show="showBackBtn" @click="clickBackBtn">
+          <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showBackBtn" @click="clickBackBtn">
             <a 
               class="h-24 px-6 flex flex-col justify-center items-center w-full"
             >
@@ -292,32 +292,47 @@ export default {
       console.log(this.isSidebarOpen)
     },
 
-    clickContentBtn() {
+    resetBtns() {
       this.showContentBtn = false
       this.showVideoBtn = false
       this.showRoomBtn = false
       this.showLinkBtn = false
 
-      this.showTimerBtn = true
-      this.showRouletteBtn = true
-      this.showWhiteboardBtn = true
-      this.showVoteBtn = true
-
-      this.showBackBtn = true
-    },
-
-    clickBackBtn() {
-      this.showContentBtn = true
-      this.showVideoBtn = true
-      this.showRoomBtn = true
-      this.showLinkBtn = true
-
       this.showTimerBtn = false
       this.showRouletteBtn = false
       this.showWhiteboardBtn = false
       this.showVoteBtn = false
-
       this.showBackBtn = false
+    },
+
+    clickContentBtn() {
+      this.resetBtns()
+
+      this.showTimerBtn = true
+      this.showRouletteBtn = true
+      this.showWhiteboardBtn = true
+      this.showVoteBtn = true
+      this.showBackBtn = true
+    },
+
+    clickBackBtn() {
+      this.resetBtns()
+
+      this.showContentBtn = true
+      this.showVideoBtn = true
+      this.showRoomBtn = true
+      this.showLinkBtn = true
+    },
+
+    clickLinkBtn() {
+      let t = document.createElement("textarea");
+      document.body.appendChild(t);
+      t.value = window.document.location.href;  // 현재 접속 중인 url
+      t.select();
+      document.execCommand('copy');
+      document.body.removeChild(t);
+      
+      console.log('url 복사 완료!')
     }
   }
 };
