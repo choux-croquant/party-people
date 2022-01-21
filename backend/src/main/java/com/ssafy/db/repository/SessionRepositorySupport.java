@@ -20,7 +20,7 @@ public class SessionRepositorySupport {
 
     public List<User> findUsersByRoomId(Long roomId) {
         List<User> users = jpaQueryFactory.select(qSession.user).from(qSession)
-                .where(qSession.room.id.eq(roomId)).fetch();
+                .where(qSession.room.id.eq(roomId).and(qSession.endTime.isNull())).fetch();
         return users;
     }
 
@@ -35,7 +35,6 @@ public class SessionRepositorySupport {
                 .where(qSession.room.id.eq(roomId).and(qSession.user.id.eq(userId))).fetchOne();
         return session;
     }
-
 
     // 이미 세션에 접속한 사용자가 다른 세션에 접근할 때 예외처리
     public boolean isUserAccessOtherSession(Long userId){
