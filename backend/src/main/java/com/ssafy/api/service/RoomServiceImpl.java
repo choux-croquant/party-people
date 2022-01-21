@@ -6,6 +6,7 @@ import com.ssafy.db.entity.Room;
 import com.ssafy.db.entity.Session;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.RoomRepository;
+import com.ssafy.db.repository.RoomRepositorySupport;
 import com.ssafy.db.repository.SessionRepository;
 import com.ssafy.db.repository.SessionRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,14 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Service("roomService")
 public class RoomServiceImpl implements RoomService{
     @Autowired
     RoomRepository roomRepository;
+    @Autowired
+    RoomRepositorySupport roomRepositorySupport;
     @Autowired
     SessionRepository sessionRepository;
     @Autowired
@@ -115,4 +119,11 @@ public class RoomServiceImpl implements RoomService{
         room.setEndTime(curDateTime);
         return roomRepository.save(room);
     }
+
+    @Override
+    public boolean isSessionClosed(Long roomId) {
+        Room room = roomRepositorySupport.getActiveRoomByRoomId(roomId);
+        return room != null;
+    }
+
 }

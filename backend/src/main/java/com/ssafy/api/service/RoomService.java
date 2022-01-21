@@ -23,4 +23,5 @@ public interface RoomService {
 	Room findByRoomId(Long roomId);
 	boolean roomEntry(User user, Long roomId, String password);
 	boolean checkRoomUserExist(Long roomId);
+	boolean isSessionClosed(Long roomId);
 }
