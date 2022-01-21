@@ -5,10 +5,7 @@ import com.ssafy.api.request.RoomHostUpdateReq;
 import com.ssafy.db.entity.Room;
 import com.ssafy.db.entity.Session;
 import com.ssafy.db.entity.User;
-import com.ssafy.db.repository.RoomRepository;
-import com.ssafy.db.repository.RoomRepositorySupport;
-import com.ssafy.db.repository.SessionRepository;
-import com.ssafy.db.repository.SessionRepositorySupport;
+import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +24,8 @@ public class RoomServiceImpl implements RoomService {
     SessionRepository sessionRepository;
     @Autowired
     SessionRepositorySupport sessionRepositorySupport;
+    @Autowired
+    UserRepository userRepository;
 
     @Override
     public Room createRoom(RoomCreatePostReq req) {
@@ -169,4 +168,20 @@ public class RoomServiceImpl implements RoomService {
         return true;
     }
 
+    @Override
+    // 사용자가 방에 입장
+    public void createSession(Long roomId, Long userId, boolean isHost) {
+        Room room = roomRepository.findById(roomId).get();
+        User user = userRepository.findByAccountId(Long.toString(userId));
+        Session session = new Session();
+
+        if(room == null || user == null)
+            return;
+
+        session.setRoom(room);
+        session.setUser(user);
+        session.setHost(isHost);
+
+        sessionRepository.save(session);
+    }
 }

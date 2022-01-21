@@ -28,8 +28,8 @@ import java.util.List;
 @RequestMapping("/api/v1/rooms")
 public class RoomController {
 
-    @Autowired
-    RoomService roomService;
+	@Autowired
+	RoomService roomService;
 
 	@GetMapping("/users/{room_id}")
 	@ApiOperation(value = "파티룸 접속 사용자 리스트 조회", notes = "사용자 닉네임을 포함하는 파티룸 내 사용자 객체 리스트를 반환한다.")
@@ -154,7 +154,8 @@ public class RoomController {
 
 		// TODO : 파티룸 생성 후 입장 방법 정하기, 프론트에서 POST 입장 한번 더 보내줄지, 여기서 처리할 지
 		// TODO: 응답 값, 메소드 응답 값 수정
-		roomService.createRoom(req);
+		Room room = roomService.createRoom(req);
+		roomService.createSession(room.getId(), userId, true);
 
 		return ResponseEntity.status(200).body(null);
 	}
@@ -223,17 +224,17 @@ public class RoomController {
 		return ResponseEntity.status(200).body(RoomEntryLinkRes.of(200, "Success", room));
 	}
 
-    @PostMapping("/{room_id}")
-    @ApiOperation(value = "파티룸 입장", notes = "<strong>파티룸</strong>입장시 비밀번호를 확인하고 입장한다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
-            @ApiResponse(code = 403, message = "인증 실패", response = BaseResponseBody.class),
-            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
-    })
-    public ResponseEntity<? extends BaseResponseBody> roomEntry(
-            @ApiIgnore Authentication authentication,
-            @PathVariable(name = "room_id") @ApiParam(value = "파티룸 번호", required = true)  Long roomId,
-            @RequestBody @ApiParam(value = "파티룸 비밀번호", required = true) RoomEntryPostReq req) {
+	@PostMapping("/{room_id}")
+	@ApiOperation(value = "파티룸 입장", notes = "<strong>파티룸</strong>입장시 비밀번호를 확인하고 입장한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
+			@ApiResponse(code = 403, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+	})
+	public ResponseEntity<? extends BaseResponseBody> roomEntry(
+			@ApiIgnore Authentication authentication,
+			@PathVariable(name = "room_id") @ApiParam(value = "파티룸 번호", required = true)  Long roomId,
+			@RequestBody @ApiParam(value = "파티룸 비밀번호", required = true) RoomEntryPostReq req) {
 
 		// TODO: 호스트인지 확인하는 코드 추가
 
@@ -243,9 +244,9 @@ public class RoomController {
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 		User user = userDetails.getUser();
 
-        if(roomService.roomEntry(user, roomId, req.getPassword())) {
+		if(roomService.roomEntry(user, roomId, req.getPassword())) {
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 		}
-        return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Failed"));
-    }
+		return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Failed"));
+	}
 }
