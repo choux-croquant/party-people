@@ -25,8 +25,8 @@
 
       <div class="flex-none hidden md:block w-1/6"></div>
       <div v-if="!state.loginState" class="flex-none hidden md:block">
-        <button data-modal-toggle="LoginModal" class="rounded-full w-32 h-10 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Login</button>
-        <button data-modal-toggle="SignupModal" class="rounded-full w-32 h-10 ml-4 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Sign-Up</button>  
+        <button @click="clickLogin()" class="rounded-full w-32 h-10 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Login</button>
+        <button @click="clickSignup()" class="rounded-full w-32 h-10 ml-4 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Sign-Up</button>  
       </div>
       <div v-else class="flex-none hidden md:block">
         <button class="rounded-full w-32 h-10 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Add+</button>
@@ -35,70 +35,18 @@
     </div>
   </nav>
 
-
   <!-- Login modal -->
-  <div id="LoginModal" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center h-modal md:h-full md:inset-0">
-    <login-modal />
-  </div>
+  <login-modal ref="loginModal"/>
   <!-- Signup modal -->
-  <div id="SignupModal" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center h-modal md:h-full md:inset-0">
-    <signup-modal />
-  </div>
-  
-  <!-- <el-row
-    class="main-header"
-    :gutter="10"
-    :style="{ 'height': height }">
-    <div class="hide-on-small">
-      <div class="logo-wrapper" @click="clickLogo"><div class="ic ic-logo"/></div>
-      <div class="tool-wrapper">
-        <div class="search-field">
-          <el-input
-            placeholder="검색"
-            prefix-icon="el-icon-search"
-            v-model="state.searchValue">
-          </el-input>
-        </div>
-        <div class="button-wrapper">
-          <el-button round type="primary">회원가입</el-button>
-          <el-button type="primary" @click="clickLogin">로그인</el-button>
-        </div>
-      </div>
-
-    </div>
-    <div class="hide-on-big">
-      <div class="menu-icon-wrapper" @click="changeCollapse"><i class="el-icon-menu"></i></div>
-      <div class="logo-wrapper" @click="clickLogo"><div class="ic ic-logo"/></div>
-      <div class="menu-icon-wrapper"><i class="el-icon-search"></i></div>
-      <div class="mobile-sidebar-wrapper" v-if="!state.isCollapse">
-        <div class="mobile-sidebar">
-          <div class="mobile-sidebar-tool-wrapper">
-            <div class="logo-wrapper"><div class="ic ic-logo"/></div>
-            <el-button type="primary" class="mobile-sidebar-btn login-btn" @click="clickLogin">로그인</el-button>
-            <el-button class="mobile-sidebar-btn register-btn">회원가입</el-button>
-          </div>
-          <el-menu
-            :default-active="String(state.activeIndex)"
-            active-text-color="#ffd04b"
-            class="el-menu-vertical-demo"
-            @select="menuSelect">
-            <el-menu-item v-for="(item, index) in state.menuItems" :key="index" :index="index.toString()">
-              <i v-if="item.icon" :class="['ic', item.icon]"/>
-              <span>{{ item.title }}</span>
-            </el-menu-item>
-          </el-menu>
-        </div>
-        <div class="mobile-sidebar-backdrop" @click="changeCollapse"></div>
-      </div>
-    </div>
-  </el-row> -->
+  <signup-modal ref="signupModal"/>
 </template>
 <script>
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import LoginModal from './login-modal.vue'
-import SignupModal from './signup-modal.vue'
+import SignupModal from '@/teleport/signup-modal.vue'
+import LoginModal from '@/teleport/login-modal.vue'
+
 export default {
   name: 'main-header',
 
@@ -106,13 +54,11 @@ export default {
     LoginModal,
     SignupModal
   },
-  props: {
-    
-  },
-
   setup() {
     const store = useStore()
     const router = useRouter()
+    const signupModal = ref(null)
+    const loginModal = ref(null)
 
     const state = reactive({
       loginState : computed(() => store.getters['root/getLoginState']),
@@ -120,10 +66,22 @@ export default {
       searchOption: 'title'
     })
 
+    const clickLogin = () => {
+      console.log("clicklogin")
+      console.log(loginModal.value)
+      loginModal.value.open()
+    }
+
     const clickLogout = () => {
       localStorage.removeItem('access_token')
       store.commit('root/setLoginState', false)
       router.push({ name: 'Home' })
+    }
+
+    const clickSignup = () => {
+      console.log("clicksignup")
+      console.log(signupModal.value)
+      signupModal.value.open()
     }
 
     const changeOption = (option) => {
@@ -159,16 +117,7 @@ export default {
     //   })
     // }
 
-
-    // const clickLogin = () => {
-    //   emit('openLoginDialog')
-    // }
-
-    // const changeCollapse = () => {
-    //   state.isCollapse = !state.isCollapse
-    // }
-
-    return { state, clickLogout, changeOption, roomSearch }
+    return { state, loginModal, signupModal, clickLogin, clickSignup, clickLogout, changeOption, roomSearch }
   }
 }
 </script>
