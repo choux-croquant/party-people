@@ -8,7 +8,11 @@
       @click.prevent="toggle"
       class="w-6 h-48 p-0 my-auto rounded-r-full cursor-pointer text-white bg-main-200 text-center focus:outline-none hover:bg-gray-500 transition-color duration-300"
     >
-      <svg class="p-0" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg v-if="isSidebarOpen" class="p-0" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" fill="white" fill-opacity="0.01"/>
+        <path d="M31 36L19 24L31 12" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <svg v-else class="p-0" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="40" height="40" fill="white" fill-opacity="0.01"/>
         <path d="M19 12L31 24L19 36" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
