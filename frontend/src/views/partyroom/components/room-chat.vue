@@ -8,7 +8,11 @@
       @click.prevent="toggle"
       class="w-6 h-48 p-0 my-auto rounded-l-full text-white bg-main-200 text-center focus:outline-none hover:bg-gray-500 transition-color duration-300"
     >
-      <svg class="p-0" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg v-if="isSidebarOpen" class="p-0" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" fill="white" fill-opacity="0.01"/>
+        <path d="M19 12L31 24L19 36" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <svg v-else class="p-0" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="40" height="40" fill="white" fill-opacity="0.01"/>
         <path d="M31 36L19 24L31 12" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
@@ -22,7 +26,7 @@
     >
 
       <!-- chatting list -->
-      <ul class="border-2 h-4/5 w-5/6 border-main-100 p-4 overflow-y-scroll">
+      <ul class="border-2 h-4/5 w-5/6 border-main-100 p-4 overflow-y-auto">
         <li class="flex flex-col mb-2" v-for="i in 10" :key="i">
           <div class="flex flex-row items-center">
             <span class="text-main-100 text-md mr-2 font-bold">ssafy kim</span>
