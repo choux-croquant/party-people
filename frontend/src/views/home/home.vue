@@ -3,7 +3,7 @@
    
   <div class="conference-list-wrap pl-0" style="overflow: auto"> 
     <infinite-scroll @infinite-scroll="infiniteHandler">
-      <div :key="i" v-for="i in state.count" @click="clickConference(i)" class="conference-card m-5"> 
+      <div :key="i" v-for="i in state.count" class="conference-card m-5" @click="handleClick(i)"> 
         <conference /> 
       </div> 
     </infinite-scroll>
@@ -11,13 +11,8 @@
 
   <footer class="display: none">not showing</footer>
   
-  <!-- <infinite-scroll @infinite-scroll="infiniteHandler">
-    <div class="conference-list-wrap pl-0" style="overflow: auto"> 
-      <div :key="i" v-for="i in state.count" @click="clickConference(i)" class="conference-card m-5"> 
-        <conference /> 
-      </div> 
-    </div>
-  </infinite-scroll>  -->
+  <password-confirm ref="passwordConfirmModal" />
+  
 
 </template>
 <style>
@@ -46,11 +41,12 @@
 </style>
 <script>
 
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import MainHeader from './components/main-header.vue'
 import Conference from './components/conference.vue'
 import InfiniteScroll from "infinite-loading-vue3";
+import PasswordConfirm from '@/teleport/password-confirm.vue'
 
 export default {
   name: 'Home',
@@ -59,11 +55,12 @@ export default {
     MainHeader,
     Conference,
     InfiniteScroll,
+    PasswordConfirm,
   },
 
   setup () {
     const router = useRouter()
-
+    const passwordConfirmModal = ref(null)
     const state = reactive({
       count: 12
     })
@@ -91,6 +88,11 @@ export default {
       })
     }
 
+    const handleClick = (key) => {
+      console.log("clickconf")
+      console.log(key)
+      passwordConfirmModal.value.open(key)
+    }
     // function infiniteHandler() {
     //   window.addEventListener('scroll', () => {
     //     if (getScrollTop() < getDocumentHeight() - window.innerHeight) 
@@ -117,7 +119,7 @@ export default {
     //   );
     // }
 
-    return { state, infiniteHandler, clickConference }
+    return { state, infiniteHandler, clickConference, handleClick, passwordConfirmModal }
   },
 
   // mounted() {
