@@ -85,7 +85,9 @@ export default {
     }
 
     const changeOption = (option) => {
+      console.log(option)
       state.searchOption = option
+      console.log(state.searchOption)
     }
 
     const roomSearch = () => {
@@ -94,8 +96,8 @@ export default {
         include: state.searchOption,
         word: state.searchValue
       })
-      .then((result) => {
-        console.log(result)
+      .then((res) => {
+        store.commit('root/setRoomList', res.contents)
       })
       .catch((err) => {
         console.log(err)

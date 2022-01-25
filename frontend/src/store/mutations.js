@@ -17,3 +17,8 @@ export function setLoginState (state, setLogin) {
 	state.loginState = setLogin
 	console.log(state.loginState)
 }
+
+export function setRoomList (state, roomList) {
+	console.log(roomList)
+	state.roomList = roomList
+}

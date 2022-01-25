@@ -5,7 +5,7 @@
     <img class="w-full" :src="thumbnailUrl" alt="PartyRoom Thumbnail">
     <div class="px-6 py-4">
       <div class="flex flex-row justify-between">
-        <span class="font-bold text-xl mb-2">{{ title }}</span>
+        <span class="font-bold text-xl mb-2">{{ room.title }}</span>
         <div class="inline">
           <span class="rounded-full main-bg-color ml-3 px-3 py-1 text-white h-8">{{currentUserCount}} / {{maxUserCount}}</span>
         </div>
@@ -53,6 +53,9 @@ export default {
   name: 'Home',
 
   props: {
+    room: {
+      type: Object
+    },
     thumbnailUrl: {
       type: String,
       default: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
