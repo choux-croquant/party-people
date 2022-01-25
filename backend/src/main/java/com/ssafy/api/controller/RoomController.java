@@ -122,11 +122,13 @@ public class RoomController {
 		// 종료된 파티룸 요청한 경우 : 404(세션 데이터 없음)
 		if(roomService.isSessionClosed(roomId))return ResponseEntity.status(404).body(BaseResponseBody.of(404, "세션 데이터 없음"));
 
-		roomService.updateSessionEndTime(roomId, userId);
 		// 현재 퇴장하는 사용자가 마지막 사용자이거나 호스트인 경우 파티룸 삭제 처리
 		if (!roomService.checkRoomUserExist(roomId) || !roomService.isNotQualifiedHost(roomId, userId)) {
 			roomService.deleteRoom(roomId);
 			roomService.closeAllUserSession(roomId);
+		} else {
+			// 현재 사용자만 퇴장하는 경우
+			roomService.updateSessionEndTime(roomId, userId);
 		}
 		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
 	}
@@ -167,18 +169,18 @@ public class RoomController {
 	@PatchMapping("/del/{room_id}")
 	@ApiOperation(value = "파티룸 삭제", notes = "<strong>파티룸</strong>을 삭제한다.")
 	@ApiResponses({
-			@ApiResponse(code = 201, message = "성공", response = UserLoginPostRes.class),
-			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 201, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 토큰 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 403, message = "호스트 권한 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 403, message = "세션 데이터 없음", response = BaseResponseBody.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<? extends BaseResponseBody> deleteRoom(
 			@ApiIgnore Authentication authentication,
 			@PathVariable(name = "room_id") @ApiParam(value = "파티룸 번호", required = true) long roomId) {
 
-		// TODO: 호스트인지 확인하는 코드 추가
-
-		// 토큰이 없는 사용자가 파티룸 삭제를 요청한 경우 : 401(Unauthorized Error반환)
-		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
+		// 토큰이 없는 사용자가 요청한 경우 : 401(인증 토큰 없음)
+		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "인증 토큰 없음"));
 
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 		Long userId = userDetails.getUser().getId();
@@ -191,10 +193,10 @@ public class RoomController {
 		if(roomService.isSessionClosed(4L))
 			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "세션 권한 없음, 이미 삭제된 방"));
 
-		// roomService.deleteRoom(roomId);
-		// TODO: 강제 삭제하면, 세션 안에 있는 사람도 다 endtime 찍어내기
+		// DB (room, session 테이블) 업데이트
+		roomService.deleteRoom(roomId);
+		roomService.closeAllUserSession(roomId);
 
-		// TODO: 응답 값, 메소드 응답 값 수정
 		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "성공"));
 	}
 
