@@ -3,7 +3,7 @@
    
   <div class="conference-list-wrap pl-0" style="overflow: auto"> 
     <infinite-scroll @infinite-scroll="infiniteHandler">
-      <conference :key="room.id" v-for="room in state.roomList" class="conference-card m-5" @click="handleClick(room.id)" :room="room" /> 
+      <conference :key="room.id" v-for="room in state.roomList" class="conference-card m-5" @click="handleClick(room.id, room.password)" :room="room" /> 
     </infinite-scroll>
   </div>
 
@@ -69,7 +69,7 @@ export default {
     onBeforeMount(() => {
       store.dispatch('root/requestRoomList')
       .then((res) => {
-        store.commit('root/setRoomList', res.contents)
+        store.commit('root/setRoomList', res.data.contents.content)
       })
       .catch((err) => {
         console.log(err)
@@ -99,11 +99,20 @@ export default {
       })
     }
 
-    const handleClick = (key) => {
+    const handleClick = (id, password) => {
       console.log("clickconf")
       console.log(state.roomList)
-      console.log(key)
-      passwordConfirmModal.value.open(key)
+      if (password === null) {
+        router.push({
+          name: 'ConferenceDetail',
+          params: {
+            conferenceId: id
+          }
+        })
+      }
+      else {
+        passwordConfirmModal.value.open(id, password)
+      }
     }
 
     return { state, store, infiniteHandler, clickConference, handleClick, passwordConfirmModal }

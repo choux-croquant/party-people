@@ -27,3 +27,10 @@ export function roomSearch ({ state }, payload) {
   const url = `/list/roomSearch?include=${payload.include}&word=${payload.word}`
   return $axios.get(url) 
 }
+
+export function createRoom ({ state }, payload) {
+  console.log('createRoom', state, payload)
+  const url = '/rooms'
+  let body = payload
+  return $axios.post(url, body)
+}
