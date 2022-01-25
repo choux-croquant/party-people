@@ -27,6 +27,20 @@ public class OpenviduServiceImpl implements OpenviduService{
     }
 
     @Override
+    public boolean closeSession(Session session) {
+        try {
+            session.close();
+        } catch (OpenViduJavaClientException e) {
+            e.printStackTrace();
+            return false;
+        } catch (OpenViduHttpException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public String createConnection(Session session) {
         // 연결 성공 시 토큰 반환
         ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
@@ -45,5 +59,19 @@ public class OpenviduServiceImpl implements OpenviduService{
         }
 
         return connection.getToken(); // Send this string to the client side
+    }
+
+    @Override
+    public boolean destroyConnection(Session session, Connection connection) {
+        try {
+            session.forceDisconnect(connection);
+        } catch (OpenViduJavaClientException e) {
+            e.printStackTrace();
+            return false;
+        } catch (OpenViduHttpException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }
