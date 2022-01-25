@@ -1,4 +1,4 @@
-// 로그인 모달 컴포넌트
+// 비디오 커스터마이징 모달
 <template>
   <base-modal ref="baseModal">
     <div class="w-full max-w-2xl bg-main-300 shadow-md rounded px-6 pt-6 pb-4">
@@ -32,8 +32,13 @@
         <!-- 커스터마이징 아이템 -->
         <div class="w-full h-32 border-3 rounded-lg border-main-100 shadow-lg flex flex-col px-3 py-2 ">
           <div id="scrolling-content" class="flex overflow-x-auto h-full">
-            <div v-for="custom in state.videoCustoms" :key="custom.id" class="w-1/4 cursor-pointer h-full px-4 flex-shrink-0" v-show="showCategory(custom.category)">
-              <img :src="custom.url" />
+            <div 
+              v-for="custom in state.videoCustoms" :key="custom.id" 
+              class="w-1/4 cursor-pointer h-full px-4 flex-shrink-0" 
+              v-show="showCategory(custom.category)"
+              @click="clickVideoCustom(custom.id)"
+            >
+              <img :src="custom.url" :class="[custom.id === state.selectedCustomId ? 'border-4 border-sub-200' : '']" />
             </div>
           </div>
           <!-- TODO: slider indicator -->
@@ -74,7 +79,7 @@ export default {
 
     const state = reactive({
       selectedCategory: 'All',
-      selectedCustom: null,
+      selectedCustomId: null,
 
       categories: [
         {id: 1, name: 'All'},
@@ -108,6 +113,11 @@ export default {
       return state.selectedCategory == 'All' || state.selectedCategory == category
     }
 
+    const clickVideoCustom = (id) => {
+      (state.selectedCustomId === id) ? (state.selectedCustomId = null) : (state.selectedCustomId = id)
+      // console.log(state.selectedCustomId)
+    }
+
     // TODO: 비디오 커스텀 적용
     const applyVideoCustom = () => {
       
@@ -117,7 +127,7 @@ export default {
       
     }
 
-    return { state, baseModal, open, close, showCategory, applyVideoCustom, cancelVideoCustom }
+    return { state, baseModal, open, close, showCategory, clickVideoCustom, applyVideoCustom, cancelVideoCustom }
   }
 }
 </script>
