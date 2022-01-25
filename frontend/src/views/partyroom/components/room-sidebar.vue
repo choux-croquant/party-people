@@ -59,7 +59,7 @@
       </div>
 
       <!-- video customizing button -->
-      <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showVideoBtn">
+      <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showVideoBtn" @click="clickVideoCustomizingBtn()">
         <a 
           class="h-24 px-6 flex flex-col justify-center items-center w-full"
         >
@@ -229,6 +229,7 @@
     </div>
   </div>
   <vote-create-modal ref="voteCreateModal"/>
+  <video-customize-modal ref="videoCustomizeModal" />
 </template>
 
 <style>
@@ -241,44 +242,31 @@
 <script>
 import { ref } from 'vue';
 import VoteCreateModal from '../../../teleport/vote-create-modal.vue';
+import videoCustomizeModal from '@/teleport/video-customize-modal.vue';
 // import { reactive } from 'vue'
 
 export default {
   name: 'room-sidebar',
 
   components: {
-    VoteCreateModal
+    VoteCreateModal,
+    videoCustomizeModal,
   },
   setup () {
     const voteCreateModal = ref(null)
+    const videoCustomizeModal = ref(null)
 
     const clickVote = () => {
       console.log("clickvote")
       voteCreateModal.value.open()
     }
-    return { clickVote, voteCreateModal }
+
+    const clickVideoCustomizingBtn = () => {
+      videoCustomizeModal.value.open()
+    }
+
+    return { voteCreateModal, videoCustomizeModal, clickVote, clickVideoCustomizingBtn }
   },
-  // setup() {
-  //   const state = reactive({
- 
-  //     open: false,
-  //     right: false
-  //     showContentBtn: true,
-  //     showVideoBtn: true,
-  //     showRoomBtn: true,
-  //     showLinkBtn: true,
-  //     showBackBtn: false,
-  //   })
-
-  //   const toggle = () => {
-  //     console.log('toggle')
-  //     console.log(state)
-  //     state.open = !state.open
-  //     console.log(state)
-  //   }
-
-  //   return { state, toggle }
-  // },
 
   data() {
     return {
