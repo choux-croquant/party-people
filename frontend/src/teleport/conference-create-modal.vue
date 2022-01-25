@@ -101,7 +101,7 @@ export default {
         console.log(err)
       })
     }
-    return { state, open, close, createRoom }
+    return { state, open, close, createRoom, baseModal }
   }
 }
 </script>
