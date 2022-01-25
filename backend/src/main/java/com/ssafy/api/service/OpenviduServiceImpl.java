@@ -3,6 +3,8 @@ package com.ssafy.api.service;
 import io.openvidu.java.client.*;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class OpenviduServiceImpl implements OpenviduService{
     OpenVidu openVidu;
@@ -24,6 +26,18 @@ public class OpenviduServiceImpl implements OpenviduService{
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public List<Session> fetchActiveSessions() {
+        try {
+            openVidu.fetch();
+        } catch (OpenViduJavaClientException e) {
+            e.printStackTrace();
+        } catch (OpenViduHttpException e) {
+            e.printStackTrace();
+        }
+        return openVidu.getActiveSessions();
     }
 
     @Override
@@ -59,6 +73,18 @@ public class OpenviduServiceImpl implements OpenviduService{
         }
 
         return connection.getToken(); // Send this string to the client side
+    }
+
+    @Override
+    public List<Connection> fetchActiveConnections(Session session) {
+        try {
+            session.fetch();
+        } catch (OpenViduJavaClientException e) {
+            e.printStackTrace();
+        } catch (OpenViduHttpException e) {
+            e.printStackTrace();
+        }
+        return session.getActiveConnections();
     }
 
     @Override
