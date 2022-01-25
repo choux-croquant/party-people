@@ -3,9 +3,7 @@
    
   <div class="conference-list-wrap pl-0" style="overflow: auto"> 
     <infinite-scroll @infinite-scroll="infiniteHandler">
-      <div :key="i" v-for="i in state.count" class="conference-card m-5" @click="handleClick(i)"> 
-        <conference /> 
-      </div> 
+      <conference :key="room.id" v-for="room in state.roomList" class="conference-card m-5" @click="handleClick(room.id, room.password)" :room="room" /> 
     </infinite-scroll>
   </div>
 
@@ -41,8 +39,9 @@
 </style>
 <script>
 
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import MainHeader from './components/main-header.vue'
 import Conference from './components/conference.vue'
 import InfiniteScroll from "infinite-loading-vue3";
@@ -60,9 +59,21 @@ export default {
 
   setup () {
     const router = useRouter()
+    const store = useStore()
     const passwordConfirmModal = ref(null)
     const state = reactive({
-      count: 12
+      count: 12,
+      roomList: computed(() => store.getters['root/getRoomList'])
+    })
+
+    onBeforeMount(() => {
+      store.dispatch('root/requestRoomList')
+      .then((res) => {
+        store.commit('root/setRoomList', res.data.contents.content)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     })
 
     // 백엔드에 axios 요청 보내서 응답 받아올 부분
@@ -88,38 +99,23 @@ export default {
       })
     }
 
-    const handleClick = (key) => {
+    const handleClick = (id, password) => {
       console.log("clickconf")
-      console.log(key)
-      passwordConfirmModal.value.open(key)
+      console.log(state.roomList)
+      if (password === null) {
+        router.push({
+          name: 'ConferenceDetail',
+          params: {
+            conferenceId: id
+          }
+        })
+      }
+      else {
+        passwordConfirmModal.value.open(id, password)
+      }
     }
-    // function infiniteHandler() {
-    //   window.addEventListener('scroll', () => {
-    //     if (getScrollTop() < getDocumentHeight() - window.innerHeight) 
-    //       return;
-        
-    //     console.log('request')
-    //     state.count += 4
-    //   });
-    // }
 
-    // // 현재 스크롤한 높이를 구하는 함수 
-    // function getScrollTop() {
-    //   return (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-    // }
-
-    // // 문서의 높이를 구하는 함수
-    // function getDocumentHeight() {
-    //   const body = document.body;
-    //   const html = document.documentElement;
-    
-    //   return Math.max(
-    //       body.scrollHeight, body.offsetHeight,
-    //       html.clientHeight, html.scrollHeight, html.offsetHeight
-    //   );
-    // }
-
-    return { state, infiniteHandler, clickConference, handleClick, passwordConfirmModal }
+    return { state, store, infiniteHandler, clickConference, handleClick, passwordConfirmModal }
   },
 
   // mounted() {

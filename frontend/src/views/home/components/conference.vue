@@ -2,15 +2,15 @@
 
 <template>
   <div class="max-w-sm rounded-xl overflow-hidden shadow-lg conference-card">
-    <img class="w-full" :src="thumbnailUrl" alt="PartyRoom Thumbnail">
+    <img class="w-full" :src="room.thumbnailUrl" alt="PartyRoom Thumbnail">
     <div class="px-6 py-4">
       <div class="flex flex-row justify-between">
-        <span class="font-bold text-xl mb-2">{{ title }}</span>
+        <span class="font-bold text-xl mb-2">{{ room.title }}</span>
         <div class="inline">
-          <span class="rounded-full main-bg-color ml-3 px-3 py-1 text-white h-8">{{currentUserCount}} / {{maxUserCount}}</span>
+          <span class="rounded-full main-bg-color ml-3 px-3 py-1 text-white h-8">{{currentUserCount}} / {{room.capacity}}</span>
         </div>
       </div>
-      <p class="text-gray-700 text-base line-clamp-3 card-description">{{ desc }}</p>
+      <p class="text-gray-700 text-base line-clamp-3 card-description">{{ room.description }}</p>
     </div>
     <div class="px-6 pt-4 pb-2 flex flex-row flex-wrap bg-gradient-to-r from-main-200 to-sub-200">
       <span class="inline-block partyroom-tag rounded-full px-3 py-1 text-sm font-semibold text-white mr-2 mb-2">#파티</span>
@@ -53,6 +53,9 @@ export default {
   name: 'Home',
 
   props: {
+    room: {
+      type: Object
+    },
     thumbnailUrl: {
       type: String,
       default: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',

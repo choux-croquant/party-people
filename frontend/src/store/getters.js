@@ -15,3 +15,7 @@ export function getActiveMenuIndex (state) {
 export function getLoginState (state) {
 	return state.loginState
 }
+
+export function getRoomList (state) {
+	return state.roomList
+}

@@ -47,13 +47,14 @@ export default {
     const baseModal = ref(null)
     const inputPassword = ref(null)
     let conferenceRoomId = ''
-    const roomPassword = '1234'
+    let roomPassword = ''
     const router = useRouter()
 
-    const open = (key) => {
+    const open = (id, password) => {
       console.log("pcopen")
-      console.log(key)
-      conferenceRoomId = key
+      console.log(id)
+      conferenceRoomId = id
+      roomPassword = password
       baseModal.value.openModal()
     }
     const close = () => {
