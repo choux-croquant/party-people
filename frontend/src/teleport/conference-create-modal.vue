@@ -58,8 +58,8 @@ input:focus {
 <script>
 import { reactive, ref } from 'vue'
 import BaseModal from './base-modal.vue'
-import useRouter from 'vue-router'
-import useStore from 'vuex'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 export default {
   name: 'Home',
