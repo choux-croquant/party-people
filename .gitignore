@@ -317,4 +317,7 @@ gradle-app.setting
 ### Gradle Patch ###
 **/build/
 
+#backend logs
+backend/*.log
+
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,macos,gradle,vue,vuejs,visualstudiocode,eclipse,windows
