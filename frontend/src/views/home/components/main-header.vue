@@ -29,7 +29,7 @@
         <button @click="clickSignup()" class="rounded-full w-32 h-10 ml-4 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Sign-Up</button>  
       </div>
       <div v-else class="flex-none hidden md:block">
-        <button class="rounded-full w-32 h-10 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Add+</button>
+        <button @click="createRoom()" class="rounded-full w-32 h-10 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100" type="button">Add+</button>
         <button @click="clickLogout()" class="rounded-full w-32 h-10 ml-4 font-bold shadow-lg bg-alert-200 text-tc-500 hover:bg-alert-100" type="button">Log-Out</button>  
       </div>
     </div>
@@ -39,6 +39,9 @@
   <login-modal ref="loginModal"/>
   <!-- Signup modal -->
   <signup-modal ref="signupModal"/>
+  <!-- Room create modal -->
+  <conference-create-modal ref="conferenceCreateModal" />
+  
 </template>
 <script>
 import { computed, reactive, ref } from 'vue'
@@ -46,20 +49,22 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import SignupModal from '@/teleport/signup-modal.vue'
 import LoginModal from '@/teleport/login-modal.vue'
+import ConferenceCreateModal from '@/teleport/conference-create-modal.vue'
 
 export default {
   name: 'main-header',
 
   components: {
     LoginModal,
-    SignupModal
+    SignupModal,
+    ConferenceCreateModal
   },
   setup() {
     const store = useStore()
     const router = useRouter()
     const signupModal = ref(null)
     const loginModal = ref(null)
-
+    const conferenceCreateModal = ref(null)
     const state = reactive({
       loginState : computed(() => store.getters['root/getLoginState']),
       searchValue: null,
@@ -84,6 +89,12 @@ export default {
       signupModal.value.open()
     }
 
+    const createRoom = () => {
+      console.log("createRoom")
+      console.log(conferenceCreateModal.value)
+      conferenceCreateModal.value.open()
+    }
+
     const changeOption = (option) => {
       console.log(option)
       state.searchOption = option
@@ -97,7 +108,7 @@ export default {
         word: state.searchValue
       })
       .then((res) => {
-        store.commit('root/setRoomList', res.contents)
+        store.commit('root/setRoomList', res.data.contents.content)
       })
       .catch((err) => {
         console.log(err)
@@ -119,7 +130,7 @@ export default {
     //   })
     // }
 
-    return { state, loginModal, signupModal, clickLogin, clickSignup, clickLogout, changeOption, roomSearch }
+    return { state, loginModal, signupModal, conferenceCreateModal, clickLogin, clickSignup, createRoom, clickLogout, changeOption, roomSearch }
   }
 }
 </script>
