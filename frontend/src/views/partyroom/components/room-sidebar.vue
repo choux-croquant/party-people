@@ -199,7 +199,7 @@
       </div>
 
       <!-- vote button -->
-      <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showVoteBtn" @click="clickVoteBtn">
+      <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showVoteBtn" @click="clickVote()">
         <a
           class="h-24 px-6 flex flex-col justify-center items-center w-full"
         >
@@ -228,6 +228,7 @@
 
     </div>
   </div>
+  <vote-create-modal ref="voteCreateModal"/>
 </template>
 
 <style>
@@ -238,12 +239,28 @@
 </style>
 
 <script>
+import { ref } from 'vue';
+import VoteCreateModal from '../../../teleport/vote-create-modal.vue';
 // import { reactive } from 'vue'
 
 export default {
+  name: 'room-sidebar',
 
+  components: {
+    VoteCreateModal
+  },
+  setup () {
+    const voteCreateModal = ref(null)
+
+    const clickVote = () => {
+      console.log("clickvote")
+      voteCreateModal.value.open()
+    }
+    return { clickVote, voteCreateModal }
+  },
   // setup() {
   //   const state = reactive({
+ 
   //     open: false,
   //     right: false
   //     showContentBtn: true,
