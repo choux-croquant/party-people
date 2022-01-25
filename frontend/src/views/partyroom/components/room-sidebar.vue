@@ -71,7 +71,7 @@
       </div>
 
       <!-- room customizing button -->
-      <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showRoomBtn">
+      <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showRoomBtn" @click="clickThemeBtn()">
         <a 
           class="h-24 px-6 flex flex-col justify-center items-center w-full"
         >
@@ -230,6 +230,7 @@
   </div>
   <vote-create-modal ref="voteCreateModal"/>
   <video-customize-modal ref="videoCustomizeModal" />
+  <theme-customize-modal ref="themeCustomizeModal" />
 </template>
 
 <style>
@@ -243,6 +244,7 @@
 import { ref } from 'vue';
 import VoteCreateModal from '../../../teleport/vote-create-modal.vue';
 import videoCustomizeModal from '@/teleport/video-customize-modal.vue';
+import themeCustomizeModal from '@/teleport/theme-customize-modal.vue';
 // import { reactive } from 'vue'
 
 export default {
@@ -251,10 +253,12 @@ export default {
   components: {
     VoteCreateModal,
     videoCustomizeModal,
+    themeCustomizeModal,
   },
   setup () {
     const voteCreateModal = ref(null)
     const videoCustomizeModal = ref(null)
+    const themeCustomizeModal = ref(null)
 
     const clickVote = () => {
       console.log("clickvote")
@@ -265,7 +269,11 @@ export default {
       videoCustomizeModal.value.open()
     }
 
-    return { voteCreateModal, videoCustomizeModal, clickVote, clickVideoCustomizingBtn }
+    const clickThemeBtn = () => {
+      themeCustomizeModal.value.open()
+    }
+
+    return { voteCreateModal, videoCustomizeModal, themeCustomizeModal, clickVote, clickVideoCustomizingBtn, clickThemeBtn }
   },
 
   data() {
