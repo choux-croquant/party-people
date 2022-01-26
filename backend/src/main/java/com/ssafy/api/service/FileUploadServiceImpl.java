@@ -1,0 +1,53 @@
+package com.ssafy.api.service;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.File;
+import java.util.HashSet;
+
+@Service
+public class FileUploadServiceImpl {
+    // 파일 저장 경로 반환
+    public String saveFile(MultipartFile multipartFile, Long roomId){
+        // 썸네일 이미지를 업로드 하지 않은 경우 기본이미지로 설정
+        if (multipartFile.isEmpty())
+            return "storage/thumbnails/defaultImage";
+
+        String path = "storage/thumbnails/" + Long.toString(roomId) + "/image";    // 방ID/이미지
+        String[] words = multipartFile.getName().split(".");
+        String extention = words[words.length - 1];
+        String absolutePath;
+
+        if (multipartFile.getName().isBlank())
+            throw new NullPointerException("File Name is Blank");
+
+        // png, jpg, jpeg 아니면 거르기
+        HashSet<String> candidate = new HashSet<>();
+        candidate.add("png");
+        candidate.add("jpg");
+        candidate.add("jpeg");
+        
+        if (this.isContain(extention, candidate))
+            throw new RuntimeException("");
+
+        try {
+            File file = new File(path);
+
+            multipartFile.transferTo(file);
+            absolutePath = file.getAbsolutePath();
+        }catch (NullPointerException e){
+            return null;
+        }catch (RuntimeException e){
+            return null;
+        }catch (Exception e){
+            return null;
+        }
+
+        return absolutePath;
+    }
+
+    // 해당 확장자가 지원되는 확장자인지 확인
+    public boolean isContain(String extension, HashSet<String> candidates){
+        return candidates.contains(extension.toLowerCase());
+    }
+}

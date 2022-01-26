@@ -17,8 +17,6 @@ public class RoomCreatePostReq {
 	String title;
 	@ApiModelProperty(name="방 설명", example="방 설명")
 	String description;
-	@ApiModelProperty(name="썸네일 경로", example="썸네일 경로")
-	String thumbnail_url;
 	@ApiModelProperty(name="최대 인원수", example="8")
 	String capacity;
 	@ApiModelProperty(name="비밀번호", example="비밀번호")

@@ -6,6 +6,7 @@ import com.ssafy.api.response.RoomEntryLinkRes;
 import com.ssafy.api.response.RoomUserListRes;
 import com.ssafy.api.request.RoomCreatePostReq;
 import com.ssafy.api.response.UserLoginPostRes;
+import com.ssafy.api.service.FileUploadServiceImpl;
 import com.ssafy.api.service.RoomService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
@@ -141,7 +143,8 @@ public class RoomController {
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<? extends BaseResponseBody> createRoom(
-			@RequestBody @ApiParam(value = "파티룸 정보", required = true) RoomCreatePostReq req,
+			@RequestPart(value = "thumbnail", required = false) @ApiParam(value = "썸네일 이미지", required = false) MultipartFile thumbnail,
+			@RequestPart(value = "room", required = true) @ApiParam(value = "파티룸 정보", required = true) RoomCreatePostReq req,
 			@ApiIgnore Authentication authentication) {
 
 		// 토큰이 없는 사용자가 파티룸 생성을 요청한 경우 : 401(Unauthorized Error반환)
@@ -156,7 +159,7 @@ public class RoomController {
 
 		// TODO : 파티룸 생성 후 입장 방법 정하기, 프론트에서 POST 입장 한번 더 보내줄지, 여기서 처리할 지
 		// TODO: 응답 값, 메소드 응답 값 수정
-		roomService.createRoom(req);
+		roomService.createRoom(req, thumbnail);
 		/*
 		프로그램 흐름 제어 : 백에서 파티룸 생성 후 프론트에서 파티룸 입장 post 요청 보냄
 		Room room = roomService.createRoom(req);

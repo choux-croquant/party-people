@@ -2,7 +2,7 @@
 
 <template>
   <base-modal ref='baseModal'>
-    <div class="flex flex-col justify-between items-center bg-main-300 p-12 w-11/12 sm:w-5/6 lg:w-1/2 max-w-2xl mx-auto rounded-lg">
+    <form enctype="multipart/form-data" class="flex flex-col justify-between items-center bg-main-300 p-12 w-11/12 sm:w-5/6 lg:w-1/2 max-w-2xl mx-auto rounded-lg">
       <div class="flex flex-row h-40 justify-between justify-items-center w-full">
         <!-- 방 이름 / 인원 수 / 비밀번호 -->
         <div class="flex flex-col justify-between w-1/2">
@@ -43,8 +43,8 @@
         <span class="text-tc-200">링크공유</span>
         <svg @click="copyLink" class="text-tc-100" height="21" viewBox="0 0 21 21" width="21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(2 2)"><path d="m16.5 10.5v-8c0-1.1045695-.8954305-2-2-2h-8c-1.1045695 0-2 .8954305-2 2v8c0 1.1045695.8954305 2 2 2h8c1.1045695 0 2-.8954305 2-2z"/><path d="m4.5 4.50345827h-2c-1.1045695 0-2 .8954305-2 2v7.99654173c0 1.1045695.8954305 2 2 2h.00345528l8.00000002-.0138241c1.1032187-.001906 1.9965447-.8967767 1.9965447-1.9999971v-1.9827205"/><path d="m10.5 3.5v6"/><path d="m10.5 3.5v6" transform="matrix(0 1 -1 0 17 -4)"/></g></svg>
       </div>
-      <button type="submit" class="w-3/5 p-2 rounded-full bg-gradient-to-r from-main-200 to-sub-200 mt-7 text-tc-200">생성하기</button>
-    </div>
+      <button type="submit" @click="createRoom" class="w-3/5 p-2 rounded-full bg-gradient-to-r from-main-200 to-sub-200 mt-7 text-tc-200">생성하기</button>
+    </form>
   </base-modal>
 </template>
 
@@ -86,16 +86,35 @@ export default {
     const close = () => {
       baseModal.value.closeModal()
     }
+    // const createRoom = () => {
+    //   store.dispatch('root/createRoom', {
+    //     capacity: state.capacity,
+    //     description: state.description,
+    //     password: state.password,
+    //     title: state.title,
+    //     thumbnailUrl: thumbnailUrl
+    //   })
+    //   .then(() => {
+    //     router.push({ name: 'ConferenceDetail' })
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //   })
+    // }
     const createRoom = () => {
+      const roomData = new FormData()
+
+      roomData.append("capacity", state.capacity)
+      roomData.append("description", state.description)
+      roomData.append("password", state.password)
+      roomData.append("title", state.title)
+      roomData.append("thumbnailUrl", thumbnailUrl)
+
       store.dispatch('root/createRoom', {
-        capacity: state.capacity,
-        description: state.form.description,
-        password: state.password,
-        title: state.title,
-        thumbnailUrl: thumbnailUrl
+        roomData
       })
       .then(() => {
-        router.push({ name: 'Home' })
+        router.push({ name: 'ConferenceDetail' })
       })
       .catch((err) => {
         console.log(err)
