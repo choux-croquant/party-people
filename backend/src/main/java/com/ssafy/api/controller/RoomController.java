@@ -135,11 +135,12 @@ public class RoomController {
 		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
 	}
 
-	@PostMapping("/")
+	@PostMapping(value = "", consumes = {"multipart/form-data"})
 	@ApiOperation(value = "파티룸 생성", notes = "<strong>파티룸</strong>을 생성한다.")
 	@ApiResponses({
 			@ApiResponse(code = 201, message = "성공", response = UserLoginPostRes.class),
-			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 토큰 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 403, message = "세션 생성 금지됨", response = BaseResponseBody.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<? extends BaseResponseBody> createRoom(
@@ -147,15 +148,15 @@ public class RoomController {
 			@RequestPart(value = "room", required = true) @ApiParam(value = "파티룸 정보", required = true) RoomCreatePostReq req,
 			@ApiIgnore Authentication authentication) {
 
-		// 토큰이 없는 사용자가 파티룸 생성을 요청한 경우 : 401(Unauthorized Error반환)
-		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
+		// 토큰이 없는 사용자가 요청한 경우 : 401(인증 토큰 없음)
+		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "인증 토큰 없음"));
 
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 		Long userId = userDetails.getUser().getId();
 
-		// 이미 세션에 접속한 사용자
+		// 이미 세션에 접속한 사용자가 요청한 경우 : 403(퇴장 권한 없음)
 		if (roomService.isUserAccessOtherSession(userId))
-			return ResponseEntity.status(403).body(null);
+			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "세션 생성 금지됨"));
 
 		// TODO : 파티룸 생성 후 입장 방법 정하기, 프론트에서 POST 입장 한번 더 보내줄지, 여기서 처리할 지
 		// TODO: 응답 값, 메소드 응답 값 수정
@@ -166,7 +167,7 @@ public class RoomController {
 		roomService.createSession(room.getId(), userId, true);
 		 */
 
-		return ResponseEntity.status(200).body(null);
+		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
 	}
 
 	@PatchMapping("/del/{room_id}")
