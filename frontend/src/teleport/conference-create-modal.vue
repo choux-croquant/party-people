@@ -2,7 +2,7 @@
 
 <template>
   <base-modal ref='baseModal'>
-    <form enctype="multipart/form-data" class="flex flex-col justify-between items-center bg-main-300 p-12 w-11/12 sm:w-5/6 lg:w-1/2 max-w-2xl mx-auto rounded-lg">
+    <form method="post" enctype='multipart/form-data' class="flex flex-col justify-between items-center bg-main-300 p-12 w-11/12 sm:w-5/6 lg:w-1/2 max-w-2xl mx-auto rounded-lg">
       <div class="flex flex-row h-40 justify-between justify-items-center w-full">
         <!-- 방 이름 / 인원 수 / 비밀번호 -->
         <div class="flex flex-col justify-between w-1/2">
@@ -21,13 +21,14 @@
             <label class="flex flex-col justify-center items-center rounded-sm w-full h-full bg-tc-500 hover:bg-gray-300">
               <svg height="21" viewBox="0 0 21 21" width="21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" transform="translate(3 3)"><g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m2.5.5h10c1.1045695 0 2 .8954305 2 2v10c0 1.1045695-.8954305 2-2 2h-10c-1.1045695 0-2-.8954305-2-2v-10c0-1.1045695.8954305-2 2-2z"/><path d="m14.5 10.5-3-3-3 2.985"/><path d="m12.5 14.5-9-9-3 3"/></g><circle cx="11" cy="4" fill="currentColor" r="1"/></g></svg>
               <p class="pt-1 text-sm tracking-wider text-tc-200 group-hover:text-gray-600">썸네일 등록</p>
-              <input ref="state.thumbnailUrl" type="file" class="opacity-0 h-0" />
+              <input id="thumbnail" type="file" class="opacity-0 h-0" />
             </label>
           </div>
         </div>
       </div>
       <!-- 방 소개 -->
       <textarea
+        v-model="state.description"
         type="text"
         name="partyroom-introduce"
         placeholder="방 소개"
@@ -43,7 +44,7 @@
         <span class="text-tc-200">링크공유</span>
         <svg @click="copyLink" class="text-tc-100" height="21" viewBox="0 0 21 21" width="21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(2 2)"><path d="m16.5 10.5v-8c0-1.1045695-.8954305-2-2-2h-8c-1.1045695 0-2 .8954305-2 2v8c0 1.1045695.8954305 2 2 2h8c1.1045695 0 2-.8954305 2-2z"/><path d="m4.5 4.50345827h-2c-1.1045695 0-2 .8954305-2 2v7.99654173c0 1.1045695.8954305 2 2 2h.00345528l8.00000002-.0138241c1.1032187-.001906 1.9965447-.8967767 1.9965447-1.9999971v-1.9827205"/><path d="m10.5 3.5v6"/><path d="m10.5 3.5v6" transform="matrix(0 1 -1 0 17 -4)"/></g></svg>
       </div>
-      <button type="submit" @click="createRoom" class="w-3/5 p-2 rounded-full bg-gradient-to-r from-main-200 to-sub-200 mt-7 text-tc-200">생성하기</button>
+      <button type="button" @click="createRoom()" class="w-3/5 p-2 rounded-full bg-gradient-to-r from-main-200 to-sub-200 mt-7 text-tc-200">생성하기</button>
     </form>
   </base-modal>
 </template>
@@ -58,7 +59,7 @@ input:focus {
 <script>
 import { reactive, ref } from 'vue'
 import BaseModal from './base-modal.vue'
-import { useRouter } from 'vue-router'
+// import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 
 export default {
@@ -67,7 +68,7 @@ export default {
     BaseModal
   },
   setup () {
-    const router = useRouter()
+    // const router = useRouter()
     const store = useStore()
     const baseModal = ref(null)
 
@@ -77,7 +78,7 @@ export default {
       password: '',
       title: ''
     })
-    const thumbnailUrl = ref(null)
+    // const thumbnailUrl = ref(null)
 
     const open = () => {
       console.log("rcopen")
@@ -86,37 +87,27 @@ export default {
     const close = () => {
       baseModal.value.closeModal()
     }
-    // const createRoom = () => {
-    //   store.dispatch('root/createRoom', {
-    //     capacity: state.capacity,
-    //     description: state.description,
-    //     password: state.password,
-    //     title: state.title,
-    //     thumbnailUrl: thumbnailUrl
-    //   })
-    //   .then(() => {
-    //     router.push({ name: 'ConferenceDetail' })
-    //   })
-    //   .catch((err) => {
-    //     console.log(err)
-    //   })
-    // }
+    
     const createRoom = () => {
+      var thumbnailImg = document.getElementById("thumbnail").files[0]
+      const room = {
+        capacity: state.capacity,
+        description: state.description,
+        password: state.password,
+        title: state.title,
+      }
+      
       const roomData = new FormData()
+      roomData.append("thumbnail", thumbnailImg)
+      roomData.append("room", new Blob([JSON.stringify(room)] , {type: "application/json"}))
 
-      roomData.append("capacity", state.capacity)
-      roomData.append("description", state.description)
-      roomData.append("password", state.password)
-      roomData.append("title", state.title)
-      roomData.append("thumbnailUrl", thumbnailUrl)
-
-      store.dispatch('root/createRoom', {
-        roomData
-      })
+      store.dispatch('root/createRoom', roomData)
       .then(() => {
-        router.push({ name: 'ConferenceDetail' })
+        console.log('요청은 성공')
+        // router.push({ name: 'ConferenceDetail' })
       })
       .catch((err) => {
+        console.log('실패')
         console.log(err)
       })
     }
