@@ -8,6 +8,7 @@ import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,20 +27,25 @@ public class RoomServiceImpl implements RoomService {
     SessionRepositorySupport sessionRepositorySupport;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    FileUploadServiceImpl fileUploadService;
 
     @Override
-    public Room createRoom(RoomCreatePostReq req) {
+    public Room createRoom(RoomCreatePostReq req, MultipartFile multipartFile) {
+        String thumbnailPath;
         Room room = new Room();
 
         room.setTitle(req.getTitle());
         room.setDescription(req.getDescription());
-        room.setThumbnailUrl(req.getThumbnail_url());
-        // Todo: 썸네일 경로 중복없이 생성  /roomid/thum.png
         room.setCapacity(req.getCapacity());
         if (req.getPassword() != null) {
             room.setPassword(req.getPassword());
             room.setLocked(true);
         }
+
+        room = roomRepository.save(room);
+        thumbnailPath = fileUploadService.saveFile(multipartFile, room.getId());
+        room.setThumbnailUrl(thumbnailPath);
 
         return roomRepository.save(room);
     }
