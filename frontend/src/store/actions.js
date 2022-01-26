@@ -6,6 +6,7 @@ export function requestLogin ({ state }, payload) {
   const url = '/auth/login'
   let body = payload
   console.log(url)
+  console.log(payload)
   return $axios.post(url, body)
 }
 
@@ -30,7 +31,14 @@ export function roomSearch ({ state }, payload) {
 
 export function createRoom ({ state }, payload) {
   console.log('createRoom', state, payload)
-  const url = '/rooms'
-  let body = payload
-  return $axios.post(url, body)
+  const url = '/rooms/'
+  let token = localStorage.getItem('access_token')
+  console.log(token)
+  return $axios({
+    method:'POST',
+    url: url,
+    headers: {'Authorization': 'Bearer ' + token,
+    'Content-Type': 'multipart/form-data'},
+    data: payload
+  })
 }
