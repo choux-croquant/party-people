@@ -32,7 +32,6 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Room createRoom(RoomCreatePostReq req, MultipartFile multipartFile) {
-        String thumbnailPath;
         Room room = new Room();
 
         room.setTitle(req.getTitle());
@@ -43,11 +42,10 @@ public class RoomServiceImpl implements RoomService {
             room.setLocked(true);
         }
 
-        room = roomRepository.save(room);
-        thumbnailPath = fileUploadService.saveFile(multipartFile, room.getId());
-        room.setThumbnailUrl(thumbnailPath);
+        room.setThumbnailUrl("dummy_value");    // 임시 썸네일 경로
+        room = roomRepository.save(room);       // 썸네일 경로 없이 방 생성
 
-        return roomRepository.save(room);
+        return this.updateThumbnail(room.getId(), multipartFile);   // 썸네일 경로 업데이트
     }
 
     @Override
@@ -189,5 +187,16 @@ public class RoomServiceImpl implements RoomService {
         session.setHost(isHost);
 
         sessionRepository.save(session);
+    }
+
+    @Override
+    // 썸네일 경로 업데이트
+    public Room updateThumbnail(long roomId, MultipartFile multipartFile) {
+        Room room = this.findByRoomId(roomId);  // 썸네일 경로가 없는 룸 얻어옴
+        String thumbnailPath = fileUploadService.saveFile(multipartFile, roomId);   // 썸네일 경로 생성
+
+        room.setThumbnailUrl(thumbnailPath);    // 썸네일 경로 설정
+        
+        return roomRepository.save(room);   // 섬네일 경로를 업데이트
     }
 }
