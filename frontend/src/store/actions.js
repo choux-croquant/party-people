@@ -31,14 +31,15 @@ export function roomSearch ({ state }, payload) {
 
 export function createRoom ({ state }, payload) {
   console.log('createRoom', state, payload)
-  const url = '/rooms/'
+  const url = '/rooms'
   let token = localStorage.getItem('access_token')
   console.log(token)
   return $axios({
     method:'POST',
     url: url,
     headers: {'Authorization': 'Bearer ' + token,
-    'Content-Type': 'multipart/form-data'},
+              'Content-Type':'multipart/form-data'
+    },
     data: payload
   })
 }
