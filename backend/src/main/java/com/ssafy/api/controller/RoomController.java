@@ -2,6 +2,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.request.RoomEntryPostReq;
 import com.ssafy.api.request.RoomHostUpdateReq;
+import com.ssafy.api.response.CreateRoomRes;
 import com.ssafy.api.response.RoomEntryLinkRes;
 import com.ssafy.api.response.RoomUserListRes;
 import com.ssafy.api.request.RoomCreatePostReq;
@@ -139,7 +140,8 @@ public class RoomController {
 	@ApiOperation(value = "파티룸 생성", notes = "<strong>파티룸</strong>을 생성한다.")
 	@ApiResponses({
 			@ApiResponse(code = 201, message = "성공", response = UserLoginPostRes.class),
-			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 토큰 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 403, message = "세션 생성 금지됨", response = BaseResponseBody.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<? extends BaseResponseBody> createRoom(
@@ -155,18 +157,11 @@ public class RoomController {
 
 		// 이미 세션에 접속한 사용자
 		if (roomService.isUserAccessOtherSession(userId))
-			//return ResponseEntity.status(403).body(null);
+			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "세션 생성 금지됨"));
 
-		// TODO : 파티룸 생성 후 입장 방법 정하기, 프론트에서 POST 입장 한번 더 보내줄지, 여기서 처리할 지
-		// TODO: 응답 값, 메소드 응답 값 수정
-		roomService.createRoom(req, thumbnail);
-		/*
-		프로그램 흐름 제어 : 백에서 파티룸 생성 후 프론트에서 파티룸 입장 post 요청 보냄
-		Room room = roomService.createRoom(req);
-		roomService.createSession(room.getId(), userId, true);
-		 */
+		Room room = roomService.createRoom(req, thumbnail);
 
-		return ResponseEntity.status(200).body(null);
+		return ResponseEntity.status(201).body(CreateRoomRes.of(201, "성공", room));
 	}
 
 	@PatchMapping("/del/{room_id}")
