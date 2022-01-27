@@ -1,14 +1,14 @@
 <template>
   <div
     class="absolute flex top-0 h-screen z-20"
-    :class="[right ? 'right-0 flex-row' : 'left-0 flex-row-reverse']"
+    :class="[state.right ? 'right-0 flex-row' : 'left-0 flex-row-reverse']"
   >
     <!-- chat-bar toggle button -->
     <button
-      @click.prevent="toggle"
+      @click.prevent="toggle()"
       class="w-6 h-48 p-0 my-auto rounded-l-full text-white bg-main-200 text-center focus:outline-none hover:bg-gray-500 transition-color duration-300"
     >
-      <svg v-if="isSidebarOpen" class="p-0" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg v-if="state.isSidebarOpen" class="p-0" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="40" height="40" fill="white" fill-opacity="0.01"/>
         <path d="M19 12L31 24L19 36" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
@@ -22,7 +22,7 @@
     <div
       ref="content"
       class="transition-all pt-16 pb-12 w-80 duration-700 bg-main-300 overflow-hidden flex flex-col items-center justify-between"
-      :class="[isSidebarOpen ? 'max-w-lg' : 'max-w-0']"
+      :class="[state.isSidebarOpen ? 'max-w-lg' : 'max-w-0']"
     >
 
       <!-- chatting list -->
@@ -39,20 +39,19 @@
       </ul>
 
       <div class="relative inline-flex border-3 rounded-lg border-main-100 w-1/2 m-0 h-7 p-0">
-        <select class="px-4 py-0 text-sm form-select border-0 rounded-md text-gray-600 w-full h-5-5 border-transparent focus:border-transparent focus:ring-0 appearance-none">
+        <select v-model="state.selectedUser" class="cursor-pointer font-bold px-4 py-0 text-sm form-select border-0 rounded-md text-gray-600 w-full h-5-5 border-transparent focus:border-transparent focus:ring-0 appearance-none">
           <option selected="selected">all</option>
-          <option>C++</option>
-          <option>Django</option>
-          <option>Spring</option>
-          <option>Vue.js</option>
+          <option v-for="subscriber in state.subscribers" :value="subscriber.userId" :key="subscriber.id">
+            {{ subscriber.userId }}
+          </option>
         </select>
       </div>
 
       <!-- message -->
       <div class="w-4/5 p-0 flex flex-row justify-between items-center">
-        <textarea v-model="message" @keydown.enter="sendMessage" class="message-box w-5/6 border-2 border-main-100 text-xs focus:border-main-100 focus:border-2" cols="" rows="2"></textarea>
+        <textarea v-model="state.message" @keydown.enter="sendMessage" class="message-box w-5/6 border-2 border-main-100 text-xs focus:border-main-100 focus:border-2" cols="" rows="2"></textarea>
         <!-- <input type="text" class="border-2 border-main-100 text-xs h-6" w-full> -->
-        <svg @click="sendMessage" class="h-6 w-6 send-icon cursor-pointer" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        <svg @click="sendMessage()" class="h-6 w-6 send-icon cursor-pointer" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
             viewBox="0 0 491.022 491.022" style="enable-background:new 0 0 491.022 491.022;" xml:space="preserve">
           <g>
             <g>
@@ -93,31 +92,45 @@
 
 <script>
 // const messageBox = document.querySelector('.message-box')
-// import { reactive } from 'vue'
+import { reactive } from 'vue'
 
 export default {
 
-  data() {
-    return {
-      isSidebarOpen: true,
+  setup () {
+    const state = reactive({
       right: true,
+      isSidebarOpen: true,
+      selectedUser: "all",
       message: "",
-    };
-  },
 
-  methods: {
-    toggle() {
-      this.isSidebarOpen = !this.isSidebarOpen;
-    },
+      // dummy 데이터
+      subscribers: [
+        { id: 1, userId: 'salt' },
+        { id: 2, userId: 'sugar77' },
+        { id: 3, userId: 'pepper235' },
+        { id: 4, userId: 'olive_oil' },
+      ]
+    })
 
-    sendMessage(event) {
-      // TODO: 메시지 전송 처리
+    const toggle = () => {
+      state.isSidebarOpen = !state.isSidebarOpen;
+    }
+
+    const sendMessage = () => {  
+      let strippeddMessage = state.message.trim()
+
+      if (strippeddMessage !== '') {
+        // TODO: 메시지 전송 처리
+      }
 
       // enter키 누를 때 줄바꿈 방지
       event.preventDefault();
       // 메시지 창 초기화
-      this.message = ""
-    },
-  }
+      state.message = ""
+    }
+
+    return { state, toggle, sendMessage }
+  },
+
 };
 </script>
