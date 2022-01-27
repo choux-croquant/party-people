@@ -178,7 +178,7 @@ export default {
     //     console.log(err)
     //   })
     // }
-    return { state, open, close, createRoom, baseModal, onUploadImage }
+    return { state, open, close, onUploadImage, createRoom, baseModal }
   }
 }
 </script>
