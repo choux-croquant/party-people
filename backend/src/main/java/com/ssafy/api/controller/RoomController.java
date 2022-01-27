@@ -155,7 +155,7 @@ public class RoomController {
 
 		// 이미 세션에 접속한 사용자
 		if (roomService.isUserAccessOtherSession(userId))
-			return ResponseEntity.status(403).body(null);
+			//return ResponseEntity.status(403).body(null);
 
 		// TODO : 파티룸 생성 후 입장 방법 정하기, 프론트에서 POST 입장 한번 더 보내줄지, 여기서 처리할 지
 		// TODO: 응답 값, 메소드 응답 값 수정
