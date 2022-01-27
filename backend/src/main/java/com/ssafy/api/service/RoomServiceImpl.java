@@ -28,7 +28,7 @@ public class RoomServiceImpl implements RoomService {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    FileUploadServiceImpl fileUploadService;
+    FileUploadService fileUploadService;
 
     @Override
     public Room createRoom(RoomCreatePostReq req, MultipartFile multipartFile) {
@@ -42,8 +42,14 @@ public class RoomServiceImpl implements RoomService {
             room.setLocked(true);
         }
 
-        room.setThumbnailUrl("dummy_value");    // 임시 썸네일 경로
+        LocalDateTime curDateTime = LocalDateTime.now();
+        curDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        room.setStartTime(curDateTime);
+
+        room.setThumbnailUrl("dummy.png");    // 임시 썸네일 경로
         room = roomRepository.save(room);       // 썸네일 경로 없이 방 생성
+        sessionRepository.flush();
+        System.out.println(room.toString());
 
         return this.updateThumbnail(room.getId(), multipartFile);   // 썸네일 경로 업데이트
     }
@@ -196,8 +202,7 @@ public class RoomServiceImpl implements RoomService {
         String thumbnailPath = fileUploadService.saveFile(multipartFile, roomId);   // 썸네일 경로 생성
 
         room.setThumbnailUrl(thumbnailPath);    // 썸네일 경로 설정
-
-        return room;
-        //return roomRepository.save(room);   // 섬네일 경로를 업데이트
+        System.out.println(room.toString());
+        return roomRepository.save(room);   // 섬네일 경로를 업데이트
     }
 }
