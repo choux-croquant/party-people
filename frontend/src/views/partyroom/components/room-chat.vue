@@ -25,19 +25,21 @@
       :class="[state.isSidebarOpen ? 'max-w-lg' : 'max-w-0']"
     >
 
-      <!-- chatting list -->
+      <!-- 채팅 내용 -->
       <ul class="border-2 h-4/5 w-5/6 border-main-100 p-4 overflow-y-auto">
-        <li class="flex flex-col mb-2" v-for="i in 10" :key="i">
+        <li class="flex flex-col mb-2" v-for="(chat, idx) in state.chats" :key="idx">
           <div class="flex flex-row items-center">
-            <span class="text-main-100 text-md mr-2 font-bold">ssafy kim</span>
-            <span class="text-tc-400 text-xs">20:25</span>
+            <!-- TODO: 내가 보낸 채팅 다르게 표시하기 -->
+            <span class="text-main-100 text-md mr-2 font-bold">{{ chat.userId }}</span>
+            <span class="text-tc-400 text-xs">{{ chat.time }}</span>
           </div>
           <div>
-            <p class="text-tc-300 text-sm break-all text-left">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+            <p class="text-tc-300 text-sm break-all text-left">{{ chat.content }}</p>
           </div>
         </li>
       </ul>
 
+      <!-- 메시지 보낼 유저 선택창 -->
       <div class="relative inline-flex border-3 rounded-lg border-main-100 w-1/2 m-0 h-7 p-0">
         <select v-model="state.selectedUser" class="cursor-pointer font-bold px-4 py-0 text-sm form-select border-0 rounded-md text-gray-600 w-full h-5-5 border-transparent focus:border-transparent focus:ring-0 appearance-none">
           <option selected="selected">all</option>
@@ -47,10 +49,9 @@
         </select>
       </div>
 
-      <!-- message -->
+      <!-- 메시지 작성 -->
       <div class="w-4/5 p-0 flex flex-row justify-between items-center">
         <textarea v-model="state.message" @keydown.enter="sendMessage" class="message-box w-5/6 border-2 border-main-100 text-xs focus:border-main-100 focus:border-2" cols="" rows="2"></textarea>
-        <!-- <input type="text" class="border-2 border-main-100 text-xs h-6" w-full> -->
         <svg @click="sendMessage()" class="h-6 w-6 send-icon cursor-pointer" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
             viewBox="0 0 491.022 491.022" style="enable-background:new 0 0 491.022 491.022;" xml:space="preserve">
           <g>
@@ -95,21 +96,35 @@
 import { reactive } from 'vue'
 
 export default {
+  // props: ["chats"],
 
   setup () {
+    // console.log(props.chats)
+
     const state = reactive({
       right: true,
       isSidebarOpen: true,
       selectedUser: "all",
       message: "",
 
-      // dummy 데이터
+      // FIX: subscribers, chats 정보 => 부모 컴포넌트에서 받아오기
       subscribers: [
         { id: 1, userId: 'salt' },
         { id: 2, userId: 'sugar77' },
         { id: 3, userId: 'pepper235' },
         { id: 4, userId: 'olive_oil' },
-      ]
+      ],
+
+      chats: [
+        { userId: 'salt', time: '20:25', content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' },
+        { userId: 'sugar77', time: '20:25', content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' },
+        { userId: 'sugar77', time: '20:25', content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' },
+        { userId: 'pepper235', time: '20:25', content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' },
+        { userId: 'salt', time: '20:26', content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' },
+        { userId: 'sugar77', time: '20:26', content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' },
+        { userId: 'sugar77', time: '20:26', content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' },
+        { userId: 'pepper235', time: '20:26', content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' },
+      ],
     })
 
     const toggle = () => {
@@ -119,9 +134,22 @@ export default {
     const sendMessage = () => {  
       let strippeddMessage = state.message.trim()
 
-      if (strippeddMessage !== '') {
-        // TODO: 메시지 전송 처리
-      }
+      if (strippeddMessage === '') 
+        return
+      
+      console.log(strippeddMessage)
+
+      // FIX: 부모 컴포넌트에서 signal 보내기 + session.on('signal')로 이벤트 listen하기
+      // session.signal({
+      //   data: strippeddMessage,
+      //   to: [],
+      // })
+      // .then(() => {
+      //   console.log('메시지 전송 완료')
+      // })
+      // .catch((error) => {
+      //   console.log(error)
+      // })
 
       // enter키 누를 때 줄바꿈 방지
       event.preventDefault();
