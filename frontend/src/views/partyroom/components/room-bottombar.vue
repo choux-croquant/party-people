@@ -29,9 +29,30 @@
 </style>
 
 <script>
+import { reactive } from '@vue/reactivity'
 export default {
   setup() {
+    const state = reactive ({
+      onCam: true,
+      onMic: true
+    })
     
+    const clickCam = () => {
+      if (state.onCam) {
+        state.onCam = false
+      } else {
+        state.onCam = true
+      }
+    }
+    
+    const clickMic = () => {
+      if (state.onMic) {
+        state.onMic = false
+      } else {
+        state.onMic = true
+      }
+    }
+  return { state, clickCam, clickMic }
   },
 }
 </script>
