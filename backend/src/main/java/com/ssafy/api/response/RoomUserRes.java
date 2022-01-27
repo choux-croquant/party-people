@@ -2,6 +2,7 @@ package com.ssafy.api.response;
 
 import com.ssafy.db.entity.User;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +13,9 @@ import lombok.Setter;
 @Setter
 @ApiModel("UserResponse")
 public class RoomUserRes {
+    @ApiModelProperty(name="사용자 pk id", example="1")
     String userid;
+    @ApiModelProperty(name="사용자 닉네임", example="싸피 조아")
     String nickname;
 
     public static RoomUserRes of(User user) {
