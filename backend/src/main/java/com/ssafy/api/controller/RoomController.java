@@ -136,7 +136,7 @@ public class RoomController {
 		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
 	}
 
-	@PostMapping("/")
+	@PostMapping(value = "", consumes = {"multipart/form-data"})
 	@ApiOperation(value = "파티룸 생성", notes = "<strong>파티룸</strong>을 생성한다.")
 	@ApiResponses({
 			@ApiResponse(code = 201, message = "성공", response = UserLoginPostRes.class),
@@ -149,13 +149,13 @@ public class RoomController {
 			@RequestPart(value = "room", required = true) @ApiParam(value = "파티룸 정보", required = true) RoomCreatePostReq req,
 			@ApiIgnore Authentication authentication) {
 
-		// 토큰이 없는 사용자가 파티룸 생성을 요청한 경우 : 401(Unauthorized Error반환)
-		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Unauthorized"));
+		// 토큰이 없는 사용자가 요청한 경우 : 401(인증 토큰 없음)
+		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "인증 토큰 없음"));
 
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 		Long userId = userDetails.getUser().getId();
 
-		// 이미 세션에 접속한 사용자
+		// 이미 세션에 접속한 사용자가 요청한 경우 : 403(퇴장 권한 없음)
 		if (roomService.isUserAccessOtherSession(userId))
 			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "세션 생성 금지됨"));
 

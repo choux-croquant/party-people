@@ -3,6 +3,7 @@
     <div class="fixed inset-0 flex z-40">
       <room-sidebar></room-sidebar>
       <room-chat></room-chat>
+      <room-bottombar></room-bottombar>
     </div>
   </div>
 </template>
@@ -15,10 +16,10 @@ import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import roomSidebar from './components/room-sidebar.vue'
 import RoomChat from './components/room-chat.vue'
-
+import roomBottombar from './components/room-bottombar.vue'
 
 export default {
-  components: { roomSidebar, RoomChat },
+  components: { roomSidebar, RoomChat, roomBottombar },
   name: 'conference-detail',
 
   setup () {
