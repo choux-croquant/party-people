@@ -30,14 +30,14 @@
           <div class="flex justify-center mt-5 mb-10">
             <div class="mt-2 p-1 bg-white rounded-lg shadow-xl w-40">
               <div class="flex justify-center">
-                <input v-model="state.min" type="number" class="border-none text-xl mt-2 font-bold w-16" max=59 min=0 placeholder="00">
+                <input v-model="state.timerTime.min" type="number" class="border-none text-xl mt-2 font-bold w-16" max=59 min=0 placeholder="00">
                 <span class="text-xl mt-3.5 font-bold">:</span>
-                <input v-model="state.sec" type="number" class="border-none text-xl ml-2 mt-2 font-bold w-16" max=59 min=0 placeholder="00">
+                <input v-model="state.timerTime.sec" type="number" class="border-none text-xl ml-2 mt-2 font-bold w-16" max=59 min=0 placeholder="00">
               </div>
             </div>  
           </div>
           <div class="flex items-center justify-center">
-            <button @click="login" class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold h-10 py-1 px-24 rounded-full focus:outline-none focus:shadow-outline" type="button" >
+            <button @click="close()" class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold h-10 py-1 px-24 rounded-full focus:outline-none focus:shadow-outline" type="button" >
               START
             </button>
           </div>
@@ -55,6 +55,8 @@
 import { reactive } from '@vue/reactivity'
 import BaseModal from './base-modal.vue'
 import { ref } from 'vue'
+import { useStore } from 'vuex'
+
 
 export default {
   name: 'timerCreateModal',
@@ -62,9 +64,12 @@ export default {
     BaseModal
   },
   setup() {
+    const store = useStore()
     const state = reactive ({
-      min: null,
-      sec: null
+      timerTime: {
+        min: null,
+        sec: null
+      }
     })
     const baseModal = ref(null)
     const open = () => {
@@ -74,6 +79,13 @@ export default {
     const close = () => {
       baseModal.value.closeModal()
     }
+
+    // const timerStart = () => {
+    //   console.log("timerStart")
+    //   store.commit('root/setTimer', state.timerTime)
+    // }
+    
+    store.commit('root/setTimer', state.timerTime)
 
     return { state, open, close, baseModal }
   },

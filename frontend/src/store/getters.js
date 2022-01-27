@@ -19,3 +19,8 @@ export function getLoginState (state) {
 export function getRoomList (state) {
 	return state.roomList
 }
+
+export function getTimerTime (state) {
+	console.log(state.timerTime)
+	return state.timerTime
+}

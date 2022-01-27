@@ -22,3 +22,8 @@ export function setRoomList (state, roomList) {
 	console.log(roomList)
 	state.roomList = roomList
 }
+
+export function setTimer (state, timerTime) {
+	console.log(timerTime)
+	state.timerTime = timerTime
+}
