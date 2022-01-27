@@ -12,8 +12,8 @@ public class FileUploadServiceImpl implements FileUploadService{
     // 파일 저장 경로 반환
     public String saveFile(MultipartFile multipartFile, Long roomId){
         // 썸네일 이미지를 업로드 하지 않은 경우 기본이미지로 설정
-        if (multipartFile.isEmpty())
-            return "storage/thumbnails/defaultImage";
+        if (multipartFile == null)
+            return "dummy.png";
 
         // 환경에 따라 경우 아래 두 라인의 주석 변경
         String path = "/opt/upload/" + Long.toString(roomId); // linux 환경
