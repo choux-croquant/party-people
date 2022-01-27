@@ -111,7 +111,7 @@
       </div>
 
       <!-- timer button -->
-      <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showTimerBtn" @click="clickTimerBtn">
+      <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showTimerBtn" @click="clickTimer()">
         <a
           class="h-24 px-6 flex flex-col justify-center items-center w-full"
         >
@@ -231,6 +231,7 @@
   <vote-create-modal ref="voteCreateModal"/>
   <video-customize-modal ref="videoCustomizeModal" />
   <theme-customize-modal ref="themeCustomizeModal" />
+  <timer-create-modal ref="timerCreateModal" />
 </template>
 
 <style>
@@ -242,9 +243,10 @@
 
 <script>
 import { ref } from 'vue';
-import VoteCreateModal from '../../../teleport/vote-create-modal.vue';
+import VoteCreateModal from '@/teleport/vote-create-modal.vue';
 import videoCustomizeModal from '@/teleport/video-customize-modal.vue';
 import themeCustomizeModal from '@/teleport/theme-customize-modal.vue';
+import timerCreateModal from '@/teleport/timer-create-modal.vue';
 // import { reactive } from 'vue'
 
 export default {
@@ -254,15 +256,22 @@ export default {
     VoteCreateModal,
     videoCustomizeModal,
     themeCustomizeModal,
+    timerCreateModal
   },
   setup () {
     const voteCreateModal = ref(null)
     const videoCustomizeModal = ref(null)
     const themeCustomizeModal = ref(null)
+    const timerCreateModal = ref(null)
 
     const clickVote = () => {
       console.log("clickvote")
       voteCreateModal.value.open()
+    }
+
+    const clickTimer = () => {
+      console.log("clickTimer")
+      timerCreateModal.value.open()
     }
 
     const clickVideoCustomizingBtn = () => {
@@ -273,7 +282,7 @@ export default {
       themeCustomizeModal.value.open()
     }
 
-    return { voteCreateModal, videoCustomizeModal, themeCustomizeModal, clickVote, clickVideoCustomizingBtn, clickThemeBtn }
+    return { clickTimer, voteCreateModal, videoCustomizeModal, themeCustomizeModal, clickVote, clickVideoCustomizingBtn, clickThemeBtn, timerCreateModal }
   },
 
   data() {
