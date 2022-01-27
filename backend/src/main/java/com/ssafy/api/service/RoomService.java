@@ -17,6 +17,7 @@ import java.util.Optional;
 public interface RoomService {
 	Room createRoom(RoomCreatePostReq roomCreatePostReq, MultipartFile multipartFile);
 	Room deleteRoom(long roomId);
+	Room updateThumbnail(long roomId, MultipartFile multipartFile);
 	List<User> getRoomUserListByRoomId(Long roomId);
 	List<Session> getSessionsByRoomId(Long roomId);
 	void updateRoomHostInfo(Long roomId, List<RoomHostUpdateReq> updateHostReq);
