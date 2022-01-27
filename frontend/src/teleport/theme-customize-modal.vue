@@ -46,8 +46,6 @@
 </style>
 <script>
 import { ref, reactive } from 'vue'
-import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
 import BaseModal from './base-modal.vue'
 
 
