@@ -4,6 +4,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
+import java.net.URL;
 import java.util.HashSet;
 
 @Service
@@ -14,7 +15,8 @@ public class FileUploadServiceImpl {
         if (multipartFile.isEmpty())
             return "storage/thumbnails/defaultImage";
 
-        String path = "storage/thumbnails/" + Long.toString(roomId) + "/image";    // 방ID/이미지
+       // String path = "/opt/upload/" + Long.toString(roomId); // linux 환경
+        String path = "C:\\upload\\" + Long.toString(roomId);    // 방ID/이미지
         String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
         String absolutePath;
 
@@ -31,8 +33,10 @@ public class FileUploadServiceImpl {
             throw new RuntimeException("Not Supported File Type");
 
         try {
-            File file = new File(path);
-
+            File dir = new File(path);
+            if(!dir.exists()) dir.mkdirs();
+            File file = new File(path + "\\img");
+           // File file = new File(path + "/img");
             multipartFile.transferTo(file);
             absolutePath = file.getAbsolutePath();
         }catch (NullPointerException e){
@@ -40,6 +44,7 @@ public class FileUploadServiceImpl {
         }catch (RuntimeException e){
             return null;
         }catch (Exception e){
+            e.printStackTrace();
             return null;
         }
 

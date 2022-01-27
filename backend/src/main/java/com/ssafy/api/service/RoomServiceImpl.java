@@ -196,7 +196,8 @@ public class RoomServiceImpl implements RoomService {
         String thumbnailPath = fileUploadService.saveFile(multipartFile, roomId);   // 썸네일 경로 생성
 
         room.setThumbnailUrl(thumbnailPath);    // 썸네일 경로 설정
-        
-        return roomRepository.save(room);   // 섬네일 경로를 업데이트
+
+        return room;
+        //return roomRepository.save(room);   // 섬네일 경로를 업데이트
     }
 }
