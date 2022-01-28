@@ -12,10 +12,6 @@ export function getActiveMenuIndex (state) {
 	return keys.findIndex(item => item === state.activeMenu)
 }
 
-export function getLoginState (state) {
-	return state.loginState
-}
-
 export function getRoomList (state) {
 	return state.roomList
 }

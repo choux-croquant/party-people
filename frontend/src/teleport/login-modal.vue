@@ -66,7 +66,7 @@ export default {
     }
     const login = function () {
       console.log(state.form)
-      store.dispatch('root/requestLogin', {
+      store.dispatch('auth/requestLogin', {
         accountId: state.form.accountId,
         password: state.form.password
       })
@@ -74,7 +74,7 @@ export default {
         console.log(result, 'asdf')
         console.log(result.data.accessToken)
         localStorage.setItem('access_token', result.data.accessToken)
-        store.commit('root/setLoginState', true)
+        store.commit('auth/setLoginState', true)
         state.form.accountId = ''
         state.form.password = ''
         state.loginErr = false

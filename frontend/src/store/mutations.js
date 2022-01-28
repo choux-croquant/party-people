@@ -12,12 +12,6 @@ export function setMenuActiveMenuName (state, menuName) {
 	state.activeMenu = menuName
 }
 
-export function setLoginState (state, setLogin) {
-	console.log(setLogin)
-	state.loginState = setLogin
-	console.log(state.loginState)
-}
-
 export function setRoomList (state, roomList) {
 	console.log(roomList)
 	state.roomList = roomList
