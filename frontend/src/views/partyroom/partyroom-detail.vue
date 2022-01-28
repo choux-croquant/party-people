@@ -1,6 +1,9 @@
 <template>
   <div class="h-screen w-screen flex bg-tc-500">
     <div class="fixed inset-0 flex z-40">
+      <div class="mx-auto">
+        <timer></timer>
+      </div>
       <room-sidebar></room-sidebar>
       <room-chat></room-chat>
       <room-bottombar></room-bottombar>
@@ -17,9 +20,10 @@ import { useRoute } from 'vue-router'
 import roomSidebar from './components/room-sidebar.vue'
 import RoomChat from './components/room-chat.vue'
 import roomBottombar from './components/room-bottombar.vue'
+import timer from './components/timer.vue'
 
 export default {
-  components: { roomSidebar, RoomChat, roomBottombar },
+  components: { roomSidebar, RoomChat, roomBottombar, timer },
   name: 'conference-detail',
 
   setup () {

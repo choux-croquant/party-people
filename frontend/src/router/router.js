@@ -18,7 +18,7 @@ const routes = [
     path: '/conferences/:conferenceId',
     name: 'ConferenceDetail',
     component: ConferencesDetail
-  }
+  },
 ]
 
 const router = createRouter({

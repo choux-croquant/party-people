@@ -15,3 +15,7 @@ export function getActiveMenuIndex (state) {
 export function getRoomList (state) {
 	return state.roomList
 }
+
+export function getTimerTime (state) {
+	return state.timerTime
+}
