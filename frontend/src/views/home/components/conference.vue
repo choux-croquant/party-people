@@ -2,7 +2,7 @@
 
 <template>
   <div class="max-w-sm rounded-xl overflow-hidden shadow-lg conference-card">
-    <img class="w-full" :src="room.thumbnailUrl" alt="PartyRoom Thumbnail">
+    <img class="w-full" src="https://pparttypeople.kro.kr/upload/101/thumbnail.jpeg" alt="PartyRoom Thumbnail">
     <div class="px-6 py-4">
       <div class="flex flex-row justify-between">
         <span class="font-bold text-xl mb-2">{{ room.title }}</span>

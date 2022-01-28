@@ -1,10 +1,15 @@
 <template>
-<div v-if="streamManager">
+<div v-if="streamManager" class="userVideoContainer">
 	<ov-video :stream-manager="streamManager"/>
 	<div><p>{{ clientData }}</p></div>
 </div>
 </template>
-
+<style>
+.userVideoContainer {
+	width: 480px;
+	height: 270px;
+}
+</style>
 <script>
 import OvVideo from './ov-video';
 
