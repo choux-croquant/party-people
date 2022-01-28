@@ -21,6 +21,5 @@ export function getRoomList (state) {
 }
 
 export function getTimerTime (state) {
-	console.log("getTimerTime")
 	return state.timerTime
 }

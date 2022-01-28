@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LandingPage from '@/views/landing/landing-page'
 import Home from '@/views/home/home'
 import ConferencesDetail from '@/views/partyroom/partyroom-detail'
-import Timer from '@/views/partyroom/components/timer'
 
 const routes = [
   {
@@ -19,11 +18,6 @@ const routes = [
     path: '/conferences/:conferenceId',
     name: 'ConferenceDetail',
     component: ConferencesDetail
-  },
-  {
-    path: '/timer',
-    name: 'Timer',
-    component: Timer
   },
 ]
 
