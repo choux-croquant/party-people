@@ -37,7 +37,7 @@
             </div>  
           </div>
           <div class="flex items-center justify-center">
-            <button @click="close()" class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold h-10 py-1 px-24 rounded-full focus:outline-none focus:shadow-outline" type="button" >
+            <button @click="timerStart(), close()" class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold h-10 py-1 px-24 rounded-full focus:outline-none focus:shadow-outline" type="button" >
               START
             </button>
           </div>
@@ -80,15 +80,13 @@ export default {
       baseModal.value.closeModal()
     }
 
-    // const timerStart = () => {
-    //   console.log("timerStart")
-    //   store.commit('root/setTimer', state.timerTime)
-    // }
-    
-    store.commit('root/setTimer', state.timerTime)
+    const timerStart = () => {
+      console.log("timerStart")
+      store.commit('root/setTimer', state.timerTime)
+    }
 
-    return { state, open, close, baseModal }
-  },
+    return { state, open, close, baseModal, timerStart }
+  }
   
 }
 </script>
