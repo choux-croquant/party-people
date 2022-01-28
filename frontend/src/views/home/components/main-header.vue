@@ -66,7 +66,7 @@ export default {
     const loginModal = ref(null)
     const conferenceCreateModal = ref(null)
     const state = reactive({
-      loginState : computed(() => store.getters['root/getLoginState']),
+      loginState : computed(() => store.getters['auth/getLoginState']),
       searchValue: null,
       searchOption: 'title'
     })
@@ -79,7 +79,7 @@ export default {
 
     const clickLogout = () => {
       localStorage.removeItem('access_token')
-      store.commit('root/setLoginState', false)
+      store.commit('auth/setLoginState', false)
       router.push({ name: 'Home' })
     }
 

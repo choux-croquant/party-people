@@ -7,7 +7,10 @@ module.exports = {
     open: true,
     proxy: {
       '/api/v1': {
-        target: 'http://localhost:8080/'
+        target: 'https://pparttypeople.kro.kr/'
+      },
+      '/openvidu/api': {
+        target: 'https://pparttypeople.kro.kr:4443/'
       }
     },
     historyApiFallback: true,

@@ -142,7 +142,42 @@ export default {
         console.log(err)
       })
     }
+    // const createRoom = () => {
+    //   store.dispatch('root/createRoom', {
+    //     thumbnail: thumbnailUrl,
+    //     room: {
+    //       capacity: state.capacity,
+    //       description: state.description,
+    //       password: state.password,
+    //       title: state.title,
+    //     }
+    //   })
+    //   .then(() => {
+    //     router.push({ name: 'ConferenceDetail' })
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //   })
+    // }
+    // const createRoom = () => {
+    //   const roomData = new FormData()
 
+    //   roomData.append("capacity", state.capacity)
+    //   roomData.append("description", state.description)
+    //   roomData.append("password", state.password)
+    //   roomData.append("title", state.title)
+    //   roomData.append("thumbnailUrl", thumbnailUrl)
+
+    //   store.dispatch('root/createRoom', {
+    //     roomData
+    //   })
+    //   .then(() => {
+    //     router.push({ name: 'ConferenceDetail' })
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //   })
+    // }
     return { state, open, close, onUploadImage, createRoom, baseModal }
   }
 }

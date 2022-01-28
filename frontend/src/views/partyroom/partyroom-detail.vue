@@ -1,6 +1,9 @@
 <template>
   <div class="h-screen w-screen flex bg-tc-500">
     <div class="fixed inset-0 flex z-40">
+      <div class="mx-auto">
+        <timer></timer>
+      </div>
       <room-sidebar></room-sidebar>
       <div id="session" v-if="session">
         <div id="session-header">
@@ -13,6 +16,7 @@
         </div>
       </div>
       <room-chat></room-chat>
+      <room-bottombar></room-bottombar>
     </div>
   </div>
 </template>
@@ -26,12 +30,14 @@ import UserVedio from './components/user-video.vue'
 import { OpenVidu } from 'openvidu-browser'
 import axios from 'axios';
 import { useRouter } from 'vue-router'
+import roomBottombar from './components/room-bottombar.vue'
+import timer from './components/timer.vue'
 
 const OPENVIDU_SERVER_URL = "https://pparttypeople.kro.kr:4443";
 const OPENVIDU_SERVER_SECRET = "a106ssafy0183";
 
 export default {
-  components: { roomSidebar, RoomChat, UserVedio },
+  components: { roomSidebar, RoomChat, UserVedio, timer,  roomBottombar },
   name: 'conference-detail',
   props: {
     conferenceId: {
