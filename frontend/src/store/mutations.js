@@ -22,3 +22,8 @@ export function setRoomList (state, roomList) {
 	console.log(roomList)
 	state.roomList = roomList
 }
+
+export function setRoomUserList (state, roomUserList) {
+	console.log(roomUserList)
+	state.roomUserList = roomUserList
+}

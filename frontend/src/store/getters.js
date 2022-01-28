@@ -19,3 +19,7 @@ export function getLoginState (state) {
 export function getRoomList (state) {
 	return state.roomList
 }
+
+export function getRoomUserList (state) {
+	return state.roomUserList
+}

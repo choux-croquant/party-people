@@ -32,5 +32,6 @@ export default {
   isDesktopPlatform: IsDesktop,
   activeMenu: 'home',
   loginState: false,
-  roomList : [{id: 1, title: '파티룸 1번'}, {id: 2, title: '파티룸 2번'}, {id: 3, title: '파티룸 3번'}]
+  roomList : [{id: 1, title: '파티룸 1번'}, {id: 2, title: '파티룸 2번'}, {id: 3, title: '파티룸 3번'}],
+  roomUserList : []
 }

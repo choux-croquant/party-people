@@ -23,10 +23,22 @@ export function requestRoomList ({ state }, payload) {
   return $axios.get(url)
 }
 
+export function requestRoomUserList ({ state }, payload) {
+  console.log('requestRoomList', state, payload)
+  const url = `/rooms/users/${payload.roomId}`
+  let token = localStorage.getItem('access_token')
+  console.log(token)
+  return $axios({
+    method:'GET',
+    url: url,
+    headers: {'Authorization': 'Bearer ' + token}
+  })
+}
+
 export function roomSearch ({ state }, payload) {
   console.log('roomSearch', state, payload)
   const url = `/list/roomSearch?include=${payload.include}&word=${payload.word}`
-  return $axios.get(url) 
+  return $axios.get(url)
 }
 
 export function createRoom ({ state }, payload) {
