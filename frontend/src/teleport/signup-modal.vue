@@ -78,7 +78,7 @@ export default {
     }
     const signup = () => {
       console.log(state.form)
-      store.dispatch('root/requestSignup', {
+      store.dispatch('auth/requestSignup', {
         accountId: state.form.accountId,
         nickname: state.form.nickname,
         password: state.form.password,
