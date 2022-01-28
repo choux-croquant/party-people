@@ -31,14 +31,10 @@ const IsDesktop = getIsDesktop()
 export default {
   isDesktopPlatform: IsDesktop,
   activeMenu: 'home',
-<<<<<<< HEAD
   loginState: false,
   roomList : [{id: 1, title: '파티룸 1번'}, {id: 2, title: '파티룸 2번'}, {id: 3, title: '파티룸 3번'}],
   timerTime: {
     min: null,
     sec: null
   }
-=======
-  roomList : [{id: 1, title: '파티룸 1번'}, {id: 2, title: '파티룸 2번'}, {id: 3, title: '파티룸 3번'}]
->>>>>>> ea831d92f5794ed6b3577777ce080133b6ab443e
 }

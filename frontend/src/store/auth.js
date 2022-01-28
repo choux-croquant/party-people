@@ -1,5 +1,8 @@
 import $axios from 'axios'
 
+const backAxios = $axios.create({
+  baseURL: '/api/v1'
+})
 
 export default {
   namespaced: true,
@@ -29,14 +32,14 @@ export default {
       let body = payload
       console.log(url)
       console.log(payload)
-      return $axios.post(url, body)
+      return backAxios.post(url, body)
     },
 
     requestSignup ({ state }, payload) {
       console.log('requestSignup', state, payload)
       const url = '/users'
       let body = payload
-      return $axios.post(url, body)
+      return backAxios.post(url, body)
     }
   }
 }
