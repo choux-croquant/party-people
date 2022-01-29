@@ -3,7 +3,7 @@
    
   <div class="conference-list-wrap pl-0" style="overflow: auto"> 
     <infinite-scroll @infinite-scroll="infiniteHandler">
-      <conference :key="room.id" v-for="room in state.roomList" class="conference-card m-5" @click="handleClick(room.id, room.password)" :room="room" /> 
+      <conference :key="room.id" v-for="room in state.roomList" class="conference-card m-5" @click="handleClick(room.id)" :room="room" /> 
     </infinite-scroll>
   </div>
 
@@ -99,25 +99,30 @@ export default {
       })
     }
 
-    const handleClick = (id, password) => {
-      console.log("clickconf")
-      console.log(state.roomList)
-      if (password === null) {
-        router.push({
-          name: 'ConferenceDetail',
-          params: {
-            conferenceId: id
-          }
-        })
-      }
-      else {
-        passwordConfirmModal.value.open(id, password)
-      }
+    const handleClick = (id) => {
+      store.dispatch('root/roomLinkEntry', id)
+      .then((res) => {
+        console.log(res.data)
+        if (res.data.locked) {
+          passwordConfirmModal.value.open(id)
+        }
+        else {
+          router.push({
+            name: 'ConferenceDetail',
+            params: {
+              conferenceId: id,
+              userName: store.getters['auth/getUserName']
+            }
+          })
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     }
-
     return { state, store, infiniteHandler, clickConference, handleClick, passwordConfirmModal }
   },
-
+}
   // mounted() {
   //   // 백엔드에 axios 요청 보내서 응답 받아올 부분
   //   const infiniteHandler = () => {
@@ -130,5 +135,4 @@ export default {
   //     }
   //   }
   // }
-}
 </script>

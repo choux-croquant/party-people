@@ -71,10 +71,10 @@ export default {
         password: state.form.password
       })
       .then((result) => {
-        console.log(result, 'asdf')
         console.log(result.data.accessToken)
         localStorage.setItem('access_token', result.data.accessToken)
         store.commit('auth/setLoginState', true)
+        store.commit('auth/setUserName', state.form.accountId)
         state.form.accountId = ''
         state.form.password = ''
         state.loginErr = false

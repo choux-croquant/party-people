@@ -53,3 +53,16 @@ export function createRoom ({ state }, payload) {
     data: payload
   })
 }
+
+export function roomLinkEntry ({ state }, roomId) {
+  console.log('roomLinkEntry', state)
+  const url = `rooms/${ roomId }`
+  let token = localStorage.getItem('access_token')
+  return backAxios({
+    method:'GET',
+    url: url,
+    headers: {
+      'Authorization': 'Bearer ' + token,
+    },
+  })
+}
