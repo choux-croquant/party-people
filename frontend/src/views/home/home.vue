@@ -102,8 +102,8 @@ export default {
     const handleClick = (id) => {
       store.dispatch('root/roomLinkEntry', id)
       .then((res) => {
-        console.log(res.data.isLocked)
-        if (res.data.isLocked) {
+        console.log(res.data)
+        if (res.data.locked) {
           passwordConfirmModal.value.open(id)
         }
         else {
@@ -111,7 +111,7 @@ export default {
             name: 'ConferenceDetail',
             params: {
               conferenceId: id,
-              userNmae: store.getters['root/getUserName']
+              userName: store.getters['auth/getUserName']
             }
           })
         }
