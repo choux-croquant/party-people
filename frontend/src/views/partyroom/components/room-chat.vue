@@ -92,14 +92,11 @@
 </style>
 
 <script>
-// const messageBox = document.querySelector('.message-box')
 import { reactive } from 'vue'
 
 export default {
-  // props: ["chats"],
 
-  setup () {
-    // console.log(props.chats)
+  setup (props, { emit }) {
 
     const state = reactive({
       right: true,
@@ -115,49 +112,46 @@ export default {
         { id: 4, userId: 'olive_oil' },
       ],
 
-      chats: [
-        { userId: 'salt', time: '20:25', content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' },
-        { userId: 'sugar77', time: '20:25', content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' },
-        { userId: 'sugar77', time: '20:25', content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' },
-        { userId: 'pepper235', time: '20:25', content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' },
-        { userId: 'salt', time: '20:26', content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' },
-        { userId: 'sugar77', time: '20:26', content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' },
-        { userId: 'sugar77', time: '20:26', content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' },
-        { userId: 'pepper235', time: '20:26', content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' },
-      ],
+      chats: [],
     })
 
     const toggle = () => {
       state.isSidebarOpen = !state.isSidebarOpen;
     }
 
-    const sendMessage = () => {  
+    const sendMessage = async () => {  
       let strippeddMessage = state.message.trim()
 
       if (strippeddMessage === '') 
         return
       
-      console.log(strippeddMessage)
+      console.log('보낼 메시지 : ' + strippeddMessage)
 
-      // FIX: 부모 컴포넌트에서 signal 보내기 + session.on('signal')로 이벤트 listen하기
-      // session.signal({
-      //   data: strippeddMessage,
-      //   to: [],
-      // })
-      // .then(() => {
-      //   console.log('메시지 전송 완료')
-      // })
-      // .catch((error) => {
-      //   console.log(error)
-      // })
+      await emit("message", {
+        content: strippeddMessage,
+      })
 
-      // enter키 누를 때 줄바꿈 방지
-      event.preventDefault();
-      // 메시지 창 초기화
-      state.message = ""
+      event.preventDefault();  // enter키 누를 때 줄바꿈 방지
+      state.message = ""       // 메시지 창 초기화
     }
 
-    return { state, toggle, sendMessage }
+    const addMessage = (messageData, isMyMessage) => {
+      let message = JSON.parse(messageData)
+
+      if (isMyMessage) {
+        message.sender += " (You)"
+      }
+
+      state.chats.push({
+        userId: message.sender,
+        time: message.time,
+        content: message.content,
+      })
+
+      console.log('메시지 수신 완료')
+    }
+
+    return { state, toggle, sendMessage, addMessage }
   },
 
 };
