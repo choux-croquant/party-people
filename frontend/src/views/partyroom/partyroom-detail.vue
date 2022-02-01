@@ -15,7 +15,7 @@
           <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         </div>
       </div>
-      <room-chat></room-chat>
+      <room-chat @message="sendMessage" ref="chat"></room-chat>
       <room-bottombar></room-bottombar>
     </div>
   </div>
@@ -87,6 +87,18 @@ export default {
 			this.session.on('exception', ({ exception }) => {
 				console.warn(exception);
 			});
+
+			// 채팅 signal 받기
+			this.session.on('signal', (event) => {
+				// console.log(JSON.parse(event.data).sender)
+				// console.log(this.myUserName)
+
+				if (JSON.parse(event.data).sender === this.myUserName) {
+					this.$refs.chat.addMessage(event.data, true)   // 내 메시지인 경우
+				} else {
+					this.$refs.chat.addMessage(event.data, false)  // 내 메시지가 아닌 경우
+				}
+			})
 
 			// --- Connect to the session with a valid user token ---
 
@@ -184,6 +196,35 @@ export default {
 					.catch(error => reject(error.response));
 			});
 		},
+
+		sendMessage ({ content }) {
+			let now = new Date()
+			let current = now.toLocaleTimeString([], {
+				hour: '2-digit',
+				minute: '2-digit',  
+				hour12: false,      // true인 경우 오후 10:25와 같이 나타냄.
+			})
+			
+			// `${now.getHours()} : ${now.getMinutes()}`
+
+			let messageData = {
+				content: content,
+				sender: this.myUserName,
+				time: current,
+			}
+
+			this.session.signal({
+        data: JSON.stringify(messageData),
+        to: [],
+      })
+      .then(() => {
+        console.log('메시지 전송 완료')
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+		}
+
   },
   mounted() {
     console.log('mounted')
