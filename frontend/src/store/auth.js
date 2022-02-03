@@ -47,6 +47,6 @@ export default {
       const url = '/users'
       let body = payload
       return backAxios.post(url, body)
-    }
+    },
   }
 }

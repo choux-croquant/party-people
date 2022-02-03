@@ -66,3 +66,17 @@ export function roomLinkEntry ({ state }, roomId) {
     },
   })
 }
+
+export function passwordConfirm ({ state }, payload) {
+  const url = `rooms/${ payload.roomId }`
+  console.log(payload.password)
+  let token = localStorage.getItem('access_token')
+  return backAxios({
+    method:'POST',
+    url: url,
+    headers: {
+      'Authorization': 'Bearer ' + token,
+    },
+    data: { password: payload.password }
+  })
+}
