@@ -37,10 +37,15 @@ public class RoomServiceImpl implements RoomService {
         room.setTitle(req.getTitle());
         room.setDescription(req.getDescription());
         room.setCapacity(req.getCapacity());
-        if (req.getPassword() != null) {
+        if (!req.getPassword().isEmpty()) {
             room.setPassword(req.getPassword());
             room.setLocked(true);
         }
+        else
+            room.setLocked(false);
+
+        System.out.println("PASSWORD :::::::::: " + req.getPassword());
+        System.out.println("SETLOCKED :::::::::: " + room.isLocked());
 
         LocalDateTime curDateTime = LocalDateTime.now();
         curDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
