@@ -91,14 +91,25 @@ export default {
 				console.warn(exception);
 			});
 
-			// 채팅 signal 받기
-			this.session.on('signal', (event) => {
+			// public 채팅 signal 받기
+			this.session.on('signal:public-chat', (event) => {
 				if (JSON.parse(event.data).sender === this.myUserName) {
-					this.$refs.chat.addMessage(event.data, true)   // 내 메시지인 경우
+					this.$refs.chat.addMessage(event.data, true, false)   // 내 메시지인 경우
 				} else {
-					this.$refs.chat.addMessage(event.data, false)  // 내 메시지가 아닌 경우
+					this.$refs.chat.addMessage(event.data, false, false)  // 내 메시지가 아닌 경우
 				}
 			})
+
+			// private 채팅 signal 받기
+			this.session.on('signal:private-chat', (event) => {
+				if (JSON.parse(event.data).sender === this.myUserName) {
+					this.$refs.chat.addMessage(event.data, true, true)   // 내 메시지인 경우
+				} else {
+					this.$refs.chat.addMessage(event.data, false, true)  // 내 메시지가 아닌 경우
+				}
+			})
+
+
 			// 타이머 signal 받기
 			this.session.on('signal:timer', (event) => {
 				this.$refs.timer.startCountdown(event.data)
@@ -202,7 +213,7 @@ export default {
 			});
 		},
 
-		sendMessage ({ content }) {
+		sendMessage ({ content, to }) {
 			let now = new Date()
 			let current = now.toLocaleTimeString([], {
 				hour: '2-digit',
@@ -216,22 +227,38 @@ export default {
 				time: current,
 			}
 
-			// 4. 주석이랑 타입 추가
+			// console.log('누구한테')
+			// console.log(to)
+
 			// 전체 메시지
-			this.session.signal({
-        data: JSON.stringify(messageData),
-        to: [],
-				type: 'public-chat',
-      })
-      .then(() => {
-        console.log('메시지 전송 완료')
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+			if (to === "") {
+				this.session.signal({
+					data: JSON.stringify(messageData),
+					to: [],
+					type: 'public-chat',
+				})
+				.then(() => {
+					console.log('메시지 전송 완료')
+				})
+				.catch((error) => {
+					console.log(error)
+				})
+			}
 
 			// 개인 메시지
-
+			if (to !== "") {
+				this.session.signal({
+					data: JSON.stringify(messageData),
+					to: [this.mySessionId, to],
+					type: 'private-chat',
+				})
+				.then(() => {
+					console.log('메시지 전송 완료')
+				})
+				.catch((error) => {
+					console.log(error)
+				})
+			}
 		},
 
 		startCountdown ({ timer }) {
