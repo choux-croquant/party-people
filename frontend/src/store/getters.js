@@ -24,3 +24,11 @@ export function getTimerTime (state) {
 export function getRoomUserList (state) {
 	return state.roomUserList
 }
+
+export function getRouletteSignalData (state) {
+	return state.rouletteSignalData
+}
+
+export function getRoomId (state) {
+	return state.roomId
+}
