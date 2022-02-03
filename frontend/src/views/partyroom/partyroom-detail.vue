@@ -1,14 +1,12 @@
 <template>
   <div class="h-screen w-screen flex bg-tc-500">
     <div class="fixed inset-0 flex z-40">
-      <div class="mx-auto">
-        <timer @startCountdown="startCountdown" ref="timer"></timer>
-      </div>
       <room-sidebar></room-sidebar>
       <div id="session" v-if="session">
         <div id="session-header">
-          <h1 id="session-title">{{ myUserName }}</h1>
-          <input type="button" id="buttonLeaveSession" @click="leaveSession()" value="Leave session">
+					<div class="mx-auto">
+						<timer @startCountdown="startCountdown" ref="timer"></timer>
+				</div>
         </div>
         <div id="video-container" class="grid grid-cols-3 gap-2">
           <user-video :stream-manager="publisher"/>
