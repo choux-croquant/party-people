@@ -1,13 +1,24 @@
 <template>
 <div v-if="streamManager" class="userVideoContainer">
 	<ov-video :stream-manager="streamManager"/>
-	<div><p>{{ clientData }}</p></div>
+	<div class="userOverlay text-tc-500"><p>{{ clientData }}</p></div>
 </div>
 </template>
 <style>
 .userVideoContainer {
-	width: 480px;
-	height: 270px;
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+.userOverlay {
+	display: none;
+}
+.userVideoContainer:hover .userOverlay {
+	display: block;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	position: absolute;
+	bottom: 0px;
 }
 </style>
 <script>
