@@ -5,7 +5,9 @@ import com.ssafy.db.repository.ListRepository;
 import com.ssafy.db.repository.ListRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,12 +25,14 @@ public class ListServiceImpl implements ListService {
 
 	@Override
 	public Page<Room> getRoomList(Pageable pageable) {
-		return listRepository.findByEndTime(null, pageable);
+		Pageable sort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id").descending());
+		return listRepository.findByEndTime(null, sort);
 	}
 
 	@Override
 	public Page<Room> getRoomListByWord(String word, String include, Pageable pageable) {
-		if(include.equals("title")) return listRepository.findByTitleContainingAndEndTimeIsNull(word, pageable);
-		return listRepository.findByDescriptionContainingAndEndTimeIsNull(word, pageable);
+		Pageable sort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id").descending());
+		if(include.equals("title")) return listRepository.findByTitleContainingAndEndTimeIsNull(word, sort);
+		return listRepository.findByDescriptionContainingAndEndTimeIsNull(word, sort);
 	}
 }
