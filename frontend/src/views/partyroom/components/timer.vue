@@ -21,7 +21,7 @@
     </svg>
   </div>
   <div v-if="state.count" class="content-center">
-    <button type="button" class="bg-white" :disabled="state.counting" @click="startCountdown">
+    <button type="button" class="bg-white" :disabled="state.counting" @click="sendTimer">
       <vue-countdown v-if="state.counting" :time="state.min*60*1000+(state.sec*1000)" @end="onCountdownEnd" v-slot="{ minutes, seconds }"> {{ minutes }} : {{ seconds }} </vue-countdown>
       <span v-else class="text-bold">start</span>
     </button>
@@ -38,10 +38,11 @@
 <script>
 import { computed, reactive } from 'vue';
 import { useStore } from 'vuex';
+
 export default {
   name : "timer",
 
-  setup() {
+  setup (props, { emit }) {
     const store = useStore()
     const state = reactive ({
       time: computed(() => store.getters['root/getTimerTime']),
@@ -50,22 +51,45 @@ export default {
       count: true,
       counting: false,
     })
-    const startCountdown = () => {
-      if (state.counting == true) {
-        console.log("stop")
-        state.counting = false
-      } else {
-        console.log('startTimer')
-        state.min = state.time.min
-        state.sec = state.time.sec
-        state.counting = true
-      }
+    const startCountdown = (timerData) => {
+      let timer = JSON.parse(timerData)
+      state.min = timer.min
+      state.sec = timer.sec
+      state.counting = timer.counting
+      console.log("타이머수신")
+      console.log(timerData)
+      // if (state.counting == true) {
+      //   console.log("stop")
+      //   state.counting = false
+      // } else {
+      //   console.log('startTimer')
+      //   state.min = state.time.min
+      //   state.sec = state.time.sec
+      //   state.counting = true        
+      // }
+    }
+
+    const sendTimer = async () => {
+      emit("startCountdown", {
+        timer: {
+          min: state.time.min,
+          sec: state.time.sec,
+          counting: true
+        }
+      })
     }
     const onCountdownEnd = () => {
       state.counting = false;
     }
     const stopCountdown = () => {
       state.counting = false
+      emit("startCountdown", {
+        timer: {
+          min: state.time.min,
+          sec: state.time.sec,
+          counting: state.counting
+        }
+      })
     }
 
     // watch(state.time, () => {
@@ -75,7 +99,7 @@ export default {
     //   // console.log(state.sec)
     // })
 
-    return { state, startCountdown, onCountdownEnd, stopCountdown }
+    return { state, startCountdown, onCountdownEnd, stopCountdown, sendTimer }
   }
 }
 </script>
