@@ -14,10 +14,10 @@
           현재 파티룸은 녹화가 허용되어 있습니다.
         </p>
         <div class="mb-6">
-          <input ref="inputPassword" class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="roomPassword" type="password" placeholder="비밀번호">
+          <input v-model="state.inputPassword" class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="roomPassword" type="password" placeholder="비밀번호">
         </div>
         <div class="flex items-center justify-center">
-          <button @click="confirm(inputPassword.value)" class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold py-1 px-24 rounded-full focus:outline-none focus:shadow-outline" type="button" >
+          <button @click="confirm()" class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold py-1 px-24 rounded-full focus:outline-none focus:shadow-outline" type="button" >
             입장하기
           </button>
         </div>
@@ -33,9 +33,10 @@
 
 </style>
 <script>
-import { ref } from "vue"
+import { ref, reactive } from "vue"
 import { useRouter } from 'vue-router'
 import BaseModal from './base-modal.vue'
+import { useStore } from 'vuex'
 
 export default {
   name: 'PasswordConfirm',
@@ -44,40 +45,42 @@ export default {
   },
 
   setup() {
+    const store = useStore()
     const baseModal = ref(null)
-    const inputPassword = ref(null)
     let conferenceRoomId = ''
-    let roomPassword = ''
     const router = useRouter()
+    const state = reactive({
+      inputPassword: ''
+    })
 
-    const open = (id, password) => {
+    const open = (id) => {
       console.log("pcopen")
       console.log(id)
       conferenceRoomId = id
-      roomPassword = password
       baseModal.value.openModal()
     }
     const close = () => {
       baseModal.value.closeModal()
     }
-    const confirm = (password) => {
-      console.log('confirm')
-      if (password === roomPassword ) {
+    const confirm = () => {
+      console.log(state.inputPassword)
+      store.dispatch('root/passwordConfirm', { roomId: conferenceRoomId, password: state.inputPassword })
+      .then((res) => {
+        console.log(res)
         router.push({
           name: 'ConferenceDetail',
           params: {
-            conferenceId: conferenceRoomId
+            conferenceId: conferenceRoomId,
+            userName: store.getters['auth/getUserName']
           }
         })
-        close()
-      }
-      else {
-        console.log('wrong password')
-        inputPassword.value = ''
-      }
-      
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+            
     }
-    return { baseModal, roomPassword, conferenceRoomId, inputPassword, open, close, confirm }
+    return { state, baseModal, conferenceRoomId, open, close, confirm }
   },
 }
 </script>
