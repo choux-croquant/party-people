@@ -71,9 +71,6 @@ export default {
 			this.session.on('streamCreated', ({ stream }) => {
 				const subscriber = this.session.subscribe(stream);
 
-				console.log('username 받았는지 확인하기')
-				console.log(subscriber.stream.userName)
-
 				// subscriber.userId = this.myUserName;  // subscriber Object에 userName 추가
 				this.subscribers.push(subscriber);
 			});
@@ -98,7 +95,7 @@ export default {
 
 			// private 채팅 signal 받기
 			this.session.on('signal:private-chat', (event) => {
-				this.$refs.chat.addMessage(event.data, JSON.parse(event.data).sender === this.myUserName, true)
+				this.$refs.chat.addMessage(event.data, false, true)
 			})
 
 			// 타이머 signal 받기
@@ -237,10 +234,12 @@ export default {
 			if (to !== "all") {
 				this.session.signal({
 					data: JSON.stringify(messageData),
-					to: [this.mySessionId, to],
+					to: [to],
 					type: 'private-chat',
 				})
 				.then(() => {
+					// 내가 보낸 개인 메시지 추가
+					this.$refs.chat.addMessage(JSON.stringify(messageData), true, true)
 					console.log('메시지 전송 완료')
 				})
 				.catch((error) => {
