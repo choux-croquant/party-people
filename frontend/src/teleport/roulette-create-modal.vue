@@ -25,7 +25,7 @@
           <div class="flex items-center justify-center">
             <button
                 class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold h-10 py-1 px-24 rounded-full focus:outline-none focus:shadow-outline"
-                type="button" @click="test">
+                type="button" @click="rouletteStart">
               룰렛시작
             </button>
           </div>
@@ -58,19 +58,18 @@ export default {
     const baseModal = ref(null)
     const open = () => {
       console.log("roulette open")
+      const sessionId = store.getters['root/getRoomId']
 
-      store.dispatch('root/requestRoomUserList', {roomId: 2})
+      store.dispatch('root/requestRoomUserList', {roomId: sessionId})
           .then((res) => {
             console.log('요청은 성공')
 
             const roomUserList = res.data.contents.reduce((acc, cur) => {
-              acc.push(`${cur.userid}/${cur.nickname}`)
+              acc.push({value : `${cur.userid}/${cur.nickname}`})
               return acc
             }, [])
 
             store.commit('root/setRoomUserList', roomUserList)
-
-            // router.push({ name: 'ConferenceDetail' })
           })
           .catch((err) => {
             console.log('실패')
@@ -89,7 +88,6 @@ export default {
       voteTopic: '',
       itemNum: 0,
       items: {},
-      roomId: 2
     }
   },
   methods: {
@@ -100,12 +98,19 @@ export default {
     minusItem() {
       this.itemNum--
     },
-    test() {
-      // console.log(this.items)
-      console.log("test data" + this.store.getters['root/getRoomUserList'])
+    rouletteStart() {
+      console.log("roulette start button clicked")
+
+      const signalParticipants = this.store.getters['root/getRoomUserList']
+      const signalWinner = Math.floor(Math.random() * signalParticipants.length)
+      const signalData = {
+        participants : signalParticipants,
+        winner : signalWinner
+      }
+      
+      this.store.commit('root/setRouletteSignalData', signalData)
     }
   }
-
 
 }
 </script>
