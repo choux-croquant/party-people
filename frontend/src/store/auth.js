@@ -8,12 +8,16 @@ export default {
   namespaced: true,
 
   state: () => {
-    loginState: false
+    loginState: false;
+    userName: ''
   },
 
   getters: {
     getLoginState (state) {
       return state.loginState
+    },
+    getUserName (state) {
+      return state.userName
     }
   },
 
@@ -22,6 +26,9 @@ export default {
       console.log(setLogin)
       state.loginState = setLogin
       console.log(state.loginState)
+    },
+    setUserName (state, userName) {
+      state.userName = userName
     }
   },
 

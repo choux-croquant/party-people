@@ -36,5 +36,6 @@ export default {
   timerTime: {
     min: null,
     sec: null
-  }
+  },
+  roomUserList : []
 }

@@ -60,7 +60,7 @@
 
       <!-- video customizing button -->
       <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showVideoBtn" @click="clickVideoCustomizingBtn()">
-        <a 
+        <a
           class="h-24 px-6 flex flex-col justify-center items-center w-full"
         >
           <svg class="sidebar-menu-icon h-8 w-8" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
@@ -72,7 +72,7 @@
 
       <!-- room customizing button -->
       <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showRoomBtn" @click="clickThemeBtn()">
-        <a 
+        <a
           class="h-24 px-6 flex flex-col justify-center items-center w-full"
         >
           <svg class="sidebar-menu-icon h-8 w-8" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -90,7 +90,7 @@
 
       <!-- link button -->
       <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showLinkBtn" @click="clickLinkBtn">
-        <a 
+        <a
           class="h-24 px-6 flex flex-col justify-center items-center w-full"
         >
           <svg class="sidebar-menu-icon h-8 w-8" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -126,7 +126,7 @@
       </div>
 
       <!-- roulette button -->
-      <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showRouletteBtn" @click="clickRouletteBtn">
+      <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showRouletteBtn" @click="clickRoulette()">
         <a
           class="h-24 px-6 flex flex-col justify-center items-center w-full"
         >
@@ -212,7 +212,7 @@
 
       <!-- back button -->
       <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showBackBtn" @click="clickBackBtn">
-        <a 
+        <a
           class="h-24 px-6 flex flex-col justify-center items-center w-full"
         >
           <svg class="sidebar-menu-icon h-8 w-8" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -229,6 +229,7 @@
     </div>
   </div>
   <vote-create-modal ref="voteCreateModal"/>
+  <roulette-create-modal ref="rouletteCreateModal"/>
   <video-customize-modal ref="videoCustomizeModal" />
   <theme-customize-modal ref="themeCustomizeModal" />
   <timer-create-modal ref="timerCreateModal" />
@@ -247,6 +248,7 @@ import VoteCreateModal from '@/teleport/vote-create-modal.vue';
 import videoCustomizeModal from '@/teleport/video-customize-modal.vue';
 import themeCustomizeModal from '@/teleport/theme-customize-modal.vue';
 import timerCreateModal from '@/teleport/timer-create-modal.vue';
+import rouletteCreateModal from "@/teleport/roulette-create-modal";
 // import { reactive } from 'vue'
 
 export default {
@@ -254,12 +256,14 @@ export default {
 
   components: {
     VoteCreateModal,
+    rouletteCreateModal,
     videoCustomizeModal,
     themeCustomizeModal,
     timerCreateModal
   },
   setup () {
     const voteCreateModal = ref(null)
+    const rouletteCreateModal = ref(null)
     const videoCustomizeModal = ref(null)
     const themeCustomizeModal = ref(null)
     const timerCreateModal = ref(null)
@@ -282,7 +286,12 @@ export default {
       themeCustomizeModal.value.open()
     }
 
-    return { clickTimer, voteCreateModal, videoCustomizeModal, themeCustomizeModal, clickVote, clickVideoCustomizingBtn, clickThemeBtn, timerCreateModal }
+    const clickRoulette = () => {
+      console.log("click roulette")
+      rouletteCreateModal.value.open()
+    }
+
+    return { clickTimer, voteCreateModal, rouletteCreateModal, videoCustomizeModal, themeCustomizeModal, clickVote, clickVideoCustomizingBtn, clickThemeBtn, clickRoulette, timerCreateModal }
   },
 
   data() {
@@ -350,7 +359,7 @@ export default {
       t.select();
       document.execCommand('copy');
       document.body.removeChild(t);
-      
+
       console.log('url 복사 완료!')
     }
   }

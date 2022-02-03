@@ -16,6 +16,11 @@ export function getRoomList (state) {
 	return state.roomList
 }
 
+
 export function getTimerTime (state) {
 	return state.timerTime
+}
+
+export function getRoomUserList (state) {
+	return state.roomUserList
 }
