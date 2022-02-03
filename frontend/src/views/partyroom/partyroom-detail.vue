@@ -17,8 +17,6 @@
       </div>
       <room-chat @message="sendMessage" ref="chat"></room-chat>
       <room-bottombar @audioOnOff="audioOnOff" @videoOnOff="videoOnOff" @leaveSession="leaveSession()" ></room-bottombar>
-			<button @click="cameraOff">camera off</button>
-			<button @click="cameraOn">camera on</button>
     </div>
   </div>
 </template>
@@ -226,11 +224,15 @@ export default {
         console.log(error)
       })
 		},
-		audioOnOff () {
+
+		audioOnOff ({ audio }) {
 			console.log("audio")
+			this.publisher.publishAudio(audio)
 		},
-		videoOnOff () {
+
+		videoOnOff ({ video }) {
 			console.log("video")
+			this.publisher.publishVideo(video)
 		}
 
   },
