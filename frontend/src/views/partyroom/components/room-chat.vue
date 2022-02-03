@@ -42,9 +42,9 @@
       <!-- 메시지 보낼 유저 선택창 -->
       <div class="relative inline-flex border-3 rounded-lg border-main-100 w-1/2 m-0 h-7 p-0">
         <select v-model="state.selectedUser" class="cursor-pointer font-bold px-4 py-0 text-sm form-select border-0 rounded-md text-gray-600 w-full h-5-5 border-transparent focus:border-transparent focus:ring-0 appearance-none">
-          <option selected="selected">all</option>
-          <option v-for="subscriber in state.subscribers" :value="subscriber.userId" :key="subscriber.id">
-            {{ subscriber.userId }}
+          <option selected="selected" value="all">all</option>
+          <option v-for="(sub, idx) in state.subscribers" :value="sub.stream.connection.connectionId" :key="idx">
+            {{ JSON.parse(sub.stream.connection.data).clientData }}
           </option>
         </select>
       </div>
@@ -96,6 +96,10 @@ import { reactive } from 'vue'
 
 export default {
 
+  props: {
+    subscribers: Object,
+  },
+
   setup (props, { emit }) {
 
     const state = reactive({
@@ -103,15 +107,7 @@ export default {
       isSidebarOpen: true,
       selectedUser: "all",
       message: "",
-
-      // FIX: subscribers, chats 정보 => 부모 컴포넌트에서 받아오기
-      subscribers: [
-        { id: 1, userId: 'salt' },
-        { id: 2, userId: 'sugar77' },
-        { id: 3, userId: 'pepper235' },
-        { id: 4, userId: 'olive_oil' },
-      ],
-
+      subscribers: props.subscribers,
       chats: [],
     })
 
@@ -119,7 +115,7 @@ export default {
       state.isSidebarOpen = !state.isSidebarOpen;
     }
 
-    const sendMessage = async () => {  
+    const sendMessage = () => {  
       let strippeddMessage = state.message.trim()
 
       if (strippeddMessage === '') 
@@ -127,19 +123,26 @@ export default {
       
       console.log('보낼 메시지 : ' + strippeddMessage)
 
-      await emit("message", {
+      emit("message", {
         content: strippeddMessage,
+        to: state.selectedUser,
       })
 
       event.preventDefault();  // enter키 누를 때 줄바꿈 방지
       state.message = ""       // 메시지 창 초기화
+
+      console.log(state.subscribers)
     }
 
-    const addMessage = (messageData, isMyMessage) => {
+    const addMessage = (messageData, isMyMessage, isPrivate) => {
       let message = JSON.parse(messageData)
 
       if (isMyMessage) {
         message.sender += " (You)"
+      }
+
+      if (isPrivate) {
+        message.content += " (private)"
       }
 
       state.chats.push({
