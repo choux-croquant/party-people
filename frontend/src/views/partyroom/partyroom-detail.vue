@@ -15,7 +15,7 @@
           <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         </div>
       </div>
-      <room-chat @message="sendMessage" ref="chat"></room-chat>
+      <room-chat @message="sendMessage" ref="chat" :subscribers="subscribers"></room-chat>
       <room-bottombar @audioOnOff="audioOnOff" @videoOnOff="videoOnOff" @leaveSession="leaveSession()" ></room-bottombar>
     </div>
   </div>
@@ -72,6 +72,11 @@ export default {
 			// On every new Stream received...
 			this.session.on('streamCreated', ({ stream }) => {
 				const subscriber = this.session.subscribe(stream);
+
+				console.log('username 받았는지 확인하기')
+				console.log(subscriber.stream.userName)
+
+				// subscriber.userId = this.myUserName;  // subscriber Object에 userName 추가
 				this.subscribers.push(subscriber);
 			});
 
@@ -90,9 +95,6 @@ export default {
 
 			// 채팅 signal 받기
 			this.session.on('signal', (event) => {
-				// console.log(JSON.parse(event.data).sender)
-				// console.log(this.myUserName)
-
 				if (JSON.parse(event.data).sender === this.myUserName) {
 					this.$refs.chat.addMessage(event.data, true)   // 내 메시지인 경우
 				} else {
@@ -118,8 +120,10 @@ export default {
 							resolution: '640x480',  // The resolution of your video
 							frameRate: 30,			// The frame rate of your video
 							insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
-							mirror: false       	// Whether to mirror your local video or not
+							mirror: false,       	// Whether to mirror your local video or not
 						});
+
+						publisher.stream.userName = 'asdfasdf'
 
 						this.mainStreamManager = publisher;
 						this.publisher = publisher;
@@ -204,8 +208,6 @@ export default {
 				minute: '2-digit',  
 				hour12: false,      // true인 경우 오후 10:25와 같이 나타냄.
 			})
-			
-			// `${now.getHours()} : ${now.getMinutes()}`
 
 			let messageData = {
 				content: content,
@@ -213,9 +215,12 @@ export default {
 				time: current,
 			}
 
+			// 4. 주석이랑 타입 추가
+			// 전체 메시지
 			this.session.signal({
         data: JSON.stringify(messageData),
         to: [],
+				type: 'public-chat',
       })
       .then(() => {
         console.log('메시지 전송 완료')
@@ -223,6 +228,9 @@ export default {
       .catch((error) => {
         console.log(error)
       })
+
+			// 개인 메시지
+
 		},
 
 		audioOnOff ({ audio }) {
