@@ -93,22 +93,13 @@ export default {
 
 			// public 채팅 signal 받기
 			this.session.on('signal:public-chat', (event) => {
-				if (JSON.parse(event.data).sender === this.myUserName) {
-					this.$refs.chat.addMessage(event.data, true, false)   // 내 메시지인 경우
-				} else {
-					this.$refs.chat.addMessage(event.data, false, false)  // 내 메시지가 아닌 경우
-				}
+				this.$refs.chat.addMessage(event.data, JSON.parse(event.data).sender === this.myUserName, false)
 			})
 
 			// private 채팅 signal 받기
 			this.session.on('signal:private-chat', (event) => {
-				if (JSON.parse(event.data).sender === this.myUserName) {
-					this.$refs.chat.addMessage(event.data, true, true)   // 내 메시지인 경우
-				} else {
-					this.$refs.chat.addMessage(event.data, false, true)  // 내 메시지가 아닌 경우
-				}
+				this.$refs.chat.addMessage(event.data, JSON.parse(event.data).sender === this.myUserName, true)
 			})
-
 
 			// 타이머 signal 받기
 			this.session.on('signal:timer', (event) => {
@@ -227,11 +218,8 @@ export default {
 				time: current,
 			}
 
-			// console.log('누구한테')
-			// console.log(to)
-
 			// 전체 메시지
-			if (to === "") {
+			if (to === "all") {
 				this.session.signal({
 					data: JSON.stringify(messageData),
 					to: [],
@@ -246,7 +234,7 @@ export default {
 			}
 
 			// 개인 메시지
-			if (to !== "") {
+			if (to !== "all") {
 				this.session.signal({
 					data: JSON.stringify(messageData),
 					to: [this.mySessionId, to],
