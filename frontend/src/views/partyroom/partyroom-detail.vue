@@ -3,6 +3,7 @@
     <div class="fixed inset-0 flex z-40">
       <div class="mx-auto">
         <timer></timer>
+		<roulette v-show="isRouletteOpen"></roulette>
       </div>
       <room-sidebar></room-sidebar>
       <div id="session" v-if="session">
@@ -23,21 +24,23 @@
 <style>
 </style>
 <script>
-  
+import {ref} from 'vue'  
 import roomSidebar from './components/room-sidebar.vue'
 import RoomChat from './components/room-chat.vue'
 import UserVideo from './components/user-video.vue'
 import { OpenVidu } from 'openvidu-browser'
 import axios from 'axios';
 import { useRouter } from 'vue-router'
+import {useStore} from "vuex";
 import roomBottombar from './components/room-bottombar.vue'
 import timer from './components/timer.vue'
+import Roulette from './components/roulette.vue'
 
 const OPENVIDU_SERVER_URL = "https://pparttypeople.kro.kr:4443";
 const OPENVIDU_SERVER_SECRET = "a106ssafy0183";
 
 export default {
-  components: { roomSidebar, RoomChat, UserVideo, timer,  roomBottombar },
+  components: { roomSidebar, RoomChat, UserVideo, timer,  roomBottombar, Roulette },
   name: 'conference-detail',
   props: {
     conferenceId: {
@@ -46,6 +49,12 @@ export default {
     userName: {
       type: String
     }
+  },
+  setup() {
+    const store = useStore()
+    const isRouletteOpen = ref(false)
+
+    return { store, isRouletteOpen }
   },
   data () {
 		return {
@@ -229,6 +238,7 @@ export default {
   mounted() {
     console.log('mounted')
     this.joinSession()
+	this.store.commit('root/setRoomId', this.mySessionId)
   },
 	beforeUnmount() {
 		console.log('unmount')
