@@ -16,7 +16,7 @@
         </div>
       </div>
       <room-chat @message="sendMessage" ref="chat"></room-chat>
-      <room-bottombar></room-bottombar>
+      <room-bottombar @audioOnOff="audioOnOff" @videoOnOff="videoOnOff" @leaveSession="leaveSession()" ></room-bottombar>
     </div>
   </div>
 </template>
@@ -223,6 +223,16 @@ export default {
       .catch((error) => {
         console.log(error)
       })
+		},
+
+		audioOnOff ({ audio }) {
+			console.log("audio")
+			this.publisher.publishAudio(audio)
+		},
+
+		videoOnOff ({ video }) {
+			console.log("video")
+			this.publisher.publishVideo(video)
 		}
 
   },
