@@ -5,8 +5,8 @@
       <div id="session" v-if="session">
         <div id="session-header">
 					<div class="mx-auto">
-        		<timer></timer>
-      		</div>
+						<timer @startCountdown="startCountdown" ref="timer"></timer>
+				</div>
         </div>
         <div id="video-container" class="grid grid-cols-3 gap-2">
           <user-video :stream-manager="publisher"/>
@@ -97,7 +97,10 @@ export default {
 					this.$refs.chat.addMessage(event.data, false)  // 내 메시지가 아닌 경우
 				}
 			})
-
+			// 타이머 signal 받기
+			this.session.on('signal:timer', (event) => {
+				this.$refs.timer.startCountdown(event.data)
+			})
 			// --- Connect to the session with a valid user token ---
 
 			// 'getToken' method is simulating what your server-side should do.
@@ -221,6 +224,20 @@ export default {
       .catch((error) => {
         console.log(error)
       })
+		},
+
+		startCountdown ({ timer }) {
+			this.session.signal({
+				data: JSON.stringify(timer),
+				to: [],
+				type: 'timer'
+			})
+			.then(() => {
+				console.log('타이머 전송 완료')
+			})
+			.catch((error) => {
+				console.log(error)
+			})
 		},
 
 		audioOnOff ({ audio }) {
