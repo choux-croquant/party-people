@@ -21,12 +21,12 @@
 </template>
 
 <script>
-import {reactive, computed, onBeforeUpdate} from 'vue';
+import {reactive, computed} from 'vue';
 import {useStore} from "vuex";
 
 export default {
     name: 'roulette',
-  setup() {
+    setup() {
         const store = useStore()
         const state = reactive({
             items: computed(() => store.getters['root/getRouletteSignalData'].participants),
@@ -34,32 +34,46 @@ export default {
             count: 0,
             history: [],
             buttonDisabled: false,
-            itemStyles: [],
-            lineStyles: [],
+            itemStyles: computed(() => {
+                let arr = []
+                state.items.forEach((el, idx) => {
+                    arr.push({
+                        "transform" : "rotate(" + (state.segment * idx) + "deg)",
+                    })
+                })
+                return arr
+            }),
+            lineStyles: computed(() => {
+                let arr = []
+                state.items.forEach((el, idx) => {
+                    arr.push({
+                        "transform" : "rotate(" + (state.segment * idx + state.offset) + "deg)",
+                    });
+                })
+                return arr
+            }),
             segment: computed(() => 360 / state.items.length),
             offset: computed(() => state.segment / 2),
             angle: computed(() => -((state.currentPin * state.segment) + (state.count * 360 * 5))),
             rouletteStyle: computed(() => ({"transform" : "rotate(" + state.angle + "deg)"})),
             currentItem: computed(() => state.items[state.currentPin])
         })
-        let cnt = 0
 
-        onBeforeUpdate(() => {
-          state.items.forEach((el, idx) => {
-            state.itemStyles.push({
-              "transform" : "rotate(" + (state.segment * idx) + "deg)",
-            });
-            state.lineStyles.push({
-              "transform" : "rotate(" + (state.segment * idx + state.offset) + "deg)",
-            });
-          });
-        })
+        // onBeforeUpdate(() => {
+        //   state.items.forEach((el, idx) => {
+        //     state.itemStyles.push({
+        //       "transform" : "rotate(" + (state.segment * idx) + "deg)",
+        //     });
+        //     state.lineStyles.push({
+        //       "transform" : "rotate(" + (state.segment * idx + state.offset) + "deg)",
+        //     });
+        //   });
+        // })
 
-      const playRoulette = () => {
+        const playRoulette = () => {
             state.buttonDisabled = true;
             state.count++;
             // state.currentPin = Math.floor(Math.random() * state.items.length);
-            cnt ++
 
             setTimeout(() => {
                 state.buttonDisabled = false;
