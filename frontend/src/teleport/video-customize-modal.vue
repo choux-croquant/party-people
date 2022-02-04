@@ -41,17 +41,6 @@
               <img :src="custom.url" :class="[custom.id === state.selectedCustomId ? 'border-4 border-sub-200' : '']" />
             </div>
           </div>
-          <!-- TODO: slider indicator -->
-          <!-- <div class="flex mx-auto my-0">
-            <ul class="flex justify-center">
-              <li class="h-3 w-3 rounded-full mx-3 cursor-pointer bg-tc-400"></li>
-              <li class="h-3 w-3 rounded-full mx-3 cursor-pointer bg-tc-400"></li>
-              <li class="h-3 w-3 rounded-full mx-3 cursor-pointer bg-tc-400"></li>
-              <li class="h-3 w-3 rounded-full mx-3 cursor-pointer bg-tc-400"></li>
-              <li class="h-3 w-3 rounded-full mx-3 cursor-pointer bg-tc-400"></li>
-              <li class="h-3 w-3 rounded-full mx-3 cursor-pointer bg-tc-400"></li>
-            </ul>
-          </div> -->
         </div>
       </div>
     </div>
@@ -113,7 +102,6 @@ export default {
 
     const clickVideoCustom = (id) => {
       (state.selectedCustomId === id) ? (state.selectedCustomId = null) : (state.selectedCustomId = id)
-      // console.log(state.selectedCustomId)
     }
 
     // TODO: 비디오 커스텀 적용

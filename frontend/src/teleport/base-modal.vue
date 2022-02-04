@@ -14,6 +14,7 @@ import { ref } from "vue"
 
 export default {
   name: 'BaseModal',
+  
   setup() {
     const isOpen = ref(false)
     
@@ -27,7 +28,7 @@ export default {
       isOpen.value = true
     }
 
-    return { isOpen, closeModal, openModal}
+    return { isOpen, closeModal, openModal }
   },
 }
 </script>

@@ -71,7 +71,6 @@
         </svg>
       </div>
 
-
     </div>
   </div>
 </template>
@@ -137,10 +136,12 @@ export default {
     const addMessage = (messageData, isMyMessage, isPrivate) => {
       let message = JSON.parse(messageData)
 
+      // 내가 보낸 메시지인 경우
       if (isMyMessage) {
         message.sender += " (You)"
       }
 
+      // 개인 메시지인 경우
       if (isPrivate) {
         message.content += " (private)"
       }
