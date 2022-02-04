@@ -3,11 +3,10 @@
     <div class="fixed inset-0 flex z-40">
       <div class="mx-auto">
         <timer></timer>
-		<roulette v-show="isRouletteOpen"></roulette>
+		<roulette v-show="isRouletteOpen" ref="apiRequest"></roulette>
       </div>
       <room-sidebar></room-sidebar>
       <!-- 위치는 나중에 옮길 예정 -->
-      <Roulette v-show="isRouletteOpen"/>
       <div id="session" v-if="session">
         <div id="session-header">
           <h1 id="session-title">{{ myUserName }}</h1>
@@ -67,8 +66,7 @@ export default {
       subscribers: [],
       mySessionId: this.conferenceId,
       myUserName: this.userName,
-      router: useRouter(),
-      isRouletteOpen: false
+      router: useRouter()
     }
   },
   methods: {
@@ -114,10 +112,11 @@ export default {
 
       // 룰렛 signal 받기
       this.session.on('signal:roulette-result', (event) => {
-        // Todo: 룰렛 실행, 매개변수 : {참가자배열 , 당첨자}
+        // Todo: 매개변수 : {참가자배열 , 당첨자}를 vuex에 저장
+        this.store.commit('root/setRouletteSignalData', JSON.parse(event.data))
+
         this.isRouletteOpen = true
-        // this.isRouletteOpen = await runRoullette(JSON.parse(event.data))
-        // Todo : 콜백으로 isRoulletteOpen false로 만듬
+        this.$refs.apiRequest.playRoulette()
       })
 
       // --- Connect to the session with a valid user token ---
@@ -217,7 +216,7 @@ export default {
       });
     },
 
-    sendMessage ({ content }) {
+    /*sendMessage ({ content }) {
       let now = new Date()
       let current = now.toLocaleTimeString([], {
         hour: '2-digit',
@@ -243,10 +242,11 @@ export default {
           .catch((error) => {
             console.log(error)
           })
-    },
+    },*/
 
     // 룰렛 데이터 보내기
-    sendRoulletteMessage () {
+    //sendRoulletteMessage () {
+    sendMessage () {
       let messageData = {
         "participants" : this.store.getters['root/getRouletteSignalData'].participants,
         "winner" : this.store.getters['root/getRouletteSignalData'].winner
