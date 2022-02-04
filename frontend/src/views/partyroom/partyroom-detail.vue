@@ -66,7 +66,8 @@ export default {
       subscribers: [],
       mySessionId: this.conferenceId,
       myUserName: this.userName,
-      router: useRouter()
+      router: useRouter(),
+      rouletteTopic: '',
     }
   },
   methods: {
@@ -113,6 +114,7 @@ export default {
       // 룰렛 signal 받기
       this.session.on('signal:roulette-result', (event) => {
         this.store.commit('root/setRouletteSignalData', JSON.parse(event.data))
+        this.rouletteTopic = JSON.parse(event.data).rouletteTopic
 
         this.isRouletteOpen = true
         this.$refs.apiRequest.playRoulette()
@@ -244,10 +246,11 @@ export default {
     },
 
     // 룰렛 데이터 보내기
-    sendRoulletteMessage () {
+    sendRoulletteMessage (rouletteTopic) {
       let messageData = {
         "participants" : this.store.getters['root/getRouletteSignalData'].participants,
-        "winner" : this.store.getters['root/getRouletteSignalData'].winner
+        "winner" : this.store.getters['root/getRouletteSignalData'].winner,
+        "rouletteTopic" : rouletteTopic
       }
 
       this.session.signal({
@@ -264,12 +267,30 @@ export default {
     },
 
 	// roulette-create-modal 에서 startSignal() 메서드를 호출하면 현재 컴포넌트에서 룰렛 실행을 위한 signal 보냄
-	sendRouletteSignal() {
-		this.sendRoulletteMessage()
+	sendRouletteSignal(rouletteTopic) {
+		this.sendRoulletteMessage(rouletteTopic)
 	},
 
     // 룰렛 종료
     closeRoulette(){
+      let now = new Date()
+      let current = now.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,      // true인 경우 오후 10:25와 같이 나타냄.
+      })
+      let participants = this.store.getters['root/getRouletteSignalData'].participants
+      let winnerIdx = this.store.getters['root/getRouletteSignalData'].winner
+
+      let messageData = {
+        content: `[${this.rouletteTopic}] ${participants[winnerIdx].value}님이 당첨되었습니다.`,
+        sender: "System",
+        time: current,
+      }
+
+      // 메세지에 당첨자 출력
+      this.$refs.chat.addMessage(JSON.stringify(messageData), false)
+      // 룰렛 감추기
       this.isRouletteOpen = false
     },
 

@@ -17,7 +17,7 @@
           <div class="">
             <input
                 class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="username" type="text" placeholder="룰렛 제목을 입력해 주세요." v-model="voteTopic">
+                id="username" type="text" placeholder="룰렛 제목을 입력해 주세요." v-model="rouletteTopic">
           </div>
         </form>
         <form class="bg-main-300 shadow-md rounded px-8 pt-4 pb-8 mb-4">
@@ -85,7 +85,7 @@ export default {
   },
   data() {
     return {
-      voteTopic: '',
+      rouletteTopic: '',
       itemNum: 0,
       items: {},
     }
@@ -109,7 +109,7 @@ export default {
       }
 
       this.store.commit('root/setRouletteSignalData', signalData)
-      this.$emit('sendRouletteSignal')
+      this.$emit('sendRouletteSignal', this.rouletteTopic)
       this.close()
     }
   }

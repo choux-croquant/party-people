@@ -363,8 +363,8 @@ export default {
       console.log('url 복사 완료!')
     },
 
-    sendRouletteSignal() {
-      this.$emit('sendRouletteSignal')
+    sendRouletteSignal(rouletteTopic) {
+      this.$emit('sendRouletteSignal', rouletteTopic)
     }
   }
 };
