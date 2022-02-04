@@ -109,7 +109,9 @@ export default {
       }
 
       this.store.commit('root/setRouletteSignalData', signalData)
-      this.store.commit('root/setRouletteStartSignal', true)
+      // this.store.commit('root/setRouletteStartSignal', true)
+      this.$emit('sendRouletteSignal')
+      this.close()
     }
   }
 
