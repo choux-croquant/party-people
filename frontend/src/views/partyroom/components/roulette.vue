@@ -45,11 +45,17 @@ export default {
             }),
             lineStyles: computed(() => {
                 let arr = []
-                state.items.forEach((el, idx) => {
+                if (state.items.length <= 1) {
                     arr.push({
-                        "transform" : "rotate(" + (state.segment * idx + state.offset) + "deg)",
+                        "display": "none",
                     });
-                })
+                } else {
+                    state.items.forEach((el, idx) => {
+                        arr.push({
+                            "transform" : "rotate(" + (state.segment * idx + state.offset) + "deg)",
+                        });
+                    })
+                }
                 return arr
             }),
             segment: computed(() => 360 / state.items.length),
