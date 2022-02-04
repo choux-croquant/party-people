@@ -60,10 +60,12 @@ export default {
             });
         })
 
-        const playRoulette = () => {
+        const playRoulette = (info) => {
             state.buttonDisabled = true;
             state.count++;
             state.currentPin = Math.floor(Math.random() * state.items.length);
+            // state.currentPin = info.winner
+            // state.items = info.participants
 
             setTimeout(() => {
                 state.buttonDisabled = false;
