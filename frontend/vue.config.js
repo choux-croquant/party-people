@@ -16,16 +16,6 @@ module.exports = {
     historyApiFallback: true,
     hot: true
   },
-  // configureWebpack: {
-  //   module: {
-  //     rules: [
-  //       {
-  //         test: /\.css$/,
-  //         use: ['postcss-loader']
-  //       }
-  //     ]
-  //   }
-  // },
   css: {
     loaderOptions: {
       postcss: {
@@ -34,9 +24,6 @@ module.exports = {
       },
     },
   },
-  // transpileDependencies: [
-  //   'tailwind-css'
-  // ],
   lintOnSave: false,
   outputDir: '../backend/src/main/resources/dist'
 }

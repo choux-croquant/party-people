@@ -115,20 +115,6 @@ export default {
       })
       state.searchValue = null
     }
-    // if (state.activeIndex === -1) {
-    //   state.activeIndex = 0
-    //   store.commit('root/setMenuActive', 0)
-    // }
-
-    // const menuSelect = function (param) {
-    //   store.commit('root/setMenuActive', param)
-    //   const MenuItems = store.getters['root/getMenus']
-    //   let keys = Object.keys(MenuItems)
-    //   router.push({
-    //     name: keys[param]
-    
-    //   })
-    // }
 
     return { state, loginModal, signupModal, conferenceCreateModal, clickLogin, clickSignup, createRoom, clickLogout, changeOption, roomSearch }
   }
