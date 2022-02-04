@@ -314,9 +314,9 @@ export default {
     console.log('mounted')
     this.joinSession()
   },
-	// beforeUnmount() {
-	// 	console.log('unmount')
-	// 	this.leaveSession()
-	// }
+	beforeUnmount() {
+		console.log('unmount')
+		this.leaveSession()
+	}
 }
 </script>
