@@ -5,7 +5,7 @@
         <timer></timer>
 		<roulette v-show="isRouletteOpen" ref="apiRequest" @closeRoulette="closeRoulette"></roulette>
       </div>
-      <room-sidebar></room-sidebar>
+      <room-sidebar @sendRouletteSignal="sendRouletteSignal"></room-sidebar>
       <!-- 위치는 나중에 옮길 예정 -->
       <div id="session" v-if="session">
         <div id="session-header">
@@ -262,6 +262,11 @@ export default {
             console.log(error)
           })
     },
+
+	// roulette-create-modal 에서 startSignal() 메서드를 호출하면 현재 컴포넌트에서 룰렛 실행을 위한 signal 보냄
+	sendRouletteSignal() {
+		this.sendRoulletteMessage()
+	},
 
     // 룰렛 종료
     closeRoulette(){

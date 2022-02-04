@@ -109,6 +109,8 @@ export default {
       }
 
       this.store.commit('root/setRouletteSignalData', signalData)
+      this.$emit('sendRouletteSignal')
+      this.close()
     }
   }
 
