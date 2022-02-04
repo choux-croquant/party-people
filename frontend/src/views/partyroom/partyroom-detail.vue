@@ -2,15 +2,27 @@
   <div class="h-screen w-screen flex bg-tc-500">
     <div class="fixed inset-0 flex z-40">
       <room-sidebar></room-sidebar>
-      <div id="session" v-if="session">
+      <div id="session" class="w-full" v-if="session">
         <div id="session-header">
 					<div class="mx-auto">
 						<timer @startCountdown="startCountdown" ref="timer"></timer>
 				</div>
         </div>
-        <div id="video-container" class="grid grid-cols-3 gap-2">
-          <user-video :stream-manager="publisher"/>
-          <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        <div v-if="currentUserCount==0" id="video-container" class="flex flex-wrap mx-8 justify-center gap-4">
+          <user-video class="w-full" :stream-manager="publisher"/>
+          <user-video class="w-full" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        </div>
+				<div v-else-if="currentUserCount<4" id="video-container" class="flex flex-wrap mx-8 justify-center">
+          <user-video class="w-1/2" :stream-manager="publisher"/>
+          <user-video class="w-1/2" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        </div>
+				<div v-else-if="currentUserCount<6" id="video-container" class="flex flex-wrap mt-20 justify-center">
+          <user-video class="w-1/3" :stream-manager="publisher"/>
+          <user-video class="w-1/3" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        </div>
+				<div v-else id="video-container" class="flex flex-wrap justify-center">
+          <user-video class="w-1/3 h-1/4" :stream-manager="publisher"/>
+          <user-video class="w-1/3 h-1/4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         </div>
       </div>
       <room-chat @message="sendMessage" ref="chat" :subscribers="subscribers"></room-chat>
@@ -55,6 +67,11 @@ export default {
 			mySessionId: this.conferenceId,
 			myUserName: this.userName,
       router: useRouter()
+		}
+	},
+	computed: {
+		currentUserCount: function () {
+			return this.subscribers.length
 		}
 	},
   methods: {
@@ -117,7 +134,7 @@ export default {
 							videoSource: undefined, // The source of video. If undefined default webcam
 							publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
 							publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
-							resolution: '640x480',  // The resolution of your video
+							resolution: '640x360',  // The resolution of your video
 							frameRate: 30,			// The frame rate of your video
 							insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
 							mirror: false,       	// Whether to mirror your local video or not
