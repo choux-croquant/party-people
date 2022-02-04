@@ -229,7 +229,7 @@
     </div>
   </div>
   <vote-create-modal ref="voteCreateModal"/>
-  <roulette-create-modal ref="rouletteCreateModal"/>
+  <roulette-create-modal ref="rouletteCreateModal" @sendRouletteSignal="sendRouletteSignal"/>
   <video-customize-modal ref="videoCustomizeModal" />
   <theme-customize-modal ref="themeCustomizeModal" />
   <timer-create-modal ref="timerCreateModal" />
@@ -361,6 +361,10 @@ export default {
       document.body.removeChild(t);
 
       console.log('url 복사 완료!')
+    },
+
+    sendRouletteSignal() {
+      this.$emit('sendRouletteSignal')
     }
   }
 };
