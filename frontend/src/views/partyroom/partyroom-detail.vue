@@ -3,6 +3,7 @@
     <div class="fixed inset-0 flex z-40">
       <div class="mx-auto">
         <timer></timer>
+		<!-- 룰렛 컴포넌트(실행시에만 show) -->
 		<roulette v-show="isRouletteOpen" ref="apiRequest" @closeRoulette="closeRoulette"></roulette>
       </div>
       <room-sidebar @sendRouletteSignal="sendRouletteSignal"></room-sidebar>
@@ -113,10 +114,12 @@ export default {
 
       // 룰렛 signal 받기
       this.session.on('signal:roulette-result', (event) => {
+		// vuex state에 signal로 받은 참가자, 당첨자 정보 저장
         this.store.commit('root/setRouletteSignalData', JSON.parse(event.data))
         this.rouletteTopic = JSON.parse(event.data).rouletteTopic
-
+		// 룰렛 컴포넌트 show
         this.isRouletteOpen = true
+		// 룰렛 애니메이션 실행
         this.$refs.apiRequest.playRoulette()
       })
 
@@ -245,14 +248,16 @@ export default {
           })
     },
 
-    // 룰렛 데이터 보내기
+    // 룰렛 signal 보내기
     sendRoulletteMessage (rouletteTopic) {
+		// 룰렛 데이터(참가자, 당첨자, 룰렛 제목) 저장
       let messageData = {
         "participants" : this.store.getters['root/getRouletteSignalData'].participants,
         "winner" : this.store.getters['root/getRouletteSignalData'].winner,
         "rouletteTopic" : rouletteTopic
       }
 
+		// 룰렛 데이터 signal 전송
       this.session.signal({
         data: JSON.stringify(messageData),
         to: [],
@@ -273,6 +278,7 @@ export default {
 
     // 룰렛 종료
     closeRoulette(){
+		// 채팅창에 로그로 남길 데이터 정의
       let now = new Date()
       let current = now.toLocaleTimeString([], {
         hour: '2-digit',
@@ -288,9 +294,9 @@ export default {
         time: current,
       }
 
-      // 메세지에 당첨자 출력
+      // 자신의 채팅창에 당첨자 로그 출력
       this.$refs.chat.addMessage(JSON.stringify(messageData), false)
-      // 룰렛 감추기
+      // 룰렛 컴포넌트 show 해제
       this.isRouletteOpen = false
     },
 

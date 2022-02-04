@@ -363,6 +363,7 @@ export default {
       console.log('url 복사 완료!')
     },
 
+    // 룰렛 생성 모달(하위)에서 받은 data를 파티룸 내부 컴포넌트(상위)로 전달(emit)
     sendRouletteSignal(rouletteTopic) {
       this.$emit('sendRouletteSignal', rouletteTopic)
     }

@@ -1,12 +1,18 @@
+// 룰렛 컴포넌트
+
 <template>
     <div>
         <div class="roulette-outer">
+            <!-- 룰렛 당첨자 핀 -->
             <div class="roulette-pin"></div>
+            <!-- 룰렛 원판 -->
             <div class="roulette" v-bind:style="this.state.rouletteStyle">
+                <!-- 룰렛 아이템(참가자 리스트) -->
                 <div class="item-wrapper">
                     <div class="item" :key="item.value" v-for="(item, index) in this.state.items"
                         v-bind:style="this.state.itemStyles[index]">{{ item.value }}</div>
                 </div>
+                <!-- 룰렛 아이템 경계선 -->
                 <div class="line-wrapper">
                     <div class="line" :key="item.value" v-for="(item, index) in this.state.items"
                         v-bind:style="this.state.lineStyles[index]"></div>
@@ -25,10 +31,14 @@ export default {
     setup(props, {emit}) {
         const store = useStore()
         const state = reactive({
+            // 참가자 리스트
             items: computed(() => store.getters['root/getRouletteSignalData'].participants),
+            // 당첨자 핀
             currentPin: 0,
+            // 당첨자 핀 각도 동적 배치를 위한 룰렛 회전 횟수
             count: 0,
             history: [],
+            // 참가자 각도 동적 배치
             itemStyles: computed(() => {
                 let arr = []
                 state.items.forEach((el, idx) => {
@@ -38,6 +48,7 @@ export default {
                 })
                 return arr
             }),
+            // 참가자 경계선 동적 배치
             lineStyles: computed(() => {
                 let arr = []
                 if (state.items.length <= 1) {
@@ -53,24 +64,30 @@ export default {
                 }
                 return arr
             }),
+            // 인원수 별 각도
             segment: computed(() => 360 / state.items.length),
+            // 경계선을 위한 오프셋
             offset: computed(() => state.segment / 2),
+            // 당첨자 핀이 가리킬 각도
             angle: computed(() => -((state.currentPin * state.segment) + (state.count * 360 * 5))),
+            // 룰렛 회전 각 동적 적용
             rouletteStyle: null,
+            // 현재 핀이 가리키는 참가자
             currentItem: computed(() => state.items[state.currentPin])
         })
 
+        // 룰렛 애니메이션 실행
         const playRoulette = () => {
+            // 실행 횟수 증가
             state.count++;
-
+            // 렌더링 1초 뒤 애니메이션 실행(당첨자 적용, 당첨자 핀 각도 동적 적용)
             setTimeout(() => {
                 state.currentPin = store.getters['root/getRouletteSignalData'].winner
                 state.rouletteStyle = {"transform" : "rotate(" + state.angle + "deg)"}
             }, 1000);
-
+            // 룰렛 애니메이션만큼 시간 흐른 뒤 룰렛 종료
             setTimeout(() => {
                 state.history.push(state.currentItem.value);
-
                 setTimeout(()=>{
                   // partyroom-detail에 룰렛 숨기기 신호 보내기
                   emit("closeRoulette")
