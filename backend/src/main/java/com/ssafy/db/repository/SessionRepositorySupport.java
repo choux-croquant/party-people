@@ -32,7 +32,7 @@ public class SessionRepositorySupport {
 
     public Session findSessionByRoomIdAndUserId(Long roomId, Long userId) {
         Session session = jpaQueryFactory.select(qSession).from(qSession)
-                .where(qSession.room.id.eq(roomId).and(qSession.user.id.eq(userId))).fetchOne();
+                .where(qSession.room.id.eq(roomId).and(qSession.user.id.eq(userId)).and(qSession.endTime.isNull())).fetchFirst();
         return session;
     }
 
