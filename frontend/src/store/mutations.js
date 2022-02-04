@@ -32,10 +32,6 @@ export function setRouletteSignalData (state, rouletteSignalData) {
 	state.rouletteSignalData = rouletteSignalData
 }
 
-export function setRouletteStartSignal (state, rouletteStartSignal) {
-	state.rouletteStartSignal = rouletteStartSignal
-}
-
 export function setRoomId (state, roomId) {
 	state.roomId = roomId
 }

@@ -25,7 +25,7 @@
 <style>
 </style>
 <script>
-import {computed, ref} from 'vue'
+import {ref} from 'vue'
 import roomSidebar from './components/room-sidebar.vue'
 import RoomChat from './components/room-chat.vue'
 import UserVideo from './components/user-video.vue'
@@ -36,7 +36,6 @@ import {useStore} from "vuex";
 import roomBottombar from './components/room-bottombar.vue'
 import timer from './components/timer.vue'
 import Roulette from './components/roulette.vue'
-import {reactive} from "vue/dist/vue";
 
 const OPENVIDU_SERVER_URL = "https://pparttypeople.kro.kr:4443";
 const OPENVIDU_SERVER_SECRET = "a106ssafy0183";
@@ -55,16 +54,6 @@ export default {
   setup() {
     const store = useStore()
     const isRouletteOpen = ref(false)
-    const state = reactive({
-      rouletteStartSignal : computed(() => store.getters['root/getRouletteStartSignal']),
-      temp: computed(()=>{
-        if(state.rouletteStartSignal) {
-          this.store.commit('root/setRouletteStartSignal', false)
-          return this.test()
-        }
-        return undefined
-      })
-    })
 
     return { store, isRouletteOpen }
   },
@@ -81,10 +70,6 @@ export default {
     }
   },
   methods: {
-    // startsignal이 변하면 실핼될 함수
-    test(){
-      console.log("#########################")
-    },
     joinSession () {
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();

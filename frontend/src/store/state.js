@@ -43,5 +43,4 @@ export default {
     winner : null,
   },
   roomId : null,
-  rouletteStartSignal: false,
 }
