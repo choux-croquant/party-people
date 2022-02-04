@@ -26,7 +26,7 @@ public class SessionRepositorySupport {
 
     public List<Session> findSessionByRoomId(Long roomId) {
         List<Session> sessions = jpaQueryFactory.select(qSession).from(qSession)
-                .where(qSession.room.id.eq(roomId)).fetch();
+                .where(qSession.room.id.eq(roomId).and(qSession.endTime.isNull())).fetch();
         return sessions;
     }
 
@@ -39,7 +39,7 @@ public class SessionRepositorySupport {
     // 이미 세션에 접속한 사용자가 다른 세션에 접근할 때 예외처리
     public boolean isUserAccessOtherSession(Long userId){
         Session session = jpaQueryFactory.select(qSession).from(qSession)
-                .where(qSession.user.id.eq(userId).and(qSession.endTime.isNull())).fetchOne();
+                .where(qSession.user.id.eq(userId).and(qSession.endTime.isNull())).fetchFirst();
 
         return session != null;
     }
@@ -47,7 +47,7 @@ public class SessionRepositorySupport {
     // 해당 방에 접속해있는 사용자인지 확인
     public boolean isUserNotInCurrentSession(Long roomId, Long userId){
         Session session = jpaQueryFactory.select(qSession).from(qSession)
-                .where(qSession.room.id.eq(roomId).and(qSession.user.id.eq(userId))).fetchOne();
+                .where(qSession.room.id.eq(roomId).and(qSession.user.id.eq(userId)).and(qSession.endTime.isNull())).fetchFirst();
 
         return session == null;
     }
