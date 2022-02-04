@@ -107,8 +107,9 @@ export default {
         participants : signalParticipants,
         winner : signalWinner
       }
-      
+
       this.store.commit('root/setRouletteSignalData', signalData)
+      this.store.commit('root/setRouletteStartSignal', true)
     }
   }
 

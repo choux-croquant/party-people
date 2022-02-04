@@ -29,6 +29,10 @@ export function getRouletteSignalData (state) {
 	return state.rouletteSignalData
 }
 
+export function getRouletteStartSignal (state) {
+	return state.rouletteStartSignal
+}
+
 export function getRoomId (state) {
 	return state.roomId
 }

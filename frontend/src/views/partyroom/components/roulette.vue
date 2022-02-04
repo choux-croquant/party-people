@@ -14,9 +14,9 @@
             </div>
         </div>
         <!-- <button class="play-btn" @click="playRoulette()" v-bind:disabled="this.state.buttonDisabled">Play</button> -->
-        <ul>
+        <!-- <ul>
             <li :key="curHistory" v-for="(curHistory) in this.state.history">{{curHistory}}</li>
-        </ul>
+        </ul> -->
     </div>
 </template>
 
@@ -26,11 +26,11 @@ import {useStore} from "vuex";
 
 export default {
     name: 'roulette',
-    setup() {
+    setup(props, {emit}) {
         const store = useStore()
         const state = reactive({
             items: computed(() => store.getters['root/getRouletteSignalData'].participants),
-            currentPin: computed(() => store.getters['root/getRouletteSignalData'].winner),
+            currentPin: 0,
             count: 0,
             history: [],
             buttonDisabled: false,
@@ -59,25 +59,19 @@ export default {
             currentItem: computed(() => state.items[state.currentPin])
         })
 
-        // onBeforeUpdate(() => {
-        //   state.items.forEach((el, idx) => {
-        //     state.itemStyles.push({
-        //       "transform" : "rotate(" + (state.segment * idx) + "deg)",
-        //     });
-        //     state.lineStyles.push({
-        //       "transform" : "rotate(" + (state.segment * idx + state.offset) + "deg)",
-        //     });
-        //   });
-        // })
-
         const playRoulette = () => {
             state.buttonDisabled = true;
             state.count++;
-            // state.currentPin = Math.floor(Math.random() * state.items.length);
+            state.currentPin = store.getters['root/getRouletteSignalData'].winner
 
             setTimeout(() => {
                 state.buttonDisabled = false;
                 state.history.push(state.currentItem.value);
+
+                setTimeout(()=>{
+                  // partyroom-detail에 룰렛 숨기기 신호 보내기
+                  emit("closeRoulette")
+                }, 0)
             }, 5000);
         }
 

@@ -3,7 +3,7 @@
     <div class="fixed inset-0 flex z-40">
       <div class="mx-auto">
         <timer></timer>
-		<roulette v-show="isRouletteOpen" ref="apiRequest"></roulette>
+		<roulette v-show="isRouletteOpen" ref="apiRequest" @closeRoulette="closeRoulette"></roulette>
       </div>
       <room-sidebar></room-sidebar>
       <!-- 위치는 나중에 옮길 예정 -->
@@ -25,7 +25,7 @@
 <style>
 </style>
 <script>
-import {ref} from 'vue'
+import {computed, ref} from 'vue'
 import roomSidebar from './components/room-sidebar.vue'
 import RoomChat from './components/room-chat.vue'
 import UserVideo from './components/user-video.vue'
@@ -36,6 +36,7 @@ import {useStore} from "vuex";
 import roomBottombar from './components/room-bottombar.vue'
 import timer from './components/timer.vue'
 import Roulette from './components/roulette.vue'
+import {reactive} from "vue/dist/vue";
 
 const OPENVIDU_SERVER_URL = "https://pparttypeople.kro.kr:4443";
 const OPENVIDU_SERVER_SECRET = "a106ssafy0183";
@@ -54,6 +55,16 @@ export default {
   setup() {
     const store = useStore()
     const isRouletteOpen = ref(false)
+    const state = reactive({
+      rouletteStartSignal : computed(() => store.getters['root/getRouletteStartSignal']),
+      temp: computed(()=>{
+        if(state.rouletteStartSignal) {
+          this.store.commit('root/setRouletteStartSignal', false)
+          return this.test()
+        }
+        return undefined
+      })
+    })
 
     return { store, isRouletteOpen }
   },
@@ -70,6 +81,10 @@ export default {
     }
   },
   methods: {
+    // startsignal이 변하면 실핼될 함수
+    test(){
+      console.log("#########################")
+    },
     joinSession () {
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();
@@ -112,7 +127,6 @@ export default {
 
       // 룰렛 signal 받기
       this.session.on('signal:roulette-result', (event) => {
-        // Todo: 매개변수 : {참가자배열 , 당첨자}를 vuex에 저장
         this.store.commit('root/setRouletteSignalData', JSON.parse(event.data))
 
         this.isRouletteOpen = true
@@ -216,7 +230,7 @@ export default {
       });
     },
 
-    /*sendMessage ({ content }) {
+    sendMessage ({ content }) {
       let now = new Date()
       let current = now.toLocaleTimeString([], {
         hour: '2-digit',
@@ -242,11 +256,10 @@ export default {
           .catch((error) => {
             console.log(error)
           })
-    },*/
+    },
 
     // 룰렛 데이터 보내기
-    //sendRoulletteMessage () {
-    sendMessage () {
+    sendRoulletteMessage () {
       let messageData = {
         "participants" : this.store.getters['root/getRouletteSignalData'].participants,
         "winner" : this.store.getters['root/getRouletteSignalData'].winner
@@ -263,9 +276,15 @@ export default {
           .catch((error) => {
             console.log(error)
           })
-    }
+    },
+
+    // 룰렛 종료
+    closeRoulette(){
+      this.isRouletteOpen = false
+    },
 
   },
+
   mounted() {
     console.log('mounted')
     this.joinSession()
