@@ -13,10 +13,6 @@
                 </div>
             </div>
         </div>
-        <!-- <button class="play-btn" @click="playRoulette()" v-bind:disabled="this.state.buttonDisabled">Play</button> -->
-        <!-- <ul>
-            <li :key="curHistory" v-for="(curHistory) in this.state.history">{{curHistory}}</li>
-        </ul> -->
     </div>
 </template>
 
@@ -33,7 +29,6 @@ export default {
             currentPin: 0,
             count: 0,
             history: [],
-            buttonDisabled: false,
             itemStyles: computed(() => {
                 let arr = []
                 state.items.forEach((el, idx) => {
@@ -61,24 +56,26 @@ export default {
             segment: computed(() => 360 / state.items.length),
             offset: computed(() => state.segment / 2),
             angle: computed(() => -((state.currentPin * state.segment) + (state.count * 360 * 5))),
-            rouletteStyle: computed(() => ({"transform" : "rotate(" + state.angle + "deg)"})),
+            rouletteStyle: null,
             currentItem: computed(() => state.items[state.currentPin])
         })
 
         const playRoulette = () => {
-            state.buttonDisabled = true;
             state.count++;
-            state.currentPin = store.getters['root/getRouletteSignalData'].winner
 
             setTimeout(() => {
-                state.buttonDisabled = false;
+                state.currentPin = store.getters['root/getRouletteSignalData'].winner
+                state.rouletteStyle = {"transform" : "rotate(" + state.angle + "deg)"}
+            }, 1000);
+
+            setTimeout(() => {
                 state.history.push(state.currentItem.value);
 
                 setTimeout(()=>{
                   // partyroom-detail에 룰렛 숨기기 신호 보내기
                   emit("closeRoulette")
                 }, 0)
-            }, 5000);
+            }, 8000);
         }
 
         return {store, state, playRoulette}
