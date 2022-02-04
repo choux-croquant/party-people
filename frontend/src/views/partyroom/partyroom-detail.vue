@@ -40,6 +40,7 @@ import UserVideo from './components/user-video.vue'
 import { OpenVidu } from 'openvidu-browser'
 import axios from 'axios';
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import roomBottombar from './components/room-bottombar.vue'
 import timer from './components/timer.vue'
 
@@ -66,7 +67,8 @@ export default {
 			subscribers: [],
 			mySessionId: this.conferenceId,
 			myUserName: this.userName,
-      router: useRouter()
+			router: useRouter(),
+			store: useStore()
 		}
 	},
 	computed: {
@@ -154,22 +156,24 @@ export default {
 					});
 			});
 
-			window.addEventListener('beforeunload', this.leaveSession)
+			window.addEventListener('beforeUnmount', this.leaveSession)
 		},
 
     leaveSession () {
-			// --- Leave the session by calling 'disconnect' method over the Session object ---
-			if (this.session) this.session.disconnect();
+		// --- Leave the session by calling 'disconnect' method over the Session object ---
+		if (this.session) this.session.disconnect();
 
-			this.session = undefined;
-			this.mainStreamManager = undefined;
-			this.publisher = undefined;
-			this.subscribers = [];
-			this.OV = undefined;
+		this.session = undefined;
+		this.mainStreamManager = undefined;
+		this.publisher = undefined;
+		this.subscribers = [];
+		this.OV = undefined;
 
-			window.removeEventListener('beforeunload', this.leaveSession);
-      this.router.push({name: 'Home'})
-		},
+		this.store.dispatch('root/leaveSession', this.mySessionId)
+
+		window.removeEventListener('beforeUnmount', this.leaveSession);
+		this.router.push({name: 'Home'})
+	},
     getToken (mySessionId) {
 			return this.createSession(mySessionId).then(sessionId => this.createToken(sessionId));
 		},

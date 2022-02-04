@@ -56,7 +56,7 @@ export function createRoom ({ state }, payload) {
 
 export function roomLinkEntry ({ state }, roomId) {
   console.log('roomLinkEntry', state)
-  const url = `rooms/${ roomId }`
+  const url = `/rooms/${ roomId }`
   let token = localStorage.getItem('access_token')
   return backAxios({
     method:'GET',
@@ -68,7 +68,7 @@ export function roomLinkEntry ({ state }, roomId) {
 }
 
 export function passwordConfirm ({ state }, payload) {
-  const url = `rooms/${ payload.roomId }`
+  const url = `/rooms/${ payload.roomId }`
   console.log(payload.password)
   let token = localStorage.getItem('access_token')
   return backAxios({
@@ -78,5 +78,18 @@ export function passwordConfirm ({ state }, payload) {
       'Authorization': 'Bearer ' + token,
     },
     data: { password: payload.password }
+  })
+}
+
+export function leaveSession ({ state }, roomId) {
+  console.log('leaveSession', state, roomId)
+  const url = `/rooms/exit/${ roomId }`
+  let token = localStorage.getItem('access_token')
+  return backAxios({
+    method:'PATCH',
+    url: url,
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
   })
 }
