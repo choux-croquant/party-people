@@ -27,3 +27,11 @@ export function setRoomUserList (state, roomUserList) {
 	console.log(roomUserList)
 	state.roomUserList = roomUserList
 }
+
+export function setRouletteSignalData (state, rouletteSignalData) {
+	state.rouletteSignalData = rouletteSignalData
+}
+
+export function setRoomId (state, roomId) {
+	state.roomId = roomId
+}
