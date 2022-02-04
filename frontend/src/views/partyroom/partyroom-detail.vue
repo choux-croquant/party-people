@@ -8,21 +8,21 @@
 						<timer @startCountdown="startCountdown" ref="timer"></timer>
 				</div>
         </div>
-        <div v-if="currentUserCount==0" id="video-container" class="flex flex-wrap mx-8 justify-center gap-4">
-          <user-video class="w-full" :stream-manager="publisher"/>
-          <user-video class="w-full" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        <div v-if="currentUserCount==0" id="video-container-1" class="flex flex-wrap mx-8 justify-center gap-4">
+          <user-video class="userVideo-1" :stream-manager="publisher"/>
+          <user-video class="userVideo-1" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         </div>
-				<div v-else-if="currentUserCount<4" id="video-container" class="flex flex-wrap mx-8 justify-center">
-          <user-video class="w-1/2" :stream-manager="publisher"/>
-          <user-video class="w-1/2" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+				<div v-else-if="currentUserCount<4" id="video-container-2" class="flex flex-wrap mx-8 justify-center gap-4">
+          <user-video class="userVideo-2" :stream-manager="publisher"/>
+          <user-video class="userVideo-2" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         </div>
-				<div v-else-if="currentUserCount<6" id="video-container" class="flex flex-wrap mt-20 justify-center">
-          <user-video class="w-1/3" :stream-manager="publisher"/>
-          <user-video class="w-1/3" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+				<div v-else-if="currentUserCount<6" id="video-container-3" class="flex flex-wrap mx-8 justify-center gap-4">
+          <user-video class="userVideo-3" :stream-manager="publisher"/>
+          <user-video class="userVideo-3" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         </div>
-				<div v-else id="video-container" class="flex flex-wrap justify-center">
-          <user-video class="w-1/3 h-1/4" :stream-manager="publisher"/>
-          <user-video class="w-1/3 h-1/4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+				<div v-else id="video-container-4" class="flex flex-wrap mx-8 justify-center gap-4">
+          <user-video class="userVideo-4" :stream-manager="publisher"/>
+          <user-video class="userVideo-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         </div>
       </div>
       <room-chat @message="sendMessage" ref="chat" :subscribers="subscribers"></room-chat>
@@ -31,6 +31,22 @@
   </div>
 </template>
 <style>
+.userVideo-1 {
+	width: 80%;
+	height: 100%;
+}
+.userVideo-2 {
+	width: 38%;
+	height: 100%;
+}
+.userVideo-3 {
+	width: 32%;
+	height: 100%;
+}
+.userVideo-4 {
+	width: 24%;
+	height: 100%;
+}
 </style>
 <script>
   
@@ -298,9 +314,9 @@ export default {
     console.log('mounted')
     this.joinSession()
   },
-	beforeUnmount() {
-		console.log('unmount')
-		this.leaveSession()
-	}
+	// beforeUnmount() {
+	// 	console.log('unmount')
+	// 	this.leaveSession()
+	// }
 }
 </script>
