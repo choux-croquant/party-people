@@ -2,15 +2,27 @@
   <div class="h-screen w-screen flex bg-tc-500">
     <div class="fixed inset-0 flex z-40">
       <room-sidebar></room-sidebar>
-      <div id="session" v-if="session">
+      <div id="session" class="w-full" v-if="session">
         <div id="session-header">
 					<div class="mx-auto">
 						<timer @startCountdown="startCountdown" ref="timer"></timer>
 				</div>
         </div>
-        <div id="video-container" class="grid grid-cols-3 gap-2">
-          <user-video :stream-manager="publisher"/>
-          <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        <div v-if="currentUserCount==0" id="video-container-1" class="flex flex-wrap mx-8 justify-center gap-4">
+          <user-video class="userVideo-1" :stream-manager="publisher"/>
+          <user-video class="userVideo-1" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        </div>
+				<div v-else-if="currentUserCount<4" id="video-container-2" class="flex flex-wrap mx-8 justify-center gap-4">
+          <user-video class="userVideo-2" :stream-manager="publisher"/>
+          <user-video class="userVideo-2" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        </div>
+				<div v-else-if="currentUserCount<6" id="video-container-3" class="flex flex-wrap mx-8 justify-center gap-4">
+          <user-video class="userVideo-3" :stream-manager="publisher"/>
+          <user-video class="userVideo-3" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        </div>
+				<div v-else id="video-container-4" class="flex flex-wrap mx-8 justify-center gap-4">
+          <user-video class="userVideo-4" :stream-manager="publisher"/>
+          <user-video class="userVideo-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         </div>
       </div>
       <room-chat @message="sendMessage" ref="chat" :subscribers="subscribers"></room-chat>
@@ -19,6 +31,22 @@
   </div>
 </template>
 <style>
+.userVideo-1 {
+	width: 80%;
+	height: 100%;
+}
+.userVideo-2 {
+	width: 38%;
+	height: 100%;
+}
+.userVideo-3 {
+	width: 32%;
+	height: 100%;
+}
+.userVideo-4 {
+	width: 24%;
+	height: 100%;
+}
 </style>
 <script>
   
@@ -57,6 +85,11 @@ export default {
 			myUserName: this.userName,
 			router: useRouter(),
 			store: useStore()
+		}
+	},
+	computed: {
+		currentUserCount: function () {
+			return this.subscribers.length
 		}
 	},
   methods: {
@@ -119,7 +152,7 @@ export default {
 							videoSource: undefined, // The source of video. If undefined default webcam
 							publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
 							publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
-							resolution: '640x480',  // The resolution of your video
+							resolution: '640x360',  // The resolution of your video
 							frameRate: 30,			// The frame rate of your video
 							insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
 							mirror: false,       	// Whether to mirror your local video or not

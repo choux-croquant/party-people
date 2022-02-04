@@ -1,13 +1,11 @@
 <template>
 <div v-if="streamManager" class="userVideoContainer">
-	<ov-video :stream-manager="streamManager"/>
+	<ov-video class="rounded-xl" :stream-manager="streamManager"/>
 	<div class="userOverlay text-tc-500"><p>{{ clientData }}</p></div>
 </div>
 </template>
 <style>
 .userVideoContainer {
-	width: 100%;
-	height: 100%;
 	position: relative;
 }
 .userOverlay {
