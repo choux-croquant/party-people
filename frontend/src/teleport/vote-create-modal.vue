@@ -10,14 +10,14 @@
         </div>
         <!-- 투표 제목 -->
         <div class="">
-          <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="투표 제목을 입력해 주세요." v-model="voteInfo.voteTopic">
+          <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="투표 제목을 입력해 주세요." v-model="state.voteInfo.voteTopic">
         </div>
       </form>
       <form class="bg-main-300 shadow-md rounded px-8 pt-4 pb-8 mb-4">
         <!-- 투표 항목 -->
         <ul>
           <li class="mt-4" v-for="i in state.itemNum" :key="i">
-            <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="item" type="text" placeholder="내용을 입력하세요." v-model="voteInfo.voteList[i]">
+            <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="item" type="text" placeholder="내용을 입력하세요." v-model="state.voteInfo.voteList[i]">
           </li>
         </ul>
         <!-- 투표 항목 추가 삭제 버튼 -->
@@ -45,6 +45,7 @@
       </p>
       </div>
     </div>
+    <vote-modal ref="voteModal"/>
   </base-modal>
 </template>
 
@@ -56,19 +57,24 @@
 import BaseModal from './base-modal.vue'
 import { reactive, ref } from 'vue'
 import { useStore } from 'vuex'
+import voteModal from '@/teleport/vote-modal.vue'
+
+
 
 export default {
   name: 'voteCreateModal',
   components : {
-    BaseModal
+    BaseModal,
+    voteModal,
   },
   setup() {
     const baseModal = ref(null)
     const store = useStore()
+    const voteModal = ref(null)
     const state = reactive ({
       voteInfo: {
-        voteTopic: '',
-        voteList: []
+        voteTopic: null,
+        voteList: {}
       },
       itemNum: 2,
     })
@@ -91,8 +97,11 @@ export default {
     
     const startVote = () => {
       store.commit('root/setVote', state.voteInfo)
+      console.log(state.voteInfo)
+      close()
+      voteModal.value.open()
     }
-    return { baseModal, open, close, state, plusItem, minusItem, startVote}
+    return { baseModal, open, close, state, plusItem, minusItem, startVote, voteModal}
   },
 }
 </script>
