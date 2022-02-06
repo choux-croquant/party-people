@@ -2,15 +2,27 @@
   <div class="h-screen w-screen flex bg-tc-500">
     <div class="fixed inset-0 flex z-40">
       <room-sidebar></room-sidebar>
-      <div id="session" v-if="session">
+      <div id="session" class="w-full" v-if="session">
         <div id="session-header">
 					<div class="mx-auto">
 						<timer @startCountdown="startCountdown" ref="timer"></timer>
 				</div>
         </div>
-        <div id="video-container" class="grid grid-cols-3 gap-2">
-          <user-video :stream-manager="publisher"/>
-          <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        <div v-if="currentUserCount==0" id="video-container-1" class="flex flex-wrap mx-8 justify-center gap-4">
+          <user-video class="userVideo-1" :stream-manager="publisher"/>
+          <user-video class="userVideo-1" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        </div>
+				<div v-else-if="currentUserCount<4" id="video-container-2" class="flex flex-wrap mx-8 justify-center gap-4">
+          <user-video class="userVideo-2" :stream-manager="publisher"/>
+          <user-video class="userVideo-2" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        </div>
+				<div v-else-if="currentUserCount<6" id="video-container-3" class="flex flex-wrap mx-8 justify-center gap-4">
+          <user-video class="userVideo-3" :stream-manager="publisher"/>
+          <user-video class="userVideo-3" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        </div>
+				<div v-else id="video-container-4" class="flex flex-wrap mx-8 justify-center gap-4">
+          <user-video class="userVideo-4" :stream-manager="publisher"/>
+          <user-video class="userVideo-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         </div>
       </div>
       <room-chat @message="sendMessage" ref="chat" :subscribers="subscribers"></room-chat>
@@ -19,6 +31,22 @@
   </div>
 </template>
 <style>
+.userVideo-1 {
+	width: 80%;
+	height: 100%;
+}
+.userVideo-2 {
+	width: 38%;
+	height: 100%;
+}
+.userVideo-3 {
+	width: 32%;
+	height: 100%;
+}
+.userVideo-4 {
+	width: 24%;
+	height: 100%;
+}
 </style>
 <script>
   
@@ -28,6 +56,7 @@ import UserVideo from './components/user-video.vue'
 import { OpenVidu } from 'openvidu-browser'
 import axios from 'axios';
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import roomBottombar from './components/room-bottombar.vue'
 import timer from './components/timer.vue'
 
@@ -54,7 +83,13 @@ export default {
 			subscribers: [],
 			mySessionId: this.conferenceId,
 			myUserName: this.userName,
-      router: useRouter()
+			router: useRouter(),
+			store: useStore()
+		}
+	},
+	computed: {
+		currentUserCount: function () {
+			return this.subscribers.length
 		}
 	},
   methods: {
@@ -70,9 +105,6 @@ export default {
 			// On every new Stream received...
 			this.session.on('streamCreated', ({ stream }) => {
 				const subscriber = this.session.subscribe(stream);
-
-				console.log('username 받았는지 확인하기')
-				console.log(subscriber.stream.userName)
 
 				// subscriber.userId = this.myUserName;  // subscriber Object에 userName 추가
 				this.subscribers.push(subscriber);
@@ -98,7 +130,7 @@ export default {
 
 			// private 채팅 signal 받기
 			this.session.on('signal:private-chat', (event) => {
-				this.$refs.chat.addMessage(event.data, JSON.parse(event.data).sender === this.myUserName, true)
+				this.$refs.chat.addMessage(event.data, false, true)
 			})
 
 			// 타이머 signal 받기
@@ -120,7 +152,7 @@ export default {
 							videoSource: undefined, // The source of video. If undefined default webcam
 							publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
 							publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
-							resolution: '640x480',  // The resolution of your video
+							resolution: '640x360',  // The resolution of your video
 							frameRate: 30,			// The frame rate of your video
 							insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
 							mirror: false,       	// Whether to mirror your local video or not
@@ -140,22 +172,24 @@ export default {
 					});
 			});
 
-			window.addEventListener('beforeunload', this.leaveSession)
+			window.addEventListener('beforeUnmount', this.leaveSession)
 		},
 
     leaveSession () {
-			// --- Leave the session by calling 'disconnect' method over the Session object ---
-			if (this.session) this.session.disconnect();
+		// --- Leave the session by calling 'disconnect' method over the Session object ---
+		if (this.session) this.session.disconnect();
 
-			this.session = undefined;
-			this.mainStreamManager = undefined;
-			this.publisher = undefined;
-			this.subscribers = [];
-			this.OV = undefined;
+		this.session = undefined;
+		this.mainStreamManager = undefined;
+		this.publisher = undefined;
+		this.subscribers = [];
+		this.OV = undefined;
 
-			window.removeEventListener('beforeunload', this.leaveSession);
-      this.router.push({name: 'Home'})
-		},
+		this.store.dispatch('root/leaveSession', this.mySessionId)
+
+		window.removeEventListener('beforeUnmount', this.leaveSession);
+		this.router.push({name: 'Home'})
+	},
     getToken (mySessionId) {
 			return this.createSession(mySessionId).then(sessionId => this.createToken(sessionId));
 		},
@@ -237,10 +271,12 @@ export default {
 			if (to !== "all") {
 				this.session.signal({
 					data: JSON.stringify(messageData),
-					to: [this.mySessionId, to],
+					to: [to],
 					type: 'private-chat',
 				})
 				.then(() => {
+					// 내가 보낸 개인 메시지 추가
+					this.$refs.chat.addMessage(JSON.stringify(messageData), true, true)
 					console.log('메시지 전송 완료')
 				})
 				.catch((error) => {

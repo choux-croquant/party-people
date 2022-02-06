@@ -73,13 +73,13 @@ export default {
     const open = () => {
       baseModal.value.openModal()
     }
+
     const close = () => {
       baseModal.value.closeModal()
     }
 
     const clickTheme = (id) => {
       (state.selectedThemeId === id) ? (state.selectedThemeId = null) : (state.selectedThemeId = id)
-      // console.log(state.selectedThemeId)
     }
 
     return { state, baseModal, clickTheme, open, close }

@@ -43,7 +43,7 @@
       <div class="relative inline-flex border-3 rounded-lg border-main-100 w-1/2 m-0 h-7 p-0">
         <select v-model="state.selectedUser" class="cursor-pointer font-bold px-4 py-0 text-sm form-select border-0 rounded-md text-gray-600 w-full h-5-5 border-transparent focus:border-transparent focus:ring-0 appearance-none">
           <option selected="selected" value="all">all</option>
-          <option v-for="(sub, idx) in state.subscribers" :value="sub.stream.connection.connectionId" :key="idx">
+          <option v-for="(sub, idx) in state.subscribers" :value="sub.stream.connection" :key="idx">
             {{ JSON.parse(sub.stream.connection.data).clientData }}
           </option>
         </select>
@@ -70,7 +70,6 @@
           </g>
         </svg>
       </div>
-
 
     </div>
   </div>
@@ -105,7 +104,7 @@ export default {
     const state = reactive({
       right: true,
       isSidebarOpen: true,
-      selectedUser: "all",
+      selectedUser: 'all',
       message: "",
       subscribers: props.subscribers,
       chats: [],
@@ -137,10 +136,12 @@ export default {
     const addMessage = (messageData, isMyMessage, isPrivate) => {
       let message = JSON.parse(messageData)
 
+      // 내가 보낸 메시지인 경우
       if (isMyMessage) {
         message.sender += " (You)"
       }
 
+      // 개인 메시지인 경우
       if (isPrivate) {
         message.content += " (private)"
       }
