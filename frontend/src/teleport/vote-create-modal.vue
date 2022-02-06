@@ -10,14 +10,14 @@
         </div>
         <!-- 투표 제목 -->
         <div class="">
-          <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="투표 제목을 입력해 주세요." v-model="voteTopic">
+          <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="투표 제목을 입력해 주세요." v-model="voteInfo.voteTopic">
         </div>
       </form>
       <form class="bg-main-300 shadow-md rounded px-8 pt-4 pb-8 mb-4">
         <!-- 투표 항목 -->
         <ul>
-          <li class="mt-4" v-for="i in itemNum" :key="i">
-            <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="item" type="text" placeholder="내용을 입력하세요." v-model="items[i]">
+          <li class="mt-4" v-for="i in state.itemNum" :key="i">
+            <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="item" type="text" placeholder="내용을 입력하세요." v-model="voteInfo.voteList[i]">
           </li>
         </ul>
         <!-- 투표 항목 추가 삭제 버튼 -->
@@ -35,7 +35,7 @@
         </div>
         <!-- 투표 시작 버튼 -->
         <div class="flex items-center justify-center">
-          <button class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold h-10 py-1 px-24 rounded-full focus:outline-none focus:shadow-outline" type="button" @click="test">
+          <button class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold h-10 py-1 px-24 rounded-full focus:outline-none focus:shadow-outline" type="button" @click="startVote">
             투표시작
           </button>
         </div>
@@ -54,7 +54,8 @@
 
 <script>
 import BaseModal from './base-modal.vue'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
+import { useStore } from 'vuex'
 
 export default {
   name: 'voteCreateModal',
@@ -63,6 +64,14 @@ export default {
   },
   setup() {
     const baseModal = ref(null)
+    const store = useStore()
+    const state = reactive ({
+      voteInfo: {
+        voteTopic: '',
+        voteList: []
+      },
+      itemNum: 2,
+    })
     const open = () => {
       console.log("voteopen")
       baseModal.value.openModal()
@@ -70,29 +79,20 @@ export default {
     const close = () => {
       baseModal.value.closeModal()
     }
-    return { baseModal, open, close}
-  },
-  data () {
-    return {
-      voteTopic: '',
-      itemNum: 2,
-      items: {}
+
+    const plusItem = () => {
+      state.itemNum ++
+      console.log(state.itemNum)
     }
-  },
-  methods: {
-    plusItem () {
-      this.itemNum ++
-      console.log(this.itemNum)
-    },
-    minusItem () {
-      this.itemNum --
-    },
-    test () {
-      console.log(this.items)
+
+    const minusItem = () => {
+      state.itemNum --
     }
-  }
-
-
-
+    
+    const startVote = () => {
+      store.commit('root/setVote', state.voteInfo)
+    }
+    return { baseModal, open, close, state, plusItem, minusItem, startVote}
+  },
 }
 </script>

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LandingPage from '@/views/landing/landing-page'
 import Home from '@/views/home/home'
 import ConferencesDetail from '@/views/partyroom/partyroom-detail'
+import Vote from '@/views/partyroom/components/vote-modal'
 
 const routes = [
   {
@@ -19,6 +20,11 @@ const routes = [
     name: 'ConferenceDetail',
     component: ConferencesDetail,
     props: true
+  },
+  {
+    path: '/vote',
+    name: 'Vote',
+    component: Vote
   },
 ]
 

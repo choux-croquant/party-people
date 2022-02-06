@@ -21,6 +21,10 @@ export function getTimerTime (state) {
 	return state.timerTime
 }
 
+export function getVoteInfo (state) {
+	return state.voteInfo
+}
+
 export function getRoomUserList (state) {
 	return state.roomUserList
 }

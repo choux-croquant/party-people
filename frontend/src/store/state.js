@@ -37,5 +37,9 @@ export default {
     min: null,
     sec: null
   },
-  roomUserList : []
+  voteInfo: {
+    voteTopic: '',
+    voteList: []
+  },
+  roomUserList : [],
 }

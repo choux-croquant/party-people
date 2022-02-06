@@ -23,6 +23,11 @@ export function setTimer (state, timerTime) {
 	state.timerTime = timerTime
 }
 
+export function setVote (state, voteInfo) {
+	console.log(voteInfo)
+	state.voteInfo = voteInfo
+}
+
 export function setRoomUserList (state, roomUserList) {
 	console.log(roomUserList)
 	state.roomUserList = roomUserList
