@@ -1,8 +1,10 @@
 <template>
-<div v-if="streamManager" class="userVideoContainer">
-	<ov-video class="rounded-xl" :stream-manager="streamManager"/>
-	<div class="userOverlay text-tc-500"><p>{{ clientData }}</p></div>
-</div>
+	<div v-if="streamManager" class="userVideoContainer">
+		<ov-video class="rounded-xl" :stream-manager="streamManager" />
+		<div class="userOverlay text-tc-500">
+			<p>{{ clientData }}</p>
+		</div>
+	</div>
 </template>
 <style>
 .userVideoContainer {
@@ -34,14 +36,14 @@ export default {
 	},
 
 	computed: {
-		clientData () {
+		clientData() {
 			const { clientData } = this.getConnectionData();
 			return clientData;
 		},
 	},
 
 	methods: {
-		getConnectionData () {
+		getConnectionData() {
 			const { connection } = this.streamManager.stream;
 			return JSON.parse(connection.data);
 		},
