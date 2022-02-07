@@ -108,7 +108,7 @@ export default {
         voteResult[vote.voteList[i]] = 0
       }
       store.commit('root/setVoteResult', voteResult)
-      voteModal.value.open()
+      voteModal.value.open(vote)
     }
 
     const sendVoteResult = () => {

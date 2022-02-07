@@ -144,7 +144,7 @@ export default {
 
 			// 투표 결과 signal 받기
 			this.session.on('signal:voteResult', (event) => {
-				this.$store.commit('root/setTimer', JSON.parse(event.data))
+				this.$store.commit('root/setVoteResult', JSON.parse(event.data))
 				let voteResult = this.$store.getters['root/getVoteResult']
 				let sum = 0
 				for (let i of Object.values(voteResult)) {
@@ -152,7 +152,7 @@ export default {
 				}
 				console.log('sum:', sum, '참가자 수:', this.subscribers.length)
 				if (sum == (this.subscribers.length + 1)) {
-					console.log('완료', voteResult)
+					alert(JSON.stringify(voteResult))
 				}
 			})
 			// --- Connect to the session with a valid user token ---

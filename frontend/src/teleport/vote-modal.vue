@@ -16,11 +16,11 @@
         <form class="bg-main-300 shadow-md rounded px-8 pt-4 pb-8 mb-4">
           <!-- 투표 항목 -->
           <ul>
-            <li class="mt-4 flex justify-between" v-for="item in state.voteInfo.voteList" :key="item">
+            <li class="mt-4 flex justify-between" v-for="i in state.voteInfo.voteList.length-1" :key="i">
               <label class="shadow text-left appearance-none border bg-white rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                {{ item }}
+                {{ state.voteInfo.voteList[i] }}
               </label>
-              <input class="shadow appearance-none border rounded-full h-4 w-4 mx-2 mb-1 mt-3 leading-tight focus:outline-none focus:shadow-outline" :id="item" :value="item" type="radio" v-model="state.checked">
+              <input class="shadow appearance-none border rounded-full h-4 w-4 mx-2 mb-1 mt-3 leading-tight focus:outline-none focus:shadow-outline" :id="state.voteInfo.voteList[i]" :value="state.voteInfo.voteList[i]" type="radio" v-model="state.checked">
             </li>
           </ul>
           <!-- 투표 완료 버튼 -->
@@ -60,8 +60,10 @@ export default {
       checked: null,
     })
 
-    const open = () => {
-      state.voteInfo.voteList.shift()
+    const open = (voteInfo) => {
+      // state.voteInfo.voteList.shift()
+      console.log('open', voteInfo)
+      store.commit('root/setVote', voteInfo)
       console.log(state.voteInfo.voteList)
       baseModal.value.openModal()
     }
