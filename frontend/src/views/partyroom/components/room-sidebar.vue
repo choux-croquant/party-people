@@ -199,7 +199,7 @@
       </div>
 
       <!-- vote button -->
-      <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showVoteBtn" @click="clickVote()">
+      <div class="hover:bg-sub-300 w-full cursor-pointer" v-show="showVoteBtn" @click="clickVote()" @startVote="sendVote">
         <a
           class="h-24 px-6 flex flex-col justify-center items-center w-full"
         >
@@ -228,7 +228,7 @@
 
     </div>
   </div>
-  <vote-create-modal ref="voteCreateModal"/>
+  <vote-create-modal @startVote="sendVote" @sendVoteResult="sendVoteResult" ref="voteCreateModal"/>
   <roulette-create-modal ref="rouletteCreateModal"/>
   <video-customize-modal ref="videoCustomizeModal" />
   <theme-customize-modal ref="themeCustomizeModal" />
@@ -261,7 +261,7 @@ export default {
     themeCustomizeModal,
     timerCreateModal
   },
-  setup () {
+  setup (props, { emit }) {
     const voteCreateModal = ref(null)
     const rouletteCreateModal = ref(null)
     const videoCustomizeModal = ref(null)
@@ -291,7 +291,14 @@ export default {
       rouletteCreateModal.value.open()
     }
 
-    return { clickTimer, voteCreateModal, rouletteCreateModal, videoCustomizeModal, themeCustomizeModal, clickVote, clickVideoCustomizingBtn, clickThemeBtn, clickRoulette, timerCreateModal }
+    const sendVote = (voteInfo) => {
+      emit("startVote", {voteInfo})
+    }
+
+    const sendVoteResult = () => {
+      emit("sendVoteResult")
+    }
+    return { clickTimer, voteCreateModal, rouletteCreateModal, videoCustomizeModal, themeCustomizeModal, clickVote, clickVideoCustomizingBtn, clickThemeBtn, clickRoulette, timerCreateModal, sendVote, sendVoteResult }
   },
 
   data() {
@@ -359,8 +366,11 @@ export default {
       t.select();
       document.execCommand('copy');
       document.body.removeChild(t);
-
       console.log('url 복사 완료!')
+    },
+
+    startVote(voteInfo) {
+      this.$refs.voteCreateModal.startVote(voteInfo)
     }
   }
 };

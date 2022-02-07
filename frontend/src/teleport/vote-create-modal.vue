@@ -35,7 +35,7 @@
         </div>
         <!-- 투표 시작 버튼 -->
         <div class="flex items-center justify-center">
-          <button class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold h-10 py-1 px-24 rounded-full focus:outline-none focus:shadow-outline" type="button" @click="startVote">
+          <button class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold h-10 py-1 px-24 rounded-full focus:outline-none focus:shadow-outline" type="button" @click="sendVote">
             투표시작
           </button>
         </div>
@@ -45,7 +45,7 @@
       </p>
       </div>
     </div>
-    <vote-modal ref="voteModal"/>
+    <vote-modal @sendVoteResult="sendVoteResult" ref="voteModal"/>
   </base-modal>
 </template>
 
@@ -67,14 +67,14 @@ export default {
     BaseModal,
     voteModal,
   },
-  setup() {
+  setup(props, { emit }) {
     const baseModal = ref(null)
     const store = useStore()
     const voteModal = ref(null)
     const state = reactive ({
       voteInfo: {
         voteTopic: null,
-        voteList: {}
+        voteList: []
       },
       itemNum: 2,
     })
@@ -95,13 +95,27 @@ export default {
       state.itemNum --
     }
     
-    const startVote = () => {
+    const sendVote = async () => {
       store.commit('root/setVote', state.voteInfo)
-      console.log(state.voteInfo)
+      emit("startVote", state.voteInfo)
       close()
+    }
+
+    const startVote = (voteInfo) => {
+      let vote = JSON.parse(voteInfo)
+      let voteResult = new Object()
+      for (let i = 1; i < vote.voteList.length; i++) {
+        voteResult[vote.voteList[i]] = 0
+      }
+      store.commit('root/setVoteResult', voteResult)
       voteModal.value.open()
     }
-    return { baseModal, open, close, state, plusItem, minusItem, startVote, voteModal}
+
+    const sendVoteResult = () => {
+      console.log('2.sendVote')
+      emit('sendVoteResult')
+    }
+    return { baseModal, open, close, state, plusItem, minusItem, startVote, voteModal, sendVote, sendVoteResult}
   },
 }
 </script>

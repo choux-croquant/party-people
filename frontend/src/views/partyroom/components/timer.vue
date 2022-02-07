@@ -56,15 +56,6 @@ export default {
       state.min = timer.min
       state.sec = timer.sec
       state.counting = timer.counting
-      // if (state.counting == true) {
-      //   console.log("stop")
-      //   state.counting = false
-      // } else {
-      //   console.log('startTimer')
-      //   state.min = state.time.min
-      //   state.sec = state.time.sec
-      //   state.counting = true        
-      // }
     }
 
     const sendTimer = async () => {
@@ -76,9 +67,11 @@ export default {
         }
       })
     }
+
     const onCountdownEnd = () => {
       state.counting = false;
     }
+    
     const stopCountdown = () => {
       state.counting = false
       emit("startCountdown", {
@@ -89,13 +82,6 @@ export default {
         }
       })
     }
-
-    // watch(state.time, () => {
-    //   console.log('watch')
-    //   state.min = state.time.min
-    //   state.sec = state.time.sec
-    //   // console.log(state.sec)
-    // })
 
     return { state, startCountdown, onCountdownEnd, stopCountdown, sendTimer }
   }

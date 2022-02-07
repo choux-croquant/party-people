@@ -37,7 +37,8 @@ export default {
   },
   voteInfo: {
     voteTopic: '',
-    voteList: []
+    voteList: {}
   },
+  voteResult: {},
   roomUserList : [],
 }

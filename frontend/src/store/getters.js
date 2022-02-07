@@ -20,6 +20,10 @@ export function getVoteInfo (state) {
 	return state.voteInfo
 }
 
+export function getVoteResult (state) {
+	return state.voteResult
+}
+
 export function getRoomUserList (state) {
 	return state.roomUserList
 }

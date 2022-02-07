@@ -17,6 +17,11 @@ export function setVote (state, voteInfo) {
 	state.voteInfo = voteInfo
 }
 
+export function setVoteResult (state, voteResult) {
+	console.log(voteResult)
+	state.voteResult = voteResult
+}
+
 export function setRoomUserList (state, roomUserList) {
 	console.log(roomUserList)
 	state.roomUserList = roomUserList

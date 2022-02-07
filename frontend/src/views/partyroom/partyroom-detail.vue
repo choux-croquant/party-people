@@ -1,7 +1,7 @@
 <template>
   <div class="h-screen w-screen flex bg-tc-500">
     <div class="fixed inset-0 flex z-40">
-      <room-sidebar></room-sidebar>
+      <room-sidebar @startVote="startVote" @sendVoteResult="sendVoteResult" ref="roomSidebar"></room-sidebar>
       <div id="session" class="w-full" v-if="session">
         <div id="session-header">
 					<div class="mx-auto">
@@ -136,6 +136,24 @@ export default {
 			// 타이머 signal 받기
 			this.session.on('signal:timer', (event) => {
 				this.$refs.timer.startCountdown(event.data)
+			})
+			// 투표 signal 받기
+			this.session.on('signal:vote', (event) => {
+				this.$refs.roomSidebar.startVote(event.data)
+			})
+
+			// 투표 결과 signal 받기
+			this.session.on('signal:voteResult', (event) => {
+				this.$store.commit('root/setTimer', JSON.parse(event.data))
+				let voteResult = this.$store.getters['root/getVoteResult']
+				let sum = 0
+				for (let i of Object.values(voteResult)) {
+					sum += i
+				}
+				console.log('sum:', sum, '참가자 수:', this.subscribers.length)
+				if (sum == (this.subscribers.length + 1)) {
+					console.log('완료', voteResult)
+				}
 			})
 			// --- Connect to the session with a valid user token ---
 
@@ -296,6 +314,36 @@ export default {
 			})
 			.catch((error) => {
 				console.log(error)
+			})
+		},
+
+		startVote ({ voteInfo }) {
+			this.session.signal({
+				data: JSON.stringify(voteInfo),
+				to: [],
+				type: 'vote'
+			})
+			.then(() => {
+				console.log('투표 전송 완료')
+			})
+			.catch((error) => {
+				console.log('투표 전송 실패', error)
+			})
+		},
+
+		sendVoteResult () {
+			console.log('3.sendVote')
+			let voteResult = this.$store.getters['root/getVoteResult']
+			this.session.signal({
+				data: JSON.stringify(voteResult),
+				to: [],
+				type: 'voteResult'
+			})
+			.then(() => {
+				console.log('투표 결과 전송 완료')
+			})
+			.catch((error) => {
+				console.log('투표 결과 전송 실패', error)
 			})
 		},
 

@@ -25,7 +25,7 @@
           </ul>
           <!-- 투표 완료 버튼 -->
           <div class="flex items-center justify-center mt-4">
-            <button class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold h-10 py-1 px-24 rounded-full focus:outline-none focus:shadow-outline" type="button">
+            <button class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold h-10 py-1 px-24 rounded-full focus:outline-none focus:shadow-outline" type="button" @click="sendVoteResult">
               투표완료
             </button>
           </div>
@@ -51,16 +51,17 @@ import BaseModal from './base-modal.vue'
 export default {
   components: { BaseModal },
   name: 'voteModal',
-  setup() {
+  setup(props, { emit }) {
     const baseModal = ref(null)
     const store = useStore()
     const state = reactive ({
       voteInfo: computed(() => store.getters['root/getVoteInfo']),
-      checked: null
+      voteComplete: computed(() => store.getters['root/getVoteResult']),
+      checked: null,
     })
 
     const open = () => {
-      console.log('votestart')
+      state.voteInfo.voteList.shift()
       console.log(state.voteInfo.voteList)
       baseModal.value.openModal()
     }
@@ -69,12 +70,16 @@ export default {
       baseModal.value.closeModal()
     }
 
-    const test = () => {
-      console.log(state.checked)
+    const sendVoteResult = () => {
+      let voteResult = store.getters['root/getVoteResult']
+      voteResult[state.checked] = voteResult[state.checked] + 1
+      console.log('1.sendVote', voteResult)
+      emit('sendVoteResult')
+      close()
     }
     
 
-    return { state, store, open, close, baseModal, test }
+    return { state, store, open, close, baseModal, sendVoteResult }
   },
 }
 </script>
