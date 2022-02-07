@@ -1,5 +1,5 @@
 <template>
-	<video class="w-full h-full" autoplay/>
+	<video class="w-full h-full" autoplay />
 </template>
 
 <script>
@@ -10,7 +10,7 @@ export default {
 		streamManager: Object,
 	},
 
-	mounted () {
+	mounted() {
 		this.streamManager.addVideoElement(this.$el);
 	},
 };
