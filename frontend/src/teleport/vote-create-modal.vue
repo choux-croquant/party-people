@@ -32,20 +32,20 @@
 							id="username"
 							type="text"
 							placeholder="투표 제목을 입력해 주세요."
-							v-model="voteTopic"
+							v-model="state.voteInfo.voteTopic"
 						/>
 					</div>
 				</form>
 				<form class="bg-main-300 shadow-md rounded px-8 pt-4 pb-8 mb-4">
 					<!-- 투표 항목 -->
 					<ul>
-						<li class="mt-4" v-for="i in itemNum" :key="i">
+						<li class="mt-4" v-for="i in state.itemNum" :key="i">
 							<input
 								class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 								id="item"
 								type="text"
 								placeholder="내용을 입력하세요."
-								v-model="items[i]"
+								v-model="state.voteInfo.voteList[i]"
 							/>
 						</li>
 					</ul>
@@ -89,7 +89,7 @@
 						<button
 							class="bg-gradient-to-r from-main-100 to-sub-100 text-white font-bold h-10 py-1 px-24 rounded-full focus:outline-none focus:shadow-outline"
 							type="button"
-							@click="test"
+							@click="sendVote"
 						>
 							투표시작
 						</button>
@@ -100,6 +100,7 @@
 				</p>
 			</div>
 		</div>
+		<vote-modal @sendVoteResult="sendVoteResult" ref="voteModal" />
 	</base-modal>
 </template>
 
@@ -107,15 +108,27 @@
 
 <script>
 import BaseModal from './base-modal.vue';
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import voteModal from '@/teleport/vote-modal.vue';
 
 export default {
 	name: 'voteCreateModal',
 	components: {
 		BaseModal,
+		voteModal,
 	},
-	setup() {
+	setup(props, { emit }) {
 		const baseModal = ref(null);
+		const store = useStore();
+		const voteModal = ref(null);
+		const state = reactive({
+			voteInfo: {
+				voteTopic: null,
+				voteList: [],
+			},
+			itemNum: 2,
+		});
 		const open = () => {
 			console.log('voteopen');
 			baseModal.value.openModal();
@@ -123,26 +136,46 @@ export default {
 		const close = () => {
 			baseModal.value.closeModal();
 		};
-		return { baseModal, open, close };
-	},
-	data() {
-		return {
-			voteTopic: '',
-			itemNum: 2,
-			items: {},
+		const plusItem = () => {
+			state.itemNum++;
+			console.log(state.itemNum);
 		};
-	},
-	methods: {
-		plusItem() {
-			this.itemNum++;
-			console.log(this.itemNum);
-		},
-		minusItem() {
-			this.itemNum--;
-		},
-		test() {
-			console.log(this.items);
-		},
+		const minusItem = () => {
+			state.itemNum--;
+		};
+
+		const sendVote = async () => {
+			store.commit('root/setVote', state.voteInfo);
+			emit('startVote', state.voteInfo);
+			close();
+		};
+
+		const startVote = voteInfo => {
+			let vote = JSON.parse(voteInfo);
+			let voteResult = new Object();
+			for (let i = 1; i < vote.voteList.length; i++) {
+				voteResult[vote.voteList[i]] = 0;
+			}
+			store.commit('root/setVoteResult', voteResult);
+			voteModal.value.open(vote);
+		};
+
+		const sendVoteResult = () => {
+			console.log('2.sendVote');
+			emit('sendVoteResult');
+		};
+		return {
+			baseModal,
+			open,
+			close,
+			state,
+			plusItem,
+			minusItem,
+			startVote,
+			voteModal,
+			sendVote,
+			sendVoteResult,
+		};
 	},
 };
 </script>

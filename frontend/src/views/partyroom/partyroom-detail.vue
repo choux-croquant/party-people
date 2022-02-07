@@ -10,7 +10,12 @@
 					@closeRoulette="closeRoulette"
 				></roulette>
 			</div>
-			<room-sidebar @sendRouletteSignal="sendRouletteSignal"></room-sidebar>
+			<room-sidebar
+				@sendRouletteSignal="sendRouletteSignal"
+				@startVote="startVote"
+				@sendVoteResult="sendVoteResult"
+				ref="roomSidebar"
+			></room-sidebar>
 			<!-- 위치는 나중에 옮길 예정 -->
 			<div id="session" class="w-full" v-if="session">
 				<div id="session-header">
@@ -221,6 +226,24 @@ export default {
 				this.$refs.apiRequest.playRoulette();
 			});
 
+			// 투표 signal 받기
+			this.session.on('signal:vote', event => {
+				this.$refs.roomSidebar.startVote(event.data);
+			});
+
+			// 투표 결과 signal 받기
+			this.session.on('signal:voteResult', event => {
+				this.$store.commit('root/setVoteResult', JSON.parse(event.data));
+				let voteResult = this.$store.getters['root/getVoteResult'];
+				let sum = 0;
+				for (let i of Object.values(voteResult)) {
+					sum += i;
+				}
+				console.log('sum:', sum, '참가자 수:', this.subscribers.length);
+				if (sum == this.subscribers.length + 1) {
+					alert(JSON.stringify(voteResult));
+				}
+			});
 			// --- Connect to the session with a valid user token ---
 
 			// 'getToken' method is simulating what your server-side should do.
@@ -403,7 +426,37 @@ export default {
 					console.log(error);
 				});
 		},
+		startVote({ voteInfo }) {
+			this.session
+				.signal({
+					data: JSON.stringify(voteInfo),
+					to: [],
+					type: 'vote',
+				})
+				.then(() => {
+					console.log('투표 전송 완료');
+				})
+				.catch(error => {
+					console.log('투표 전송 실패', error);
+				});
+		},
 
+		sendVoteResult() {
+			console.log('3.sendVote');
+			let voteResult = this.$store.getters['root/getVoteResult'];
+			this.session
+				.signal({
+					data: JSON.stringify(voteResult),
+					to: [],
+					type: 'voteResult',
+				})
+				.then(() => {
+					console.log('투표 결과 전송 완료');
+				})
+				.catch(error => {
+					console.log('투표 결과 전송 실패', error);
+				});
+		},
 		audioOnOff({ audio }) {
 			console.log('audio');
 			this.publisher.publishAudio(audio);

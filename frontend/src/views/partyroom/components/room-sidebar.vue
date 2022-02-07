@@ -314,6 +314,7 @@
 				class="hover:bg-sub-300 w-full cursor-pointer"
 				v-show="showVoteBtn"
 				@click="clickVote()"
+				@startVote="sendVote"
 			>
 				<a class="h-24 px-6 flex flex-col justify-center items-center w-full">
 					<svg
@@ -359,7 +360,11 @@
 			</div>
 		</div>
 	</div>
-	<vote-create-modal ref="voteCreateModal" />
+	<vote-create-modal
+		@startVote="sendVote"
+		@sendVoteResult="sendVoteResult"
+		ref="voteCreateModal"
+	/>
 	<roulette-create-modal
 		ref="rouletteCreateModal"
 		@sendRouletteSignal="sendRouletteSignal"
@@ -394,7 +399,7 @@ export default {
 		themeCustomizeModal,
 		timerCreateModal,
 	},
-	setup() {
+	setup(props, { emit }) {
 		const voteCreateModal = ref(null);
 		const rouletteCreateModal = ref(null);
 		const videoCustomizeModal = ref(null);
@@ -423,7 +428,13 @@ export default {
 			console.log('click roulette');
 			rouletteCreateModal.value.open();
 		};
+		const sendVote = voteInfo => {
+			emit('startVote', { voteInfo });
+		};
 
+		const sendVoteResult = () => {
+			emit('sendVoteResult');
+		};
 		return {
 			clickTimer,
 			voteCreateModal,
@@ -435,6 +446,8 @@ export default {
 			clickThemeBtn,
 			clickRoulette,
 			timerCreateModal,
+			sendVote,
+			sendVoteResult,
 		};
 	},
 
@@ -506,7 +519,9 @@ export default {
 
 			console.log('url 복사 완료!');
 		},
-
+		startVote(voteInfo) {
+			this.$refs.voteCreateModal.startVote(voteInfo);
+		},
 		// 룰렛 생성 모달(하위)에서 받은 data를 파티룸 내부 컴포넌트(상위)로 전달(emit)
 		sendRouletteSignal(rouletteTopic) {
 			this.$emit('sendRouletteSignal', rouletteTopic);
