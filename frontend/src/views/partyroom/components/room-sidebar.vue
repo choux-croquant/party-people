@@ -229,7 +229,7 @@
     </div>
   </div>
   <vote-create-modal ref="voteCreateModal"/>
-  <roulette-create-modal ref="rouletteCreateModal"/>
+  <roulette-create-modal ref="rouletteCreateModal" @sendRouletteSignal="sendRouletteSignal"/>
   <video-customize-modal ref="videoCustomizeModal" />
   <theme-customize-modal ref="themeCustomizeModal" />
   <timer-create-modal ref="timerCreateModal" />
@@ -361,6 +361,11 @@ export default {
       document.body.removeChild(t);
 
       console.log('url 복사 완료!')
+    },
+
+    // 룰렛 생성 모달(하위)에서 받은 data를 파티룸 내부 컴포넌트(상위)로 전달(emit)
+    sendRouletteSignal(rouletteTopic) {
+      this.$emit('sendRouletteSignal', rouletteTopic)
     }
   }
 };

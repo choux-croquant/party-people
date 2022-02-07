@@ -1,7 +1,13 @@
 <template>
   <div class="h-screen w-screen flex bg-tc-500">
     <div class="fixed inset-0 flex z-40">
-      <room-sidebar></room-sidebar>
+      <div class="mx-auto">
+        <timer></timer>
+		<!-- 룰렛 컴포넌트(실행시에만 show) -->
+		<roulette v-show="isRouletteOpen" ref="apiRequest" @closeRoulette="closeRoulette"></roulette>
+      </div>
+      <room-sidebar @sendRouletteSignal="sendRouletteSignal"></room-sidebar>
+      <!-- 위치는 나중에 옮길 예정 -->
       <div id="session" class="w-full" v-if="session">
         <div id="session-header">
 					<div class="mx-auto">
@@ -49,7 +55,7 @@
 }
 </style>
 <script>
-  
+import {ref} from 'vue'
 import roomSidebar from './components/room-sidebar.vue'
 import RoomChat from './components/room-chat.vue'
 import UserVideo from './components/user-video.vue'
@@ -59,12 +65,13 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import roomBottombar from './components/room-bottombar.vue'
 import timer from './components/timer.vue'
+import Roulette from './components/roulette.vue'
 
 const OPENVIDU_SERVER_URL = "https://pparttypeople.kro.kr:4443";
 const OPENVIDU_SERVER_SECRET = "a106ssafy0183";
 
 export default {
-  components: { roomSidebar, RoomChat, UserVideo, timer,  roomBottombar },
+  components: { roomSidebar, RoomChat, UserVideo, timer,  roomBottombar, Roulette },
   name: 'conference-detail',
   props: {
     conferenceId: {
@@ -73,6 +80,11 @@ export default {
     userName: {
       type: String
     }
+  },
+  setup() {
+    const isRouletteOpen = ref(false)
+
+    return { isRouletteOpen }
   },
   data () {
 		return {
@@ -84,7 +96,8 @@ export default {
 			mySessionId: this.conferenceId,
 			myUserName: this.userName,
 			router: useRouter(),
-			store: useStore()
+			store: useStore(),
+      rouletteTopic: ''
 		}
 	},
 	computed: {
@@ -93,14 +106,14 @@ export default {
 		}
 	},
   methods: {
-		joinSession () {
-			// --- Get an OpenVidu object ---
-			this.OV = new OpenVidu();
+    joinSession () {
+      // --- Get an OpenVidu object ---
+      this.OV = new OpenVidu();
 
-			// --- Init a session ---
-			this.session = this.OV.initSession();
+      // --- Init a session ---
+      this.session = this.OV.initSession();
 
-			// --- Specify the actions when events take place in the session ---
+      // --- Specify the actions when events take place in the session ---
 
 			// On every new Stream received...
 			this.session.on('streamCreated', ({ stream }) => {
@@ -110,18 +123,18 @@ export default {
 				this.subscribers.push(subscriber);
 			});
 
-			// On every Stream destroyed...
-			this.session.on('streamDestroyed', ({ stream }) => {
-				const index = this.subscribers.indexOf(stream.streamManager, 0);
-				if (index >= 0) {
-					this.subscribers.splice(index, 1);
-				}
-			});
+      // On every Stream destroyed...
+      this.session.on('streamDestroyed', ({ stream }) => {
+        const index = this.subscribers.indexOf(stream.streamManager, 0);
+        if (index >= 0) {
+          this.subscribers.splice(index, 1);
+        }
+      });
 
-			// On every asynchronous exception...
-			this.session.on('exception', ({ exception }) => {
-				console.warn(exception);
-			});
+      // On every asynchronous exception...
+      this.session.on('exception', ({ exception }) => {
+        console.warn(exception);
+      });
 
 			// public 채팅 signal 받기
 			this.session.on('signal:public-chat', (event) => {
@@ -137,106 +150,115 @@ export default {
 			this.session.on('signal:timer', (event) => {
 				this.$refs.timer.startCountdown(event.data)
 			})
-			// --- Connect to the session with a valid user token ---
 
-			// 'getToken' method is simulating what your server-side should do.
-			// 'token' parameter should be retrieved and returned by your own backend
-			this.getToken(this.mySessionId).then(token => {
-				this.session.connect(token, { clientData: this.myUserName })
-					.then(() => {
+      // 룰렛 signal 받기
+      this.session.on('signal:roulette-result', (event) => {
+        // vuex state에 signal로 받은 참가자, 당첨자 정보 저장
+        this.store.commit('root/setRouletteSignalData', JSON.parse(event.data))
+        this.rouletteTopic = JSON.parse(event.data).rouletteTopic
+        // 룰렛 컴포넌트 show
+        this.isRouletteOpen = true
+        // 룰렛 애니메이션 실행
+        this.$refs.apiRequest.playRoulette()
+      })
 
-						// --- Get your own camera stream with the desired properties ---
+      // --- Connect to the session with a valid user token ---
 
-						let publisher = this.OV.initPublisher(undefined, {
-							audioSource: undefined, // The source of audio. If undefined default microphone
-							videoSource: undefined, // The source of video. If undefined default webcam
-							publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
-							publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
-							resolution: '640x360',  // The resolution of your video
-							frameRate: 30,			// The frame rate of your video
-							insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
-							mirror: false,       	// Whether to mirror your local video or not
-						});
+      // 'getToken' method is simulating what your server-side should do.
+      // 'token' parameter should be retrieved and returned by your own backend
+      this.getToken(this.mySessionId).then(token => {
+        this.session.connect(token, { clientData: this.myUserName })
+          .then(() => {
+            let publisher = this.OV.initPublisher(undefined, {
+              audioSource: undefined, // The source of audio. If undefined default microphone
+              videoSource: undefined, // The source of video. If undefined default webcam
+              publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
+              publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
+              resolution: '640x360',  // The resolution of your video
+              frameRate: 30,			// The frame rate of your video
+              insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
+              mirror: false,       	// Whether to mirror your local video or not
+            });
 
-						publisher.stream.userName = 'asdfasdf'
+            publisher.stream.userName = 'asdfasdf'
 
-						this.mainStreamManager = publisher;
-						this.publisher = publisher;
+            this.mainStreamManager = publisher;
+            this.publisher = publisher;
             console.log(this.publisher)
-						// --- Publish your stream ---
+            // --- Publish your stream ---
+            this.session.publish(this.publisher);
+          })
+          .catch(error => {
+            console.log('There was an error connecting to the session:', error.code, error.message);
+          });
+      });
 
-						this.session.publish(this.publisher);
-					})
-					.catch(error => {
-						console.log('There was an error connecting to the session:', error.code, error.message);
-					});
-			});
-
-			window.addEventListener('beforeUnmount', this.leaveSession)
-		},
+      window.addEventListener('beforeunload', this.leaveSession)
+    },
 
     leaveSession () {
-		// --- Leave the session by calling 'disconnect' method over the Session object ---
-		if (this.session) this.session.disconnect();
+      // --- Leave the session by calling 'disconnect' method over the Session object ---
+      if (this.session) this.session.disconnect();
 
-		this.session = undefined;
-		this.mainStreamManager = undefined;
-		this.publisher = undefined;
-		this.subscribers = [];
-		this.OV = undefined;
+      this.session = undefined;
+      this.mainStreamManager = undefined;
+      this.publisher = undefined;
+      this.subscribers = [];
+      this.OV = undefined;
 
-		this.store.dispatch('root/leaveSession', this.mySessionId)
+      this.store.dispatch('root/leaveSession', this.mySessionId)
 
-		window.removeEventListener('beforeUnmount', this.leaveSession);
-		this.router.push({name: 'Home'})
-	},
+      window.removeEventListener('beforeUnmount', this.leaveSession);
+      this.router.push({name: 'Home'})
+    },
+    
     getToken (mySessionId) {
-			return this.createSession(mySessionId).then(sessionId => this.createToken(sessionId));
-		},
+      return this.createSession(mySessionId).then(sessionId => this.createToken(sessionId));
+    },
 
-		// See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessions
-		createSession (sessionId) {
-			return new Promise((resolve, reject) => {
-				axios
-					.post(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions`, JSON.stringify({
-						customSessionId: sessionId,
-					}), {
-						auth: {
-							username: 'OPENVIDUAPP',
-							password: OPENVIDU_SERVER_SECRET,
-						},
-					})
-					.then(response => response.data)
-					.then(data => resolve(data.id))
-					.catch(error => {
-						if (error.response.status === 409) {
-							resolve(sessionId);
-						} else {
-							console.warn(`No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}`);
-							if (window.confirm(`No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`)) {
-								location.assign(`${OPENVIDU_SERVER_URL}/accept-certificate`);
-							}
-							reject(error.response);
-						}
-					});
-			});
-		},
+    // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessions
+    createSession (sessionId) {
+      return new Promise((resolve, reject) => {
+        axios
+            .post(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions`, JSON.stringify({
+              customSessionId: sessionId,
+            }), {
+              auth: {
+                username: 'OPENVIDUAPP',
+                password: OPENVIDU_SERVER_SECRET,
+              },
+            })
+            .then(response => response.data)
+            .then(data => resolve(data.id))
+            .catch(error => {
+              if (error.response.status === 409) {
+                resolve(sessionId);
+              } else {
+                console.warn(`No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}`);
+                if (window.confirm(`No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`)) {
+                  location.assign(`${OPENVIDU_SERVER_URL}/accept-certificate`);
+                }
+                reject(error.response);
+              }
+            });
+      });
+    },
 
-		// See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
-		createToken (sessionId) {
-			return new Promise((resolve, reject) => {
-				axios
-					.post(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`, {}, {
-						auth: {
-							username: 'OPENVIDUAPP',
-							password: OPENVIDU_SERVER_SECRET,
-						},
-					})
-					.then(response => response.data)
-					.then(data => resolve(data.token))
-					.catch(error => reject(error.response));
-			});
-		},
+    // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
+    createToken (sessionId) {
+      return new Promise((resolve, reject) => {
+        axios
+            .post(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`, {}, {
+              auth: {
+                username: 'OPENVIDUAPP',
+                password: OPENVIDU_SERVER_SECRET,
+              },
+            })
+            .then(response => response.data)
+            .then(data => resolve(data.token))
+            .catch(error => reject(error.response));
+      });
+    },
 
 		sendMessage ({ content, to }) {
 			let now = new Date()
@@ -246,11 +268,11 @@ export default {
 				hour12: false,      // true인 경우 오후 10:25와 같이 나타냄.
 			})
 
-			let messageData = {
-				content: content,
-				sender: this.myUserName,
-				time: current,
-			}
+      let messageData = {
+        content: content,
+        sender: this.myUserName,
+        time: current,
+      }
 
 			// 전체 메시지
 			if (to === "all") {
@@ -307,16 +329,70 @@ export default {
 		videoOnOff ({ video }) {
 			console.log("video")
 			this.publisher.publishVideo(video)
-		}
+		},
+
+    // 룰렛 signal 보내기
+    sendRoulletteMessage (rouletteTopic) {
+      // 룰렛 데이터(참가자, 당첨자, 룰렛 제목) 저장
+      let messageData = {
+        "participants" : this.store.getters['root/getRouletteSignalData'].participants,
+        "winner" : this.store.getters['root/getRouletteSignalData'].winner,
+        "rouletteTopic" : rouletteTopic
+      }
+      
+      // 룰렛 데이터 signal 전송
+      this.session.signal({
+        data: JSON.stringify(messageData),
+        to: [],
+        type: 'roulette-result',
+      })
+      .then(() => {
+        console.log('룰렛 메시지 전송 완료')
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    },
+    
+    // roulette-create-modal 에서 startSignal() 메서드를 호출하면 현재 컴포넌트에서 룰렛 실행을 위한 signal 보냄
+    sendRouletteSignal(rouletteTopic) {
+      this.sendRoulletteMessage(rouletteTopic)
+    },
+
+    // 룰렛 종료
+    closeRoulette(){
+      // 채팅창에 로그로 남길 데이터 정의
+      let now = new Date()
+      let current = now.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,      // true인 경우 오후 10:25와 같이 나타냄.
+      })
+      let participants = this.store.getters['root/getRouletteSignalData'].participants
+      let winnerIdx = this.store.getters['root/getRouletteSignalData'].winner
+
+      let messageData = {
+        content: `[${this.rouletteTopic}] ${participants[winnerIdx].value}님이 당첨되었습니다.`,
+        sender: "System",
+        time: current,
+      }
+
+      // 자신의 채팅창에 당첨자 로그 출력
+      this.$refs.chat.addMessage(JSON.stringify(messageData), false)
+      // 룰렛 컴포넌트 show 해제
+      this.isRouletteOpen = false
+    },
 
   },
+
   mounted() {
     console.log('mounted')
     this.joinSession()
+    this.store.commit('root/setRoomId', this.mySessionId)
   },
-	beforeUnmount() {
-		console.log('unmount')
-		this.leaveSession()
-	}
+  beforeUnmount() {
+    console.log('unmount')
+    this.leaveSession()
+  }
 }
 </script>

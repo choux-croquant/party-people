@@ -35,5 +35,10 @@ export default {
     min: null,
     sec: null
   },
-  roomUserList : []
+  roomUserList : [],
+  rouletteSignalData : {
+    participants : [],
+    winner : null,
+  },
+  roomId : null,
 }
