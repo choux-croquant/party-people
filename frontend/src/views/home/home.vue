@@ -1,16 +1,16 @@
 <template>
   <main-header />
-   
-  <div class="conference-list-wrap pl-0" style="overflow: auto"> 
+
+  <div class="conference-list-wrap pl-0" style="overflow: auto">
     <infinite-scroll @infinite-scroll="infiniteHandler">
-      <conference :key="room.id" v-for="room in state.roomList" class="conference-card m-5" @click="handleClick(room.id)" :room="room" /> 
+      <conference :key="room.id" v-for="room in state.roomList" class="conference-card m-5" @click="handleClick(room.id)" :room="room" />
     </infinite-scroll>
   </div>
 
   <footer class="display: none">not showing</footer>
-  
+
   <password-confirm ref="passwordConfirmModal" />
-  
+
 
 </template>
 <style>
@@ -107,6 +107,22 @@ export default {
           passwordConfirmModal.value.open(id)
         }
         else {
+
+          store.dispatch('root/passwordConfirm', { roomId: id, password: '' })
+              .then((res) => {
+                console.log(res)
+                router.push({
+                  name: 'ConferenceDetail',
+                  params: {
+                    conferenceId: id,
+                    userName: store.getters['auth/getUserName']
+                  }
+                })
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+
           router.push({
             name: 'ConferenceDetail',
             params: {
