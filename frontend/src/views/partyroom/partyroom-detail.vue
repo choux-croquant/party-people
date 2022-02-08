@@ -14,6 +14,7 @@
 				@sendRouletteSignal="sendRouletteSignal"
 				@startVote="startVote"
 				@sendVoteResult="sendVoteResult"
+				@open-whiteboard="openWhiteboard"
 				ref="roomSidebar"
 			></room-sidebar>
 			<!-- 위치는 나중에 옮길 예정 -->
@@ -77,8 +78,10 @@
 				</div>
 			</div>
 			<whiteboard
+				v-show="isWhiteboardOpen"
 				@send-whiteboard-signal="sendWhiteboardSignal"
 				@send-painting-signal="sendPaintingSignal"
+				@close-whiteboard="closeWhiteboard"
 				ref="whiteboard"
 			></whiteboard>
 			<room-chat
@@ -150,8 +153,9 @@ export default {
 	},
 	setup() {
 		const isRouletteOpen = ref(false);
+		const isWhiteboardOpen = ref(false);
 
-		return { isRouletteOpen };
+		return { isRouletteOpen, isWhiteboardOpen };
 	},
 	data() {
 		return {
@@ -542,6 +546,19 @@ export default {
 			this.$refs.chat.addMessage(JSON.stringify(messageData), false);
 			// 룰렛 컴포넌트 show 해제
 			this.isRouletteOpen = false;
+		},
+
+		// 화이트보드 창 열기
+		openWhiteboard() {
+			console.log('open whiteboard');
+			this.isWhiteboardOpen = true;
+		},
+
+		// 화이트보드 창 닫기
+		// TODO: 화이트보드 창 닫을 때 화이트보드 초기화하기
+		closeWhiteboard() {
+			console.log('close whiteboard');
+			this.isWhiteboardOpen = false;
 		},
 
 		// ctx 정보 보내기 step 2
