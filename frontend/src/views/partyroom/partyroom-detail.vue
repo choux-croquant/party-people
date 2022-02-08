@@ -80,6 +80,12 @@
 				<!-- Kurento faceOverlayFilter 동작버튼 -->
 				<button @click="applyKurentoFilter">Kurento apply Btn |</button>
 				<button @click="removeKurentoFilter">Kurento remove Btn</button>
+				<!-- Kurento GStreamerFilter 동작버튼 -->
+				<br />
+				<button @click="applyGStreamerFilter">Kurento TextOverlay Btn |</button>
+				<button @click="removeKurentoFilter">
+					Kurento TextOverlay remove Btn
+				</button>
 			</div>
 			<whiteboard
 				v-show="isWhiteboardOpen"
@@ -578,7 +584,7 @@ export default {
 			});
 		},
 
-		// Kurento faceOverlayFilter 해제
+		// Kurento faceOverlayFilter, Kurento GStreamerFilter 해제
 		removeKurentoFilter() {
 			this.publisher.stream
 				.removeFilter()
@@ -587,6 +593,21 @@ export default {
 				})
 				.catch(error => {
 					console.error(error);
+				});
+		},
+
+		// Kurento GStreamerFilter 적용
+		applyGStreamerFilter() {
+			this.publisher.stream
+				.applyFilter('GStreamerFilter', {
+					command:
+						'textoverlay text="PartyPeople" valignment=top halignment=center font-desc="Cantarell 25"',
+				})
+				.then(() => {
+					console.log('Video flipped!!!!');
+				})
+				.catch(e => {
+					console.log('err ::::: ', e);
 				});
 		},
 
@@ -641,7 +662,6 @@ export default {
 					console.log(error);
 				});
 		},
-		
 	},
 
 	mounted() {
