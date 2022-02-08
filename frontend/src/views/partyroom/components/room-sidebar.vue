@@ -369,7 +369,12 @@
 		ref="rouletteCreateModal"
 		@sendRouletteSignal="sendRouletteSignal"
 	/>
-	<video-customize-modal ref="videoCustomizeModal" />
+	<video-customize-modal
+		@stickerOverlay="stickerOverlay"
+		@visualFilter="visualFilter"
+		@textOverlay="textOverlay"
+		ref="videoCustomizeModal"
+	/>
 	<theme-customize-modal ref="themeCustomizeModal" />
 	<timer-create-modal ref="timerCreateModal" />
 </template>
@@ -442,6 +447,19 @@ export default {
 			emit('sendVoteResult');
 		};
 
+		const stickerOverlay = filterInfo => {
+			console.log('스티커오버레이 사이드바 emit : ' + filterInfo);
+			emit('stickerOverlay', filterInfo);
+		};
+
+		const visualFilter = filterInfo => {
+			emit('visualFilter', filterInfo);
+		};
+
+		const textOverlay = filterInfo => {
+			emit('textOverlay', filterInfo);
+		};
+
 		return {
 			clickTimer,
 			voteCreateModal,
@@ -456,6 +474,9 @@ export default {
 			timerCreateModal,
 			sendVote,
 			sendVoteResult,
+			stickerOverlay,
+			visualFilter,
+			textOverlay,
 		};
 	},
 
