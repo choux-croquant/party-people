@@ -51,7 +51,10 @@
 					></div>
 				</div>
 				<!-- 지우개 -->
-				<div class="w-10 h-10 p-0 cursor-pointer rounded-full bg-tc-500 flex items-center justify-center" id="eraser">
+				<div
+					class="w-10 h-10 p-0 cursor-pointer rounded-full bg-tc-500 flex items-center justify-center"
+					id="eraser"
+				>
 					<svg
 						version="1.1"
 						class="h-5/6 w-5/6 erasor-icon"
@@ -109,7 +112,6 @@
 .selected {
 	outline: 3px solid #f3799e;
 }
-
 </style>
 
 <script>
@@ -132,7 +134,7 @@ export default {
 			state.ctx = state.canvas.getContext('2d');
 			state.colors = document.getElementsByClassName('color-set');
 			state.range = document.querySelector('#widthRange');
-			const eraser = document.querySelector('#eraser')
+			const eraser = document.querySelector('#eraser');
 
 			const INITIAL_COLOR = '#2c2c2c';
 			const CANVAS_SIZE = 700;
@@ -149,12 +151,12 @@ export default {
 			const stopPainting = () => {
 				// state.painting = false;
 				sendPaintingState(false);
-			}
+			};
 
 			const startPainting = () => {
 				// state.painting = true;
 				sendPaintingState(true);
-			}
+			};
 
 			// 캔버스 내에서 마우스를 움직일 때마다 호출 (현재 좌표, 붓 색상/두께 정보를 담아 sendSignal 함수 호출)
 			const onMouseMove = async event => {
@@ -169,32 +171,32 @@ export default {
 				const color = event.target.style.backgroundColor;
 				state.ctx.strokeStyle = color;
 				resetBtns();
-				event.target.classList.add('selected')
-				console.log(event.target)
+				event.target.classList.add('selected');
+				console.log(event.target);
 			}
 
 			// 붓 두께 설정
-			const handleRangeChange = (event) => {
+			const handleRangeChange = event => {
 				const size = event.target.value;
 				state.ctx.lineWidth = size;
-			}
+			};
 
-			const handleCM = (event) => {
+			const handleCM = event => {
 				event.preventDefault();
-			}
+			};
 
 			const clickEraser = () => {
 				resetBtns();
 				eraser.classList.add('selected');
-				state.ctx.strokeStyle = "#ffffff";
-			}
+				state.ctx.strokeStyle = '#ffffff';
+			};
 
 			const resetBtns = () => {
 				Array.from(state.colors).forEach(color =>
-					color.classList.remove('selected')
+					color.classList.remove('selected'),
 				);
 				eraser.classList.remove('selected');
-			}
+			};
 
 			if (state.canvas) {
 				state.canvas.addEventListener('mousemove', onMouseMove);
@@ -205,7 +207,7 @@ export default {
 			}
 
 			if (eraser) {
-				eraser.addEventListener('click', clickEraser)
+				eraser.addEventListener('click', clickEraser);
 			}
 
 			Array.from(state.colors).forEach(color =>
@@ -256,7 +258,7 @@ export default {
 
 		// 화이트보드 초기화 (자기 화면에만 적용)
 		const resetWhiteboard = () => {
-			console.log('asdf')
+			console.log('asdf');
 			state.ctx.fillRect(0, 0, 700, 700);
 		};
 
