@@ -1,6 +1,7 @@
 package com.ssafy.config;
 
 import com.ssafy.common.util.JwtTokenUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +31,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
+    @Value("${static.upload.location}")
+    private String staticUploadLocation;
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     		registry.addResourceHandler("/resources/**")
@@ -57,6 +59,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 			.addResourceLocations("classpath:/dist/img/");
         registry.addResourceHandler("/js/**")
 				.addResourceLocations("classpath:/dist/js/");
+        registry.addResourceHandler("/upload/**")
+                .addResourceLocations(staticUploadLocation);
+
     }
 
     public Filter requestLoggingFilter() {

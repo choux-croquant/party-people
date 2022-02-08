@@ -1,20 +1,24 @@
 <template>
-  <!-- main 으로 시작 -->
-  <Main/>
+	<router-view></router-view>
+	<!-- <img alt="Vue logo" src="./assets/logo.png">
+  <div class="bg-tc-100">메인페이지</div> -->
 </template>
 
 <script>
-import Main from './views/main/main.vue'
-
 export default {
-  name: 'App',
-
-  components: {
-    Main,
-  },
-
-  data: () => ({
-    //
-  }),
-}
+	name: 'App',
+	components: {},
+};
 </script>
+
+<style>
+#app {
+	font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto,
+		'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR',
+		'Malgun Gothic', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-align: center;
+	color: #2c3e50;
+}
+</style>
