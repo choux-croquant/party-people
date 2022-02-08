@@ -82,7 +82,7 @@
 				<!-- Kurento GStreamerFilter 동작버튼 -->
 				<br />
 				<button @click="applyGStreamerFilter">Kurento TextOverlay Btn |</button>
-				<button @click="removeGStreamerFilter">
+				<button @click="removeKurentoFilter">
 					Kurento TextOverlay remove Btn
 				</button>
 			</div>
@@ -558,7 +558,7 @@ export default {
 			});
 		},
 
-		// Kurento faceOverlayFilter 해제
+		// Kurento faceOverlayFilter, Kurento GStreamerFilter 해제
 		removeKurentoFilter() {
 			this.publisher.stream
 				.removeFilter()
@@ -582,18 +582,6 @@ export default {
 				})
 				.catch(e => {
 					console.log('err ::::: ', e);
-				});
-		},
-
-		// Kurento GStreamerFilter 해제
-		removeGStreamerFilter() {
-			this.publisher.stream
-				.removeFilter()
-				.then(() => {
-					console.log('Filter removed');
-				})
-				.catch(error => {
-					console.error(error);
 				});
 		},
 	},
