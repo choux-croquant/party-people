@@ -211,29 +211,6 @@ export default {
 			});
 
 			// 타이머 signal 받기
-<<<<<<< HEAD
-			this.session.on('signal:timer', (event) => {
-				this.$refs.timer.startCountdown(event.data)
-			})
-			// 투표 signal 받기
-			this.session.on('signal:vote', (event) => {
-				this.$refs.roomSidebar.startVote(event.data)
-			})
-
-			// 투표 결과 signal 받기
-			this.session.on('signal:voteResult', (event) => {
-				this.$store.commit('root/setVoteResult', JSON.parse(event.data))
-				let voteResult = this.$store.getters['root/getVoteResult']
-				let sum = 0
-				for (let i of Object.values(voteResult)) {
-					sum += i
-				}
-				console.log('sum:', sum, '참가자 수:', this.subscribers.length)
-				if (sum == (this.subscribers.length + 1)) {
-					alert(`투표결과:${JSON.stringify(voteResult)}`)
-				}
-			})
-=======
 			this.session.on('signal:timer', event => {
 				this.$refs.timer.startCountdown(event.data);
 			});
@@ -264,10 +241,9 @@ export default {
 				}
 				console.log('sum:', sum, '참가자 수:', this.subscribers.length);
 				if (sum == this.subscribers.length + 1) {
-					alert(JSON.stringify(voteResult));
+					alert(`투표결과: ${JSON.stringify(voteResult)}`);
 				}
 			});
->>>>>>> cc4c493c509a0c8e5e56f4e676411761ae1348be
 			// --- Connect to the session with a valid user token ---
 
 			// 'getToken' method is simulating what your server-side should do.
@@ -491,41 +467,6 @@ export default {
 			this.publisher.publishVideo(video);
 		},
 
-<<<<<<< HEAD
-		startVote ({ voteInfo }) {
-			this.session.signal({
-				data: JSON.stringify(voteInfo),
-				to: [],
-				type: 'vote'
-			})
-			.then(() => {
-				console.log('투표 전송 완료')
-			})
-			.catch((error) => {
-				console.log('투표 전송 실패', error)
-			})
-		},
-
-		sendVoteResult () {
-			console.log('3.sendVote')
-			let voteResult = this.$store.getters['root/getVoteResult']
-			this.session.signal({
-				data: JSON.stringify(voteResult),
-				to: [],
-				type: 'voteResult'
-			})
-			.then(() => {
-				console.log('투표 결과 전송 완료')
-			})
-			.catch((error) => {
-				console.log('투표 결과 전송 실패', error)
-			})
-		},
-
-		audioOnOff ({ audio }) {
-			console.log("audio")
-			this.publisher.publishAudio(audio)
-=======
 		// 룰렛 signal 보내기
 		sendRoulletteMessage(rouletteTopic) {
 			// 룰렛 데이터(참가자, 당첨자, 룰렛 제목) 저장
@@ -554,7 +495,6 @@ export default {
 		// roulette-create-modal 에서 startSignal() 메서드를 호출하면 현재 컴포넌트에서 룰렛 실행을 위한 signal 보냄
 		sendRouletteSignal(rouletteTopic) {
 			this.sendRoulletteMessage(rouletteTopic);
->>>>>>> cc4c493c509a0c8e5e56f4e676411761ae1348be
 		},
 
 		// 룰렛 종료
