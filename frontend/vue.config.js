@@ -7,18 +7,23 @@ module.exports = {
     open: true,
     proxy: {
       '/api/v1': {
-        target: 'http://localhost:8080/'
+        target: 'https://pparttypeople.kro.kr/'
+      },
+      '/openvidu/api': {
+        target: 'https://pparttypeople.kro.kr:4443/'
       }
     },
     historyApiFallback: true,
     hot: true
   },
   css: {
-    requireModuleExtension: false // import 시에 경로에 .module 포함 안해도 됨.
+    loaderOptions: {
+      postcss: {
+        ident: 'postcss',
+        plugins: [require('tailwindcss')],
+      },
+    },
   },
-  transpileDependencies: [
-    'element-plus'
-  ],
   lintOnSave: false,
   outputDir: '../backend/src/main/resources/dist'
 }
