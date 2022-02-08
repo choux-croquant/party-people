@@ -75,13 +75,64 @@
 				<div
 					class="w-full h-32 border-3 rounded-lg border-main-100 shadow-lg flex flex-col px-3 py-2"
 				>
-					<div id="scrolling-content" class="flex overflow-x-auto h-full">
+					<!-- 스티커 선택 -->
+					<div
+						v-if="state.selectedCategory === '스티커'"
+						id="scrolling-content"
+						class="flex overflow-x-auto h-full"
+					>
 						<div
-							v-for="custom in state.videoCustoms"
+							v-for="custom in state.stickerList"
 							:key="custom.id"
 							class="w-1/4 cursor-pointer h-full px-4 flex-shrink-0"
 							v-show="showCategory(custom.category)"
-							@click="clickVideoCustom(custom.id)"
+							@click="clickVideoCustom(custom)"
+						>
+							<img
+								:src="custom.url"
+								:class="[
+									custom.id === state.selectedCustomId
+										? 'border-4 border-sub-200'
+										: '',
+								]"
+							/>
+						</div>
+					</div>
+					<!-- 비주얼 필터 선택 -->
+					<div
+						v-if="state.selectedCategory === '필터'"
+						id="scrolling-content"
+						class="flex overflow-x-auto h-full"
+					>
+						<div
+							v-for="custom in state.visualFilterList"
+							:key="custom.id"
+							class="w-1/4 cursor-pointer h-full px-4 flex-shrink-0"
+							v-show="showCategory(custom.category)"
+							@click="clickVideoCustom(custom)"
+						>
+							<img
+								:src="custom.url"
+								:class="[
+									custom.id === state.selectedCustomId
+										? 'border-4 border-sub-200'
+										: '',
+								]"
+							/>
+						</div>
+					</div>
+					<!-- 문구 선택 -->
+					<div
+						v-if="state.selectedCategory === '문구'"
+						id="scrolling-content"
+						class="flex overflow-x-auto h-full"
+					>
+						<div
+							v-for="custom in state.textList"
+							:key="custom.id"
+							class="w-1/4 cursor-pointer h-full px-4 flex-shrink-0"
+							v-show="showCategory(custom.category)"
+							@click="clickVideoCustom(custom)"
 						>
 							<img
 								:src="custom.url"
@@ -102,6 +153,7 @@
 <script>
 import { ref, reactive } from 'vue';
 import BaseModal from './base-modal.vue';
+import stickerListJson from '@/assets/json-assets/stickerList.json';
 
 export default {
 	name: 'VideoCustomizeModal',
@@ -110,67 +162,36 @@ export default {
 		BaseModal,
 	},
 
-	setup() {
+	setup(props, { emit }) {
 		const baseModal = ref(null);
 
 		const state = reactive({
-			selectedCategory: 'All',
-			selectedCustomId: null,
+			selectedCategory: '스티커',
+			selectedCustom: null,
 
 			categories: [
-				{ id: 1, name: 'All' },
-				{ id: 2, name: 'Birthday' },
-				{ id: 3, name: 'Christmas' },
-				{ id: 4, name: 'Halloween' },
+				{ id: 1, name: '스티커' },
+				{ id: 2, name: '필터' },
+				{ id: 3, name: '문구' },
 			],
 
-			videoCustoms: [
+			// 각 항목을 json 파일로 따로 저장하여 json파일 불러옴
+			stickerList: stickerListJson,
+
+			visualFilterList: [
 				{
 					id: 1,
-					category: 'Halloween',
-					url: 'https://images.unsplash.com/photo-1508361001413-7a9dca21d08a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8aGFsbG93ZWVufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=200&q=20',
+					url: 'https://cdn.crowdpic.net/list-thumb/thumb_l_02F4A9A335F63872A1C75E9FAFE16241.png',
+					command: 'videoflip method=vertical-flip',
 				},
 				{
 					id: 2,
-					category: 'Halloween',
-					url: 'https://images.unsplash.com/photo-1508361001413-7a9dca21d08a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8aGFsbG93ZWVufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=200&q=20',
-				},
-				{
-					id: 3,
-					category: 'Halloween',
-					url: 'https://images.unsplash.com/photo-1508361001413-7a9dca21d08a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8aGFsbG93ZWVufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=200&q=20',
-				},
-				{
-					id: 4,
-					category: 'Christmas',
-					url: 'https://images.unsplash.com/photo-1451772741724-d20990422508?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
-				},
-				{
-					id: 5,
-					category: 'Christmas',
-					url: 'https://images.unsplash.com/photo-1451772741724-d20990422508?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
-				},
-				{
-					id: 6,
-					category: 'Christmas',
-					url: 'https://images.unsplash.com/photo-1451772741724-d20990422508?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
-				},
-				{
-					id: 7,
-					category: 'Birthday',
-					url: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80',
-				},
-				{
-					id: 8,
-					category: 'Birthday',
-					url: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80',
-				},
-				{
-					id: 9,
-					category: 'Birthday',
-					url: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80',
+					url: 'https://cdn.crowdpic.net/list-thumb/thumb_l_02F4A9A335F63872A1C75E9FAFE16241.png',
+					command: 'videoflip method=vertical-flip',
 				},
 			],
+
+			textList: null,
 		});
 
 		const open = () => {
@@ -180,23 +201,39 @@ export default {
 			baseModal.value.closeModal();
 		};
 
-		// 옵션 카테고리가 'All'이거나 함수의 인자로 들어온 category와 같은 경우에만 true 리턴
+		// 옵션 카테고리가 기본값인 '스티커'이거나 함수의 인자로 들어온 category와 같은 경우에만 true 리턴
 		const showCategory = category => {
 			return (
-				state.selectedCategory == 'All' || state.selectedCategory == category
+				state.selectedCategory == '스티커' || state.selectedCategory == category
 			);
 		};
 
-		const clickVideoCustom = id => {
-			state.selectedCustomId === id
-				? (state.selectedCustomId = null)
-				: (state.selectedCustomId = id);
+		const clickVideoCustom = customObject => {
+			console.log('선택된 항목 : ' + customObject);
+			state.selectedCustom === customObject
+				? (state.selectedCustom = null)
+				: (state.selectedCustom = customObject);
 		};
 
-		// TODO: 비디오 커스텀 적용
-		const applyVideoCustom = () => {};
-		// TODO: 비디오 커스텀 적용 취소
-		const cancelVideoCustom = () => {};
+		// 카테고리에 따라 파티룸 내부 함수 호출(emit)
+		const applyVideoCustom = () => {
+			var selected = state.selectedCategory;
+			console.log('apply 클릭 : ' + selected);
+			if (selected === '스티커') {
+				emit('stickerOverlay', state.selectedCustom);
+			} else if (selected === '필터') {
+				emit('visualFilter', state.selectedCustom);
+			} else if (selected === '문구') {
+				emit('textOverlay', state.selectedCustom);
+			} else {
+				cancelVideoCustom();
+			}
+		};
+
+		// TODO: 비디오 커스텀 적용 취소 - bottombar의 filterOff 버튼과 연동
+		const cancelVideoCustom = () => {
+			close();
+		};
 
 		return {
 			state,
