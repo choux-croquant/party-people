@@ -78,13 +78,8 @@
 
 				<!-- Kurento faceOverlayFilter 동작버튼 -->
 				<button @click="applyKurentoFilter">Kurento apply Btn |</button>
-				<button @click="removeKurentoFilter">Kurento remove Btn</button>
 				<!-- Kurento GStreamerFilter 동작버튼 -->
-				<br />
 				<button @click="applyGStreamerFilter">Kurento TextOverlay Btn |</button>
-				<button @click="removeKurentoFilter">
-					Kurento TextOverlay remove Btn
-				</button>
 			</div>
 			<room-chat
 				@message="sendMessage"
@@ -92,6 +87,8 @@
 				:subscribers="subscribers"
 			></room-chat>
 			<room-bottombar
+				ref="bottombar"
+				@filterOff="filterOff"
 				@audioOnOff="audioOnOff"
 				@videoOnOff="videoOnOff"
 				@leaveSession="leaveSession()"
@@ -556,18 +553,8 @@ export default {
 					heightPercent: '1.0F',
 				});
 			});
-		},
-
-		// Kurento faceOverlayFilter, Kurento GStreamerFilter 해제
-		removeKurentoFilter() {
-			this.publisher.stream
-				.removeFilter()
-				.then(() => {
-					console.log('-- kurento Filter removed --');
-				})
-				.catch(error => {
-					console.error(error);
-				});
+			// bottombar 필터 해제 버튼 활성화
+			this.$refs.bottombar.state.filter = true;
 		},
 
 		// Kurento GStreamerFilter 적용
@@ -579,9 +566,24 @@ export default {
 				})
 				.then(() => {
 					console.log('Video flipped!!!!');
+					// bottombar 필터 해제 버튼 활성화
+					this.$refs.bottombar.state.filter = true;
 				})
 				.catch(e => {
 					console.log('err ::::: ', e);
+				});
+		},
+
+		// 필터 해제
+		filterOff() {
+			console.log('filter');
+			this.publisher.stream
+				.removeFilter()
+				.then(() => {
+					console.log('-- Filter removed --');
+				})
+				.catch(error => {
+					console.error(error);
 				});
 		},
 	},
