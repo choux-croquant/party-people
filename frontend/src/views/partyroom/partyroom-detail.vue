@@ -14,6 +14,7 @@
 				@sendRouletteSignal="sendRouletteSignal"
 				@startVote="startVote"
 				@sendVoteResult="sendVoteResult"
+				@open-whiteboard="openWhiteboard"
 				ref="roomSidebar"
 			></room-sidebar>
 			<!-- 위치는 나중에 옮길 예정 -->
@@ -75,13 +76,27 @@
 						:stream-manager="sub"
 					/>
 				</div>
+
+				<!-- Kurento faceOverlayFilter 동작버튼 -->
+				<button @click="applyKurentoFilter">Kurento apply Btn |</button>
+				<!-- Kurento GStreamerFilter 동작버튼 -->
+				<button @click="applyGStreamerFilter">Kurento TextOverlay Btn |</button>
 			</div>
+			<whiteboard
+				v-show="isWhiteboardOpen"
+				@send-whiteboard-signal="sendWhiteboardSignal"
+				@send-painting-signal="sendPaintingSignal"
+				@close-whiteboard="closeWhiteboard"
+				ref="whiteboard"
+			></whiteboard>
 			<room-chat
 				@message="sendMessage"
 				ref="chat"
 				:subscribers="subscribers"
 			></room-chat>
 			<room-bottombar
+				ref="bottombar"
+				@filterOff="filterOff"
 				@audioOnOff="audioOnOff"
 				@videoOnOff="videoOnOff"
 				@leaveSession="leaveSession()"
@@ -119,6 +134,7 @@ import { useStore } from 'vuex';
 import roomBottombar from './components/room-bottombar.vue';
 import timer from './components/timer.vue';
 import Roulette from './components/roulette.vue';
+import Whiteboard from './components/whiteboard.vue';
 
 const OPENVIDU_SERVER_URL = 'https://pparttypeople.kro.kr:4443';
 const OPENVIDU_SERVER_SECRET = 'a106ssafy0183';
@@ -131,6 +147,7 @@ export default {
 		timer,
 		roomBottombar,
 		Roulette,
+		Whiteboard,
 	},
 	name: 'conference-detail',
 	props: {
@@ -143,8 +160,9 @@ export default {
 	},
 	setup() {
 		const isRouletteOpen = ref(false);
+		const isWhiteboardOpen = ref(false);
 
-		return { isRouletteOpen };
+		return { isRouletteOpen, isWhiteboardOpen };
 	},
 	data() {
 		return {
@@ -245,6 +263,21 @@ export default {
 					this.voteComplete(voteResult);
 				}
 			});
+
+			// ctx 정보 보내기 step 3
+			// whiteboard signal 받기
+			this.session.on('signal:whiteboard', event => {
+				this.$refs.whiteboard.addWhiteboardSignal(event.data);
+				console.log('[S-3] ', event.data);
+			});
+
+			// painting state 정보 보내기 step 3
+			// painting state signal 받기
+			this.session.on('signal:painting-state', event => {
+				this.$refs.whiteboard.addPaintingSignal(event.data);
+				console.log('[P-3] ', event.data);
+			});
+
 			// --- Connect to the session with a valid user token ---
 
 			// 'getToken' method is simulating what your server-side should do.
@@ -266,9 +299,13 @@ export default {
 
 						publisher.stream.userName = 'asdfasdf';
 
+						// Kurento 필터 적용을 위해 remote를 subscribe
+						publisher.subscribeToRemote(true);
+
 						this.mainStreamManager = publisher;
 						this.publisher = publisher;
 						console.log(this.publisher);
+
 						// --- Publish your stream ---
 						this.session.publish(this.publisher);
 					})
@@ -350,7 +387,14 @@ export default {
 				axios
 					.post(
 						`${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
-						{},
+						{
+							// filter 사용을 위해 create connection 시 body를 추가
+							type: 'WEBRTC',
+							role: 'PUBLISHER',
+							kurentoOptions: {
+								allowedFilters: ['GStreamerFilter', 'FaceOverlayFilter'],
+							},
+						},
 						{
 							auth: {
 								username: 'OPENVIDUAPP',
@@ -539,6 +583,105 @@ export default {
 			this.$refs.chat.addMessage(JSON.stringify(messageData), false);
 			// 룰렛 컴포넌트 show 해제
 			this.isRouletteOpen = false;
+		},
+
+		// Kurento faceOverlayFilter 적용
+		applyKurentoFilter() {
+			this.publisher.stream.applyFilter('FaceOverlayFilter').then(filter => {
+				console.log('-- kurento filter applied --');
+
+				filter.execMethod('setOverlayedImage', {
+					uri: 'https://cdn.crowdpic.net/list-thumb/thumb_l_02F4A9A335F63872A1C75E9FAFE16241.png',
+					offsetXPercent: '-0.4F',
+					offsetYPercent: '-0.6F',
+					widthPercent: '1.7F',
+					heightPercent: '1.0F',
+				});
+			});
+			// bottombar 필터 해제 버튼 활성화
+			this.$refs.bottombar.state.filter = true;
+		},
+
+		// Kurento GStreamerFilter 적용
+		applyGStreamerFilter() {
+			this.publisher.stream
+				.applyFilter('GStreamerFilter', {
+					command:
+						'textoverlay text="PartyPeople" valignment=top halignment=center font-desc="Cantarell 25"',
+				})
+				.then(() => {
+					console.log('Video flipped!!!!');
+					// bottombar 필터 해제 버튼 활성화
+					this.$refs.bottombar.state.filter = true;
+				})
+				.catch(e => {
+					console.log('err ::::: ', e);
+				});
+		},
+
+		// 필터 해제
+		filterOff() {
+			console.log('filter');
+			this.publisher.stream
+				.removeFilter()
+				.then(() => {
+					console.log('-- Filter removed --');
+				})
+				.catch(error => {
+					console.error(error);
+				});
+		},
+
+		// 화이트보드 창 열기
+		openWhiteboard() {
+			console.log('open whiteboard');
+			this.isWhiteboardOpen = true;
+		},
+
+		// 화이트보드 창 닫기
+		// TODO: 화이트보드 창 닫을 때 화이트보드 초기화하기
+		closeWhiteboard() {
+			console.log('close whiteboard');
+			this.isWhiteboardOpen = false;
+		},
+
+		// ctx 정보 보내기 step 2
+		// 현재 좌표, 색깔, 굵기 정보를 받아 파티룸 내의 전체 사용자에게 전송
+		sendWhiteboardSignal(x, y, color, width) {
+			console.log('[S-2] ', x, y, color, width);
+
+			let data = {
+				currentX: x,
+				currentY: y,
+				color: color,
+				width: width,
+			};
+
+			this.session
+				.signal({
+					data: JSON.stringify(data),
+					to: [],
+					type: 'whiteboard',
+				})
+				.catch(error => {
+					console.log(error);
+				});
+		},
+
+		// painting state 정보 보내기 step 2
+		// painting state를 받아 파티룸 내의 전체 사용자에게 전송
+		sendPaintingSignal(is_painting) {
+			console.log('[P-2] ', is_painting);
+
+			this.session
+				.signal({
+					data: JSON.stringify(is_painting),
+					to: [],
+					type: 'painting-state',
+				})
+				.catch(error => {
+					console.log(error);
+				});
 		},
 	},
 

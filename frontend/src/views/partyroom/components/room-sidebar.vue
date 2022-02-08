@@ -284,7 +284,7 @@
 			<div
 				class="hover:bg-sub-300 w-full cursor-pointer"
 				v-show="showWhiteboardBtn"
-				@click="clickWhiteboardBtn"
+				@click="clickWhiteboardBtn()"
 			>
 				<a class="h-24 px-6 flex flex-col justify-center items-center w-full">
 					<svg
@@ -428,6 +428,12 @@ export default {
 			console.log('click roulette');
 			rouletteCreateModal.value.open();
 		};
+
+		const clickWhiteboardBtn = () => {
+			emit('open-whiteboard');
+			console.log('click whiteboard');
+		};
+
 		const sendVote = voteInfo => {
 			emit('startVote', { voteInfo });
 		};
@@ -435,6 +441,7 @@ export default {
 		const sendVoteResult = () => {
 			emit('sendVoteResult');
 		};
+
 		return {
 			clickTimer,
 			voteCreateModal,
@@ -445,6 +452,7 @@ export default {
 			clickVideoCustomizingBtn,
 			clickThemeBtn,
 			clickRoulette,
+			clickWhiteboardBtn,
 			timerCreateModal,
 			sendVote,
 			sendVoteResult,
