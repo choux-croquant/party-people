@@ -45,11 +45,11 @@ public class SessionRepositorySupport {
     }
 
     // 해당 방에 접속해있는 사용자인지 확인
-    public boolean isUserNotInCurrentSession(Long roomId, Long userId){
+    public boolean isUserInCurrentSession(Long roomId, Long userId){
         Session session = jpaQueryFactory.select(qSession).from(qSession)
                 .where(qSession.room.id.eq(roomId).and(qSession.user.id.eq(userId)).and(qSession.endTime.isNull())).fetchFirst();
 
-        return session == null;
+        return session != null;
     }
 
     // 유저 아이디로 해당 방 호스트인지 확인
