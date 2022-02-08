@@ -45,6 +45,11 @@ export default {
 		sec: null,
 	},
 	roomUserList: [],
+	voteInfo: {
+		voteTopic: '',
+		voteList: {},
+	},
+	voteResult: {},
 	rouletteSignalData: {
 		participants: [],
 		winner: null,

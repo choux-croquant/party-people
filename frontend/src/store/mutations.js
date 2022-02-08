@@ -24,3 +24,13 @@ export function setRouletteSignalData(state, rouletteSignalData) {
 export function setRoomId(state, roomId) {
 	state.roomId = roomId;
 }
+
+export function setVote(state, voteInfo) {
+	console.log(voteInfo);
+	state.voteInfo = voteInfo;
+}
+
+export function setVoteResult(state, voteResult) {
+	console.log(voteResult);
+	state.voteResult = voteResult;
+}

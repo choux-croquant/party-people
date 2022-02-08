@@ -27,3 +27,11 @@ export function getRouletteSignalData(state) {
 export function getRoomId(state) {
 	return state.roomId;
 }
+
+export function getVoteInfo(state) {
+	return state.voteInfo;
+}
+
+export function getVoteResult(state) {
+	return state.voteResult;
+}
