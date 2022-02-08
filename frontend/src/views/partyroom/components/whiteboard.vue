@@ -15,54 +15,54 @@
 					step="0.1"
 				/>
 			</div>
-      <div class="flex justify-evenly p-4">
-        <!-- 색깔 설정 -->
-        <div class="flex mr-4" id="jsColors">
-          <div
-            class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
-            style="background-color: #2c2c2c"
-          ></div>
-          <div
-            class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
-            style="background-color: white"
-          ></div>
-          <div
-            class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
-            style="background-color: #ff3b30"
-          ></div>
-          <div
-            class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
-            style="background-color: #ff9500"
-          ></div>
-          <div
-            class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
-            style="background-color: #ffcc00"
-          ></div>
-          <div
-            class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
-            style="background-color: #4cd963"
-          ></div>
-          <div
-            class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
-            style="background-color: #5ac8fa"
-          ></div>
-          <div
-            class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
-            style="background-color: #0579ff"
-          ></div>
-          <div
-            class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
-            style="background-color: #5856d6"
-          ></div>
-        </div>
-        <!-- 화이트보드 닫기 버튼 -->
-        <button 
-          class="bg-transparent hover:bg-main-200 text-main-200 font-semibold hover:text-tc-500 py-2 px-4 border border-main-200 hover:border-transparent rounded"
-          @click="closeWhiteboard"
-        >
-          Close
-        </button>
-      </div>
+			<div class="flex justify-evenly p-4">
+				<!-- 색깔 설정 -->
+				<div class="flex mr-4" id="jsColors">
+					<div
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+						style="background-color: #2c2c2c"
+					></div>
+					<div
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+						style="background-color: white"
+					></div>
+					<div
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+						style="background-color: #ff3b30"
+					></div>
+					<div
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+						style="background-color: #ff9500"
+					></div>
+					<div
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+						style="background-color: #ffcc00"
+					></div>
+					<div
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+						style="background-color: #4cd963"
+					></div>
+					<div
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+						style="background-color: #5ac8fa"
+					></div>
+					<div
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+						style="background-color: #0579ff"
+					></div>
+					<div
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+						style="background-color: #5856d6"
+					></div>
+				</div>
+				<!-- 화이트보드 닫기 버튼 -->
+				<button
+					class="bg-transparent hover:bg-main-200 text-main-200 font-semibold hover:text-tc-500 py-2 px-4 border border-main-200 hover:border-transparent rounded"
+					@click="closeWhiteboard"
+				>
+					Close
+				</button>
+			</div>
 		</div>
 	</div>
 </template>
@@ -199,10 +199,10 @@ export default {
 			console.log('[P-4] ', is_painting);
 		};
 
-    // 화이트보드 창 닫기
-    const closeWhiteboard = () => {
-      emit('close-whiteboard');
-    }
+		// 화이트보드 창 닫기
+		const closeWhiteboard = () => {
+			emit('close-whiteboard');
+		};
 
 		return {
 			state,
@@ -210,7 +210,7 @@ export default {
 			addWhiteboardSignal,
 			sendPaintingState,
 			addPaintingSignal,
-      closeWhiteboard,
+			closeWhiteboard,
 		};
 	},
 };
