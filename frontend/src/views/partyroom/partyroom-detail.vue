@@ -76,6 +76,10 @@
 						:stream-manager="sub"
 					/>
 				</div>
+
+				<!-- Kurento faceOverlayFilter 동작버튼 -->
+				<button @click="applyKurentoFilter">Kurento apply Btn |</button>
+				<button @click="removeKurentoFilter">Kurento remove Btn</button>
 			</div>
 			<whiteboard
 				v-show="isWhiteboardOpen"
@@ -291,9 +295,13 @@ export default {
 
 						publisher.stream.userName = 'asdfasdf';
 
+						// Kurento 필터 적용을 위해 remote를 subscribe
+						publisher.subscribeToRemote(true);
+
 						this.mainStreamManager = publisher;
 						this.publisher = publisher;
 						console.log(this.publisher);
+
 						// --- Publish your stream ---
 						this.session.publish(this.publisher);
 					})
@@ -375,7 +383,14 @@ export default {
 				axios
 					.post(
 						`${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
-						{},
+						{
+							// filter 사용을 위해 create connection 시 body를 추가
+							type: 'WEBRTC',
+							role: 'PUBLISHER',
+							kurentoOptions: {
+								allowedFilters: ['GStreamerFilter', 'FaceOverlayFilter'],
+							},
+						},
 						{
 							auth: {
 								username: 'OPENVIDUAPP',
@@ -548,6 +563,33 @@ export default {
 			this.isRouletteOpen = false;
 		},
 
+		// Kurento faceOverlayFilter 적용
+		applyKurentoFilter() {
+			this.publisher.stream.applyFilter('FaceOverlayFilter').then(filter => {
+				console.log('-- kurento filter applied --');
+
+				filter.execMethod('setOverlayedImage', {
+					uri: 'https://cdn.crowdpic.net/list-thumb/thumb_l_02F4A9A335F63872A1C75E9FAFE16241.png',
+					offsetXPercent: '-0.4F',
+					offsetYPercent: '-0.6F',
+					widthPercent: '1.7F',
+					heightPercent: '1.0F',
+				});
+			});
+		},
+
+		// Kurento faceOverlayFilter 해제
+		removeKurentoFilter() {
+			this.publisher.stream
+				.removeFilter()
+				.then(() => {
+					console.log('-- kurento Filter removed --');
+				})
+				.catch(error => {
+					console.error(error);
+				});
+		},
+
 		// 화이트보드 창 열기
 		openWhiteboard() {
 			console.log('open whiteboard');
@@ -599,6 +641,7 @@ export default {
 					console.log(error);
 				});
 		},
+		
 	},
 
 	mounted() {
