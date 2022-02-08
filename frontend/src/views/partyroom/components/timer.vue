@@ -1,7 +1,17 @@
 <template>
-  <div class="flex justify-center">
-    <svg class="w-10 h-10" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 511 511" style="enable-background:new 0 0 511 511;" xml:space="preserve">
-      <path d="M407.881,143.119c-11.693-11.693-24.497-21.867-38.167-30.444l12.062-20.891l21.218,12.25
+	<div class="flex justify-center">
+		<svg
+			class="w-10 h-10"
+			version="1.1"
+			id="Capa_1"
+			xmlns="http://www.w3.org/2000/svg"
+			xmlns:xlink="http://www.w3.org/1999/xlink"
+			viewBox="0 0 511 511"
+			style="enable-background: new 0 0 511 511"
+			xml:space="preserve"
+		>
+			<path
+				d="M407.881,143.119c-11.693-11.693-24.497-21.867-38.167-30.444l12.062-20.891l21.218,12.25
         c1.181,0.682,2.471,1.006,3.743,1.006c2.592,0,5.113-1.346,6.502-3.751c2.071-3.587,0.842-8.174-2.745-10.245l-55.426-32
         c-3.587-2.072-8.174-0.842-10.245,2.745c-2.071,3.587-0.842,8.174,2.745,10.245l21.218,12.25l-12.046,20.864
         c-21.461-11.449-44.746-19.152-69.038-22.77C297.101,73.693,303,61.275,303,47.5C303,21.309,281.691,0,255.5,0S208,21.309,208,47.5
@@ -11,79 +21,91 @@
         c-13.67,8.577-26.474,18.751-38.167,30.444C62.416,183.821,40,237.938,40,295.5s22.416,111.679,63.119,152.381
         S197.938,511,255.5,511s111.679-22.416,152.381-63.119S471,353.062,471,295.5S448.584,183.821,407.881,143.119z M223,47.5
         c0-17.92,14.58-32.5,32.5-32.5S288,29.58,288,47.5S273.42,80,255.5,80S223,65.42,223,47.5z M255.5,496
-        C144.944,496,55,406.056,55,295.5S144.944,95,255.5,95S456,184.944,456,295.5S366.056,496,255.5,496z"/>
-      <path d="M263,264.919V151.5c0-4.142-3.358-7.5-7.5-7.5s-7.5,3.358-7.5,7.5v113.409c-13.759,3.374-24,15.806-24,30.591
+        C144.944,496,55,406.056,55,295.5S144.944,95,255.5,95S456,184.944,456,295.5S366.056,496,255.5,496z"
+			/>
+			<path
+				d="M263,264.919V151.5c0-4.142-3.358-7.5-7.5-7.5s-7.5,3.358-7.5,7.5v113.409c-13.759,3.374-24,15.806-24,30.591
         s10.241,27.216,24,30.591V367.5c0,4.142,3.358,7.5,7.5,7.5s7.5-3.358,7.5-7.5v-41.409c13.759-3.374,24-15.806,24-30.591
         c0-7.765-2.851-15.226-8.027-21.006C274.704,269.725,269.11,266.421,263,264.919z M255.5,312c-9.098,0-16.5-7.402-16.5-16.5
-        s7.402-16.5,16.5-16.5c4.687,0,9.169,2.004,12.298,5.5c2.709,3.026,4.202,6.933,4.202,11C272,304.598,264.598,312,255.5,312z"/>
-      <path d="M255.5,112C154.318,112,72,194.318,72,295.5S154.318,479,255.5,479S439,396.682,439,295.5S356.682,112,255.5,112z
-        M255.5,464C162.589,464,87,388.411,87,295.5S162.589,127,255.5,127S424,202.589,424,295.5S348.411,464,255.5,464z"/>
-    </svg>
-  </div>
-  <div v-if="state.count" class="content-center">
-    <button type="button" class="bg-white" :disabled="state.counting" @click="sendTimer">
-      <vue-countdown v-if="state.counting" :time="state.min*60*1000+(state.sec*1000)" @end="onCountdownEnd" v-slot="{ minutes, seconds }"> {{ minutes }} : {{ seconds }} </vue-countdown>
-      <span v-else class="text-bold">start</span>
-    </button>
-    <div>
-      <button v-if="state.counting==true" @click="stopCountdown">stop</button>
-    </div>
-  </div>
+        s7.402-16.5,16.5-16.5c4.687,0,9.169,2.004,12.298,5.5c2.709,3.026,4.202,6.933,4.202,11C272,304.598,264.598,312,255.5,312z"
+			/>
+			<path
+				d="M255.5,112C154.318,112,72,194.318,72,295.5S154.318,479,255.5,479S439,396.682,439,295.5S356.682,112,255.5,112z
+        M255.5,464C162.589,464,87,388.411,87,295.5S162.589,127,255.5,127S424,202.589,424,295.5S348.411,464,255.5,464z"
+			/>
+		</svg>
+	</div>
+	<div v-if="state.count" class="content-center">
+		<button
+			type="button"
+			class="bg-white"
+			:disabled="state.counting"
+			@click="sendTimer"
+		>
+			<vue-countdown
+				v-if="state.counting"
+				:time="state.min * 60 * 1000 + state.sec * 1000"
+				@end="onCountdownEnd"
+				v-slot="{ minutes, seconds }"
+			>
+				{{ minutes }} : {{ seconds }}
+			</vue-countdown>
+			<span v-else class="text-bold">start</span>
+		</button>
+		<div>
+			<button v-if="state.counting == true" @click="stopCountdown">stop</button>
+		</div>
+	</div>
 </template>
 
-<style>
-
-</style>
+<style></style>
 
 <script>
 import { computed, reactive } from 'vue';
 import { useStore } from 'vuex';
 
 export default {
-  name : "timer",
+	name: 'timer',
 
-  setup (props, { emit }) {
-    const store = useStore()
-    const state = reactive ({
-      time: computed(() => store.getters['root/getTimerTime']),
-      min: 0,
-      sec: 0,
-      count: true,
-      counting: false,
-    })
-    const startCountdown = (timerData) => {
-      let timer = JSON.parse(timerData)
-      state.min = timer.min
-      state.sec = timer.sec
-      state.counting = timer.counting
-    }
+	setup(props, { emit }) {
+		const store = useStore();
+		const state = reactive({
+			time: computed(() => store.getters['root/getTimerTime']),
+			min: 0,
+			sec: 0,
+			count: true,
+			counting: false,
+		});
+		const startCountdown = timerData => {
+			let timer = JSON.parse(timerData);
+			state.min = timer.min;
+			state.sec = timer.sec;
+			state.counting = timer.counting;
+		};
 
-    const sendTimer = async () => {
-      emit("startCountdown", {
-        timer: {
-          min: state.time.min,
-          sec: state.time.sec,
-          counting: true
-        }
-      })
-    }
-
-    const onCountdownEnd = () => {
-      state.counting = false;
-    }
-    
-    const stopCountdown = () => {
-      state.counting = false
-      emit("startCountdown", {
-        timer: {
-          min: state.time.min,
-          sec: state.time.sec,
-          counting: state.counting
-        }
-      })
-    }
-
-    return { state, startCountdown, onCountdownEnd, stopCountdown, sendTimer }
-  }
-}
+		const sendTimer = async () => {
+			emit('startCountdown', {
+				timer: {
+					min: state.time.min,
+					sec: state.time.sec,
+					counting: true,
+				},
+			});
+		};
+		const onCountdownEnd = () => {
+			state.counting = false;
+		};
+		const stopCountdown = () => {
+			state.counting = false;
+			emit('startCountdown', {
+				timer: {
+					min: state.time.min,
+					sec: state.time.sec,
+					counting: state.counting,
+				},
+			});
+		};
+		return { state, startCountdown, onCountdownEnd, stopCountdown, sendTimer };
+	},
+};
 </script>

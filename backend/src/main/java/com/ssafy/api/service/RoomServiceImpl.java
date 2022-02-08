@@ -95,8 +95,8 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public boolean checkRoomUserExist(Long roomId) {
         List<Session> sessions = getSessionsByRoomId(roomId);
-        if(sessions.isEmpty()) return true;
-        return false;
+        if(sessions.isEmpty()) return false;
+        return true;
     }
 
     @Override
