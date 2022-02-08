@@ -271,14 +271,12 @@ export default {
 			// whiteboard signal 받기
 			this.session.on('signal:whiteboard', event => {
 				this.$refs.whiteboard.addWhiteboardSignal(event.data);
-				console.log('[S-3] ', event.data);
 			});
 
 			// painting state 정보 보내기 step 3
 			// painting state signal 받기
 			this.session.on('signal:painting-state', event => {
 				this.$refs.whiteboard.addPaintingSignal(event.data);
-				console.log('[P-3] ', event.data);
 			});
 
 			// --- Connect to the session with a valid user token ---
@@ -668,8 +666,6 @@ export default {
 		// ctx 정보 보내기 step 2
 		// 현재 좌표, 색깔, 굵기 정보를 받아 파티룸 내의 전체 사용자에게 전송
 		sendWhiteboardSignal(x, y, color, width) {
-			console.log('[S-2] ', x, y, color, width);
-
 			let data = {
 				currentX: x,
 				currentY: y,
@@ -691,8 +687,6 @@ export default {
 		// painting state 정보 보내기 step 2
 		// painting state를 받아 파티룸 내의 전체 사용자에게 전송
 		sendPaintingSignal(is_painting) {
-			console.log('[P-2] ', is_painting);
-
 			this.session
 				.signal({
 					data: JSON.stringify(is_painting),
