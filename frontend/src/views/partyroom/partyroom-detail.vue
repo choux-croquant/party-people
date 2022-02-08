@@ -14,6 +14,7 @@
 				@sendRouletteSignal="sendRouletteSignal"
 				@startVote="startVote"
 				@sendVoteResult="sendVoteResult"
+				@open-whiteboard="openWhiteboard"
 				ref="roomSidebar"
 			></room-sidebar>
 			<!-- 위치는 나중에 옮길 예정 -->
@@ -86,6 +87,13 @@
 					Kurento TextOverlay remove Btn
 				</button>
 			</div>
+			<whiteboard
+				v-show="isWhiteboardOpen"
+				@send-whiteboard-signal="sendWhiteboardSignal"
+				@send-painting-signal="sendPaintingSignal"
+				@close-whiteboard="closeWhiteboard"
+				ref="whiteboard"
+			></whiteboard>
 			<room-chat
 				@message="sendMessage"
 				ref="chat"
@@ -129,6 +137,7 @@ import { useStore } from 'vuex';
 import roomBottombar from './components/room-bottombar.vue';
 import timer from './components/timer.vue';
 import Roulette from './components/roulette.vue';
+import Whiteboard from './components/whiteboard.vue';
 
 const OPENVIDU_SERVER_URL = 'https://pparttypeople.kro.kr:4443';
 const OPENVIDU_SERVER_SECRET = 'a106ssafy0183';
@@ -141,6 +150,7 @@ export default {
 		timer,
 		roomBottombar,
 		Roulette,
+		Whiteboard,
 	},
 	name: 'conference-detail',
 	props: {
@@ -153,8 +163,9 @@ export default {
 	},
 	setup() {
 		const isRouletteOpen = ref(false);
+		const isWhiteboardOpen = ref(false);
 
-		return { isRouletteOpen };
+		return { isRouletteOpen, isWhiteboardOpen };
 	},
 	data() {
 		return {
@@ -254,6 +265,21 @@ export default {
 					alert(JSON.stringify(voteResult));
 				}
 			});
+
+			// ctx 정보 보내기 step 3
+			// whiteboard signal 받기
+			this.session.on('signal:whiteboard', event => {
+				this.$refs.whiteboard.addWhiteboardSignal(event.data);
+				console.log('[S-3] ', event.data);
+			});
+
+			// painting state 정보 보내기 step 3
+			// painting state signal 받기
+			this.session.on('signal:painting-state', event => {
+				this.$refs.whiteboard.addPaintingSignal(event.data);
+				console.log('[P-3] ', event.data);
+			});
+
 			// --- Connect to the session with a valid user token ---
 
 			// 'getToken' method is simulating what your server-side should do.
@@ -582,6 +608,58 @@ export default {
 				})
 				.catch(e => {
 					console.log('err ::::: ', e);
+				});
+		},
+
+		// 화이트보드 창 열기
+		openWhiteboard() {
+			console.log('open whiteboard');
+			this.isWhiteboardOpen = true;
+		},
+
+		// 화이트보드 창 닫기
+		// TODO: 화이트보드 창 닫을 때 화이트보드 초기화하기
+		closeWhiteboard() {
+			console.log('close whiteboard');
+			this.isWhiteboardOpen = false;
+		},
+
+		// ctx 정보 보내기 step 2
+		// 현재 좌표, 색깔, 굵기 정보를 받아 파티룸 내의 전체 사용자에게 전송
+		sendWhiteboardSignal(x, y, color, width) {
+			console.log('[S-2] ', x, y, color, width);
+
+			let data = {
+				currentX: x,
+				currentY: y,
+				color: color,
+				width: width,
+			};
+
+			this.session
+				.signal({
+					data: JSON.stringify(data),
+					to: [],
+					type: 'whiteboard',
+				})
+				.catch(error => {
+					console.log(error);
+				});
+		},
+
+		// painting state 정보 보내기 step 2
+		// painting state를 받아 파티룸 내의 전체 사용자에게 전송
+		sendPaintingSignal(is_painting) {
+			console.log('[P-2] ', is_painting);
+
+			this.session
+				.signal({
+					data: JSON.stringify(is_painting),
+					to: [],
+					type: 'painting-state',
+				})
+				.catch(error => {
+					console.log(error);
 				});
 		},
 	},
