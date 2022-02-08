@@ -13,7 +13,7 @@ public class FileUploadServiceImpl implements FileUploadService{
     public String saveFile(MultipartFile multipartFile, Long roomId){
         // 썸네일 이미지를 업로드 하지 않은 경우 기본이미지로 설정
         if (multipartFile == null)
-            return "dummy.png";
+            return "https://pparttypeople.kro.kr/upload/dummy.png";
 
         // 환경에 따라 경우 아래 두 라인의 주석 변경
         String path = "/opt/upload/" + Long.toString(roomId); // linux 환경
@@ -52,7 +52,7 @@ public class FileUploadServiceImpl implements FileUploadService{
             return null;
         }
 
-        return Long.toString(roomId) + "/thumbnail." + extension;
+        return "https://pparttypeople.kro.kr/upload/" + Long.toString(roomId) + "/thumbnail." + extension;
     }
 
     // 해당 확장자가 지원되는 확장자인지 확인
