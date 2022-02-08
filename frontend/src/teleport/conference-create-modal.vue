@@ -243,6 +243,13 @@ export default {
 					console.log('요청은 성공');
 					console.log(res);
 					// router.push({ name: 'ConferenceDetail' })
+					close();
+					state.capacity = '';
+					state.description = '';
+					state.password = '';
+					state.title = '';
+					state.thumbnailImg = null;
+					state.fileName = '';
 				})
 				.catch(err => {
 					console.log('실패');

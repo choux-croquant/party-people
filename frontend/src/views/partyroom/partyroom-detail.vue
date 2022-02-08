@@ -241,7 +241,8 @@ export default {
 				}
 				console.log('sum:', sum, '참가자 수:', this.subscribers.length);
 				if (sum == this.subscribers.length + 1) {
-					alert(`투표결과: ${JSON.stringify(voteResult)}`);
+					// alert(`투표결과\n${JSON.stringify(voteResult)}`);
+					this.voteComplete(voteResult);
 				}
 			});
 			// --- Connect to the session with a valid user token ---
@@ -457,6 +458,24 @@ export default {
 					console.log('투표 결과 전송 실패', error);
 				});
 		},
+
+		voteComplete(voteResult) {
+			let now = new Date();
+			let current = now.toLocaleTimeString([], {
+				hour: '2-digit',
+				minute: '2-digit',
+				hour12: false, // true인 경우 오후 10:25와 같이 나타냄.
+			});
+			let voteMessage = `투표 결과입니다. ${JSON.stringify(voteResult)}`;
+			let messageData = {
+				content: voteMessage,
+				sender: 'System',
+				time: current,
+			};
+			// 자신의 채팅창에 당첨자 로그 출력
+			this.$refs.chat.addMessage(JSON.stringify(messageData), false);
+		},
+
 		audioOnOff({ audio }) {
 			console.log('audio');
 			this.publisher.publishAudio(audio);
