@@ -15,6 +15,9 @@
 				@startVote="startVote"
 				@sendVoteResult="sendVoteResult"
 				@open-whiteboard="openWhiteboard"
+				@stickerOverlay="applyStickerFilter"
+				@visualFilter="applyVisualFilter"
+				@textOverlay="applyTextFilter"
 				ref="roomSidebar"
 			></room-sidebar>
 			<!-- 위치는 나중에 옮길 예정 -->
@@ -566,13 +569,13 @@ export default {
 			this.isRouletteOpen = false;
 		},
 
-		// Kurento faceOverlayFilter 적용
-		applyKurentoFilter() {
+		// Kurento faceOverlayFilter 적용한 스티커 필터
+		applyStickerFilter(filterInfo) {
 			this.publisher.stream.applyFilter('FaceOverlayFilter').then(filter => {
 				console.log('-- kurento filter applied --');
 
 				filter.execMethod('setOverlayedImage', {
-					uri: 'https://cdn.crowdpic.net/list-thumb/thumb_l_02F4A9A335F63872A1C75E9FAFE16241.png',
+					uri: filterInfo.url,
 					offsetXPercent: '-0.4F',
 					offsetYPercent: '-0.6F',
 					widthPercent: '1.7F',
@@ -583,8 +586,25 @@ export default {
 			this.$refs.bottombar.state.filter = true;
 		},
 
-		// Kurento GStreamerFilter 적용
-		applyGStreamerFilter() {
+		// Kurento GStreamerFilter 적용한 비주얼 필터
+		applyVisualFilter(filterInfo) {
+			this.publisher.stream
+				.applyFilter('GStreamerFilter', {
+					command:
+						'textoverlay text="PartyPeople" valignment=top halignment=center font-desc="Cantarell 25"',
+				})
+				.then(() => {
+					console.log('Video flipped!!!!');
+					// bottombar 필터 해제 버튼 활성화
+					this.$refs.bottombar.state.filter = true;
+				})
+				.catch(e => {
+					console.log('err ::::: ', e);
+				});
+		},
+
+		// Kurento GStreamerFilter 적용한 텍스트 필터
+		applyTextFilter(filterInfo) {
 			this.publisher.stream
 				.applyFilter('GStreamerFilter', {
 					command:
