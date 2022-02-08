@@ -4,9 +4,12 @@
 >
 > 빠뤼 피플은 기존의 딱딱한 화상 회의가 아닌, 참여자 다 같이 즐기는 컨텐츠가 준비된 비대면 파티 플랫폼입니다.
 
-메인 페이지 썸네일 해결 후 이미지 추가
+## 📌 주요 기능
+1. 화상 파티 기능(WebRTC 기반 비대면 화상 통화, 1대다 통화)
+2. 파티 컨텐츠 추가(룰렛, 뽑기, 타이머, 화이트보드를 통한 커뮤니케이션)
+3. 파티 시각, 음성 효과 추가(얼굴, 프레임, 배경 커스터마이징)
 
-## 팀원 구성
+## 👩‍💻 팀원 구성
 
 ### Front-End
 
@@ -26,7 +29,7 @@
 * [선민기](https://lab.ssafy.com/suns1502) - QA
   * 파티룸 입장/삭제 API 개발
 
-## 개발 환경
+## 🌱 개발 환경
 
 ### Front-End
 
@@ -58,7 +61,7 @@
 * Kurento-media-server 6.16.0
 * openVidu-Server  2.20.0
 
-## 기획/설계 문서
+## 📝 기획/설계 문서
 
 ### 와이어 프레임
 
@@ -85,6 +88,10 @@
 * 화면 꾸미기 Modal
 
 ![Display-Customizing-Modal](./result/Wireframe/Display-Customizing-Modal.png)
+
+### 컬러 시스템
+
+![ColorSystem](./result/Color-System.png)
 
 ### 프로토타입
 
@@ -134,7 +141,7 @@
 
 * 화이트보드 기능
 
-![WhiteBoard](./result/Prototype/Partyroom-Page/WhiteBoard.png)
+![Whiteboard](./result/Prototype/Partyroom-Page/Whiteboard.png)
 
 * 타이머 Modal
 
