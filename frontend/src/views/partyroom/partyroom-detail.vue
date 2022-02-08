@@ -152,7 +152,7 @@ export default {
 				}
 				console.log('sum:', sum, '참가자 수:', this.subscribers.length)
 				if (sum == (this.subscribers.length + 1)) {
-					alert(JSON.stringify(voteResult))
+					alert(`투표결과:${JSON.stringify(voteResult)}`)
 				}
 			})
 			// --- Connect to the session with a valid user token ---
