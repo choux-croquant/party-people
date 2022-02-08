@@ -40,6 +40,24 @@
 				/>
 			</svg>
 		</div>
+		<div>
+			<svg
+				v-show="state.filter"
+				@click="filterOff"
+				xmlns="http://www.w3.org/2000/svg"
+				class="cursor-pointer py-2 px-2 mx-5 h-10 w-10 text-white-600 bg-main-200 rounded-full"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke="currentColor"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="1.5"
+					d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+				/>
+			</svg>
+		</div>
 		<button
 			@click="leaveSession"
 			class="bg-alert-100 w-32 h-10 text-white rounded-full text-center mx-5"
@@ -65,6 +83,7 @@ export default {
 		const state = reactive({
 			video: true,
 			audio: true,
+			filter: false,
 		});
 
 		const videoOnOff = () => {
@@ -91,10 +110,19 @@ export default {
 			});
 		};
 
+		const filterOff = () => {
+			if (state.filter) {
+				state.filter = false;
+			} else {
+				state.filter = true;
+			}
+			emit('filterOff');
+		};
+
 		const leaveSession = () => {
 			emit('leaveSession');
 		};
-		return { state, videoOnOff, audioOnOff, leaveSession };
+		return { state, videoOnOff, audioOnOff, filterOff, leaveSession };
 	},
 };
 </script>
