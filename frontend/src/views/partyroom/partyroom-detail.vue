@@ -590,11 +590,10 @@ export default {
 		applyVisualFilter(filterInfo) {
 			this.publisher.stream
 				.applyFilter('GStreamerFilter', {
-					command:
-						'textoverlay text="PartyPeople" valignment=top halignment=center font-desc="Cantarell 25"',
+					command: filterInfo.command,
 				})
 				.then(() => {
-					console.log('Video flipped!!!!');
+					console.log('Visual-filter applied');
 					// bottombar 필터 해제 버튼 활성화
 					this.$refs.bottombar.state.filter = true;
 				})
