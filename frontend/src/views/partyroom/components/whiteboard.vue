@@ -10,50 +10,68 @@
 					type="range"
 					id="widthRange"
 					min="0.1"
-					max="10"
+					max="20"
 					value="2.5"
 					step="0.1"
 				/>
 			</div>
-			<div class="flex justify-evenly p-4">
+			<div class="flex items-center justify-evenly p-4">
 				<!-- 색깔 설정 -->
-				<div class="flex mr-4" id="jsColors">
+				<div class="flex" id="jsColors">
 					<div
-						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg mr-2 color-set selected"
 						style="background-color: #2c2c2c"
 					></div>
-					<div
-						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+					<!-- <div
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg mr-2 color-set"
 						style="background-color: white"
-					></div>
+					></div> -->
 					<div
-						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg mr-2 color-set"
 						style="background-color: #ff3b30"
 					></div>
 					<div
-						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg mr-2 color-set"
 						style="background-color: #ff9500"
 					></div>
 					<div
-						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg mr-2 color-set"
 						style="background-color: #ffcc00"
 					></div>
 					<div
-						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg mr-2 color-set"
 						style="background-color: #4cd963"
 					></div>
 					<div
-						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg mr-2 color-set"
 						style="background-color: #5ac8fa"
 					></div>
 					<div
-						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg mr-2 color-set"
 						style="background-color: #0579ff"
 					></div>
 					<div
-						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg color-set"
+						class="flex w-12 h-12 cursor-pointer rounded-full shadow-lg mr-2 color-set"
 						style="background-color: #5856d6"
 					></div>
+				</div>
+				<!-- 지우개 -->
+				<div class="w-12 h-12 ml-4 mr-6 p-0 cursor-pointer rounded-full bg-tc-500" id="eraser">
+				<!-- <div class="h-8 w-8  cursor-pointer " > -->
+					<svg
+						version="1.1"
+						class="h-full w-full erasor-icon"
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 500 500"
+					>
+						<path
+							fill="black"
+							d="M317.468,0L72.048,245.418l14.41,14.41L0,346.287L165.713,512l86.459-86.46l14.411,14.411L512,194.532L317.468,0z
+							M425.541,151.303L223.353,353.492l-64.844-64.844L360.697,86.459L425.541,151.303z M317.468,43.23l21.615,21.614L136.894,267.033
+							l-21.615-21.616L317.468,43.23z M165.713,468.77L43.23,346.287l64.843-64.844l122.484,122.483L165.713,468.77z M266.582,396.721
+							l-21.614-21.614l202.188-202.189l21.615,21.615L266.582,396.721z"
+						/>
+					</svg>
 				</div>
 				<!-- 화이트보드 닫기 버튼 -->
 				<button
@@ -74,6 +92,15 @@
 	border-radius: 15px;
 	box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
+
+.erasor-icon {
+	fill: black;
+}
+
+.selected {
+	outline: 3px solid #f3799e;
+}
+
 </style>
 
 <script>
@@ -96,6 +123,7 @@ export default {
 			state.ctx = state.canvas.getContext('2d');
 			state.colors = document.getElementsByClassName('color-set');
 			state.range = document.querySelector('#widthRange');
+			const eraser = document.querySelector('#eraser')
 
 			const INITIAL_COLOR = '#2c2c2c';
 			const CANVAS_SIZE = 700;
@@ -109,16 +137,14 @@ export default {
 			state.ctx.lineWidth = 2.5;
 			state.painting = false;
 
-			function stopPainting() {
+			const stopPainting = () => {
 				// state.painting = false;
 				sendPaintingState(false);
-				console.log('[P-0] ', false);
 			}
 
-			function startPainting() {
+			const startPainting = () => {
 				// state.painting = true;
 				sendPaintingState(true);
-				console.log('[P-0] ', true);
 			}
 
 			// 캔버스 내에서 마우스를 움직일 때마다 호출 (현재 좌표, 붓 색상/두께 정보를 담아 sendSignal 함수 호출)
@@ -127,23 +153,38 @@ export default {
 				const y = event.offsetY;
 
 				sendSignal(x, y, state.ctx.strokeStyle, state.ctx.lineWidth);
-				console.log('[S-0] ', x, y, state.ctx.strokeStyle, state.ctx.lineWidth);
 			};
 
 			// 붓 색상 설정
 			function handleColorClick(event) {
 				const color = event.target.style.backgroundColor;
 				state.ctx.strokeStyle = color;
+				resetBtns();
+				event.target.classList.add('selected')
+				console.log(event.target)
 			}
 
 			// 붓 두께 설정
-			function handleRangeChange(event) {
+			const handleRangeChange = (event) => {
 				const size = event.target.value;
 				state.ctx.lineWidth = size;
 			}
 
-			function handleCM(event) {
+			const handleCM = (event) => {
 				event.preventDefault();
+			}
+
+			const clickEraser = () => {
+				resetBtns();
+				eraser.classList.add('selected');
+				state.ctx.strokeStyle = "#ffffff";
+			}
+
+			const resetBtns = () => {
+				Array.from(state.colors).forEach(color =>
+					color.classList.remove('selected')
+				);
+				eraser.classList.remove('selected');
 			}
 
 			if (state.canvas) {
@@ -152,6 +193,10 @@ export default {
 				state.canvas.addEventListener('mouseup', stopPainting);
 				state.canvas.addEventListener('mouseleave', stopPainting);
 				state.canvas.addEventListener('contextmenu', handleCM);
+			}
+
+			if (eraser) {
+				eraser.addEventListener('click', clickEraser)
 			}
 
 			Array.from(state.colors).forEach(color =>
@@ -166,13 +211,11 @@ export default {
 		// ctx 정보 보내기 step 1
 		const sendSignal = (x, y, color, width) => {
 			emit('send-whiteboard-signal', x, y, color, width);
-			console.log('[S-1] ', x, y, color, width);
 		};
 
 		// ctx 정보 보내기 step 4
 		const addWhiteboardSignal = data => {
 			let parsedData = JSON.parse(data);
-			console.log('[S-4] ', parsedData);
 
 			if (!state.painting) {
 				state.ctx.beginPath();
@@ -188,7 +231,6 @@ export default {
 		// painting state 정보 보내기 step 1
 		const sendPaintingState = is_painting => {
 			emit('send-painting-signal', is_painting);
-			console.log('[P-1] ', is_painting);
 		};
 
 		// painting state 정보 보내기 step 4
@@ -196,7 +238,6 @@ export default {
 			let is_painting = JSON.parse(data);
 
 			state.painting = is_painting;
-			console.log('[P-4] ', is_painting);
 		};
 
 		// 화이트보드 창 닫기
