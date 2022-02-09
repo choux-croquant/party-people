@@ -17,6 +17,7 @@
 				@stickerOverlay="applyStickerFilter"
 				@visualFilter="applyVisualFilter"
 				@textOverlay="applyTextFilter"
+				@filterOff="filterOff"
 				ref="roomSidebar"
 			></room-sidebar>
 			<!-- 위치는 나중에 옮길 예정 -->
@@ -588,14 +589,34 @@ export default {
 		// Kurento faceOverlayFilter 적용한 스티커 필터
 		applyStickerFilter(filterInfo) {
 			this.publisher.stream.applyFilter('FaceOverlayFilter').then(filter => {
-				console.log('-- kurento filter applied --');
+				var offsetX;
+				var offsetY;
+				var width;
+				var height;
+
+				if (filterInfo.category === 'hat') {
+					offsetX = '-0.5F';
+					offsetY = '-1.0F';
+					width = '2.1F';
+					height = '1.5F';
+				} else if (filterInfo.category === 'mask') {
+					offsetX = '-0.7F';
+					offsetY = '-0.7F';
+					width = '2.3';
+					height = '2.3';
+				} else if (filterInfo.category === 'eyes') {
+					offsetX = '0.02F';
+					offsetY = '0.1F';
+					width = '1.0';
+					height = '0.5';
+				}
 
 				filter.execMethod('setOverlayedImage', {
 					uri: filterInfo.url,
-					offsetXPercent: '-0.4F',
-					offsetYPercent: '-0.6F',
-					widthPercent: '1.7F',
-					heightPercent: '1.0F',
+					offsetXPercent: offsetX,
+					offsetYPercent: offsetY,
+					widthPercent: width,
+					heightPercent: height,
 				});
 			});
 			// bottombar 필터 해제 버튼 활성화
@@ -644,7 +665,7 @@ export default {
 
 		// 필터 해제
 		filterOff() {
-			console.log('filter');
+			console.log('filter Off called');
 			this.publisher.stream
 				.removeFilter()
 				.then(() => {
