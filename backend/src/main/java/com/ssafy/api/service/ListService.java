@@ -11,5 +11,5 @@ import java.util.List;
  */
 public interface ListService {
     Page<Room> getRoomList(Pageable pageable);
-    Page<Room> getRoomListByWord(String word, String include, Pageable pageable);
+    Page<Room> getRoomListByWord(String[] word, String include, Pageable pageable);
 }

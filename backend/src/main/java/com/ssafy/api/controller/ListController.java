@@ -38,9 +38,9 @@ public class ListController {
 		@ApiResponse(code = 200, message = "성공")
 	})
 	public ResponseEntity<? extends BaseResponseBody> getRoomListByWord(
-		@RequestParam @ApiParam(value = "검색어", required = true) String word,
-		@RequestParam @ApiParam(value = "검색 키워드(제목 : title, 내용 : des)", required = true)  String include,
-		final Pageable pageable) {
+			@RequestParam(value="word[]") @ApiParam(value = "검색어", required = true) String[] word,
+			@RequestParam @ApiParam(value = "검색 키워드(제목 : title, 내용 : des)", required = true)  String include,
+			final Pageable pageable) {
 
 		Page<Room> roomList = listService.getRoomListByWord(word, include, pageable);
 		return ResponseEntity.status(200).body(RoomListRes.of(200, "Success", roomList));

@@ -30,7 +30,7 @@ public class ListServiceImpl implements ListService {
 	}
 
 	@Override
-	public Page<Room> getRoomListByWord(String word, String include, Pageable pageable) {
+	public Page<Room> getRoomListByWord(String[] word, String include, Pageable pageable) {
 		Pageable sort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id").descending());
 		if(include.equals("title")) return listRepository.findByTitleContainingAndEndTimeIsNull(word, sort);
 		return listRepository.findByDescriptionContainingAndEndTimeIsNull(word, sort);
