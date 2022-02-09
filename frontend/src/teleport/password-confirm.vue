@@ -31,9 +31,9 @@
 						alt="Vue logo"
 						src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
 					/>
-					<p class="text-center text-black text-xs my-3">
+					<!-- <p class="text-center text-black text-xs my-3">
 						현재 파티룸은 녹화가 허용되어 있습니다.
-					</p>
+					</p> -->
 					<div class="mb-6">
 						<input
 							v-model="state.inputPassword"
