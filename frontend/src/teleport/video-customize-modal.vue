@@ -169,6 +169,30 @@
 							class="overflow-x-auto w-full h-14 border-main-100 border-2 font-bold text-sm rounded-md text-gray-600 border-transparent focus:border-transparent focus:ring-0 appearance-none"
 						/>
 					</div>
+          <!-- 보이스 필터 선택 -->
+          <div
+              v-if="state.selectedCategory === '음성'"
+              id="scrolling-content"
+              class="flex overflow-x-auto h-full"
+          >
+            <div
+                v-for="custom in state.visualFilterList"
+                :key="custom.id"
+                class="w-1/4 cursor-pointer h-full px-4 flex-shrink-0 text-center"
+                v-show="true"
+                @click="clickVideoCustom(custom)"
+            >
+              <div
+                  :class="[
+									custom.id === state.selectedCustom
+										? 'border-4 border-sub-200'
+										: 'mt-3 border-4 border-main-100 py-4 rounded-xl bg-main-200 text-tc-500',
+								]"
+              >
+                {{ custom.url }}
+              </div>
+            </div>
+          </div>
 				</div>
 			</div>
 			<a
@@ -205,6 +229,7 @@ export default {
 				{ id: 1, name: '스티커' },
 				{ id: 2, name: '필터' },
 				{ id: 3, name: '문구' },
+				{ id: 4, name: '음성' },
 			],
 
 			fonts: [
