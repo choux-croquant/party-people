@@ -2,126 +2,171 @@
   {
     "id": "1",
     "category": "hat",
-    "url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7e68a263-fc95-4b14-89b3-52160d99b7b3/hat3.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220208%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220208T105349Z&X-Amz-Expires=86400&X-Amz-Signature=0007448d76618735f84bcc33d2d8afb2e92b7f2965057b0d73d8fd0dfd3f6230&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22hat3.png%22&x-id=GetObject"
+    "url": "https://pparttypeople.kro.kr/sticker/hat/hat1.png"
   },
   {
     "id": "2",
     "category": "hat",
-    "url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/141de4f6-0414-482c-b102-f626282b9957/hat2.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220208%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220208T105503Z&X-Amz-Expires=86400&X-Amz-Signature=d18e172e7e0f32e53066343f76b2235366519c20ada2572ae8bdeb855b6ec6ca&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22hat2.png%22&x-id=GetObject"
+    "url": "https://pparttypeople.kro.kr/sticker/hat/hat2.png"
   },
   {
     "id": "3",
     "category": "hat",
-    "url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/45f270bf-4b5e-4643-8398-1e31b1d4462c/hat7.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220208%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220208T105523Z&X-Amz-Expires=86400&X-Amz-Signature=477160ad82dfc8742cfa15676289b8ae628758bce8cddf6176042ac39b13c5c2&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22hat7.png%22&x-id=GetObject"
+    "url": "https://pparttypeople.kro.kr/sticker/hat/hat3.png"
   },
   {
     "id": "4",
     "category": "hat",
-    "url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/bcf69e90-0fae-4ca5-83ac-416100d929a6/hat4.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220208%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220208T105537Z&X-Amz-Expires=86400&X-Amz-Signature=f65ad720baeb18af5f72f87ffaf1d72b04ad4998816c4ffef62e7f6c7e479a47&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22hat4.png%22&x-id=GetObject"
+    "url": "https://pparttypeople.kro.kr/sticker/hat/hat4.png"
   },
   {
     "id": "5",
     "category": "hat",
-    "url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7e68a263-fc95-4b14-89b3-52160d99b7b3/hat3.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220208%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220208T105349Z&X-Amz-Expires=86400&X-Amz-Signature=0007448d76618735f84bcc33d2d8afb2e92b7f2965057b0d73d8fd0dfd3f6230&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22hat3.png%22&x-id=GetObject"
+    "url": "https://pparttypeople.kro.kr/sticker/hat/hat5.png"
   },
   {
     "id": "6",
     "category": "hat",
-    "url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7e68a263-fc95-4b14-89b3-52160d99b7b3/hat3.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220208%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220208T105349Z&X-Amz-Expires=86400&X-Amz-Signature=0007448d76618735f84bcc33d2d8afb2e92b7f2965057b0d73d8fd0dfd3f6230&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22hat3.png%22&x-id=GetObject"
+    "url": "https://pparttypeople.kro.kr/sticker/hat/hat6.png"
   },
   {
     "id": "7",
     "category": "hat",
-    "url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7e68a263-fc95-4b14-89b3-52160d99b7b3/hat3.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220208%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220208T105349Z&X-Amz-Expires=86400&X-Amz-Signature=0007448d76618735f84bcc33d2d8afb2e92b7f2965057b0d73d8fd0dfd3f6230&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22hat3.png%22&x-id=GetObject"
+    "url": "https://pparttypeople.kro.kr/sticker/hat/hat7.png"
   },
   {
     "id": "8",
     "category": "hat",
-    "url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7e68a263-fc95-4b14-89b3-52160d99b7b3/hat3.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220208%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220208T105349Z&X-Amz-Expires=86400&X-Amz-Signature=0007448d76618735f84bcc33d2d8afb2e92b7f2965057b0d73d8fd0dfd3f6230&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22hat3.png%22&x-id=GetObject"
+    "url": "https://pparttypeople.kro.kr/sticker/hat/hat8.png"
   },
   {
     "id": "9",
     "category": "hat",
-    "url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7e68a263-fc95-4b14-89b3-52160d99b7b3/hat3.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220208%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220208T105349Z&X-Amz-Expires=86400&X-Amz-Signature=0007448d76618735f84bcc33d2d8afb2e92b7f2965057b0d73d8fd0dfd3f6230&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22hat3.png%22&x-id=GetObject"
+    "url": "https://pparttypeople.kro.kr/sticker/hat/hat9.png"
   },
   {
     "id": "10",
-    "category": "eyes",
-    "url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/926fe6b4-cde5-45db-9270-cf9b0a1f0fea/eye1.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220208%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220208T102419Z&X-Amz-Expires=86400&X-Amz-Signature=2e90426796e95067be29023a4df072afcfc82b147923f62f0c9e11b0002e9fc4&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22eye1.png%22&x-id=GetObject"
+    "category": "hat",
+    "url": "https://pparttypeople.kro.kr/sticker/hat/hat10.png"
   },
   {
     "id": "11",
     "category": "eyes",
-    "url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/bb56e988-e8d8-4129-a004-ee94b7b601d3/eye2.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220208%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220208T102955Z&X-Amz-Expires=86400&X-Amz-Signature=062296f166602ae958be91b59dd8023336a9765fd998af4490649d1721ca1b0e&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22eye2.png%22&x-id=GetObject"
+    "url": "https://pparttypeople.kro.kr/sticker/eyes/eye1.png"
   },
   {
     "id": "12",
     "category": "eyes",
-    "url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/abb83899-0fe8-4b6e-8968-8e84e6327973/eye7.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220208%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220208T104509Z&X-Amz-Expires=86400&X-Amz-Signature=234410997ca9ff8f021c151732ee56bc930127646431234d9934cc9a889343ff&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22eye7.png%22&x-id=GetObject"
+    "url": "https://pparttypeople.kro.kr/sticker/eyes/eye2.png"
   },
   {
     "id": "13",
     "category": "eyes",
-    "url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/4464a4e0-142a-48c5-898e-068763310ff9/eye4.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220208%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220208T101753Z&X-Amz-Expires=86400&X-Amz-Signature=46bd08db7b064a6f98458d02b6065daf8a8c1bc8fbb0bbf776a95f104bb0e30b&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22eye4.png%22&x-id=GetObject"
+    "url": "https://pparttypeople.kro.kr/sticker/eyes/eye3.png"
   },
   {
     "id": "14",
     "category": "eyes",
-    "url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/4464a4e0-142a-48c5-898e-068763310ff9/eye4.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220208%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220208T101753Z&X-Amz-Expires=86400&X-Amz-Signature=46bd08db7b064a6f98458d02b6065daf8a8c1bc8fbb0bbf776a95f104bb0e30b&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22eye4.png%22&x-id=GetObject"
-  },
+    "url": "https://pparttypeople.kro.kr/sticker/eyes/eye4.png"
+    },
   {
     "id": "15",
     "category": "eyes",
-    "url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/4464a4e0-142a-48c5-898e-068763310ff9/eye4.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220208%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220208T101753Z&X-Amz-Expires=86400&X-Amz-Signature=46bd08db7b064a6f98458d02b6065daf8a8c1bc8fbb0bbf776a95f104bb0e30b&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22eye4.png%22&x-id=GetObject"
+    "url": "https://pparttypeople.kro.kr/sticker/eyes/eye5.png"
   },
   {
     "id": "16",
     "category": "eyes",
-    "url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/4464a4e0-142a-48c5-898e-068763310ff9/eye4.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220208%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220208T101753Z&X-Amz-Expires=86400&X-Amz-Signature=46bd08db7b064a6f98458d02b6065daf8a8c1bc8fbb0bbf776a95f104bb0e30b&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22eye4.png%22&x-id=GetObject"
+    "url": "https://pparttypeople.kro.kr/sticker/eyes/eye6.png"
   },
   {
     "id": "17",
-    "category": "mask",
-    "url": "https://cdn.pixabay.com/photo/2016/08/21/18/48/emoticon-1610518_960_720.png"
+    "category": "eyes",
+    "url": "https://pparttypeople.kro.kr/sticker/eyes/eye7.png"
   },
   {
     "id": "18",
     "category": "mask",
-    "url": "https://cdn.pixabay.com/photo/2016/08/11/09/50/emoji-1585197_960_720.png"
+    "url": "https://pparttypeople.kro.kr/sticker/mask/mask1.png"
   },
   {
     "id": "19",
     "category": "mask",
-    "url": "https://cdn.pixabay.com/photo/2016/08/22/11/00/emoticon-1611718_960_720.png"
+    "url": "https://pparttypeople.kro.kr/sticker/mask/mask2.png"
   },
   {
     "id": "20",
     "category": "mask",
-    "url": "https://cdn.pixabay.com/photo/2016/08/22/10/17/emoticon-1611647_960_720.png"
+    "url": "https://pparttypeople.kro.kr/sticker/mask/mask3.png"
   },
   {
     "id": "21",
     "category": "mask",
-    "url": "https://cdn.pixabay.com/photo/2016/09/25/13/07/emoticon-1693696_960_720.png"
+    "url": "https://pparttypeople.kro.kr/sticker/mask/mask4.png"
   },
   {
     "id": "22",
     "category": "mask",
-    "url": "https://cdn.pixabay.com/photo/2016/08/21/19/27/emoticon-1610573_960_720.png"
+    "url": "https://pparttypeople.kro.kr/sticker/mask/mask5.png"
   },
   {
     "id": "23",
     "category": "mask",
-    "url": "https://cdn.pixabay.com/photo/2016/08/28/17/18/emoticon-1626442_960_720.png"
+    "url": "https://pparttypeople.kro.kr/sticker/mask/mask6.png"
   },
   {
     "id": "24",
     "category": "mask",
-    "url": "https://cdn.pixabay.com/photo/2016/08/22/12/16/wink-1611815_960_720.png"
+    "url": "https://pparttypeople.kro.kr/sticker/mask/mask7.png"
   },
   {
     "id": "25",
     "category": "mask",
-    "url": "https://cdn.pixabay.com/photo/2016/09/25/13/07/emoticon-1693696_960_720.png"
+    "url": "https://pparttypeople.kro.kr/sticker/mask/mask8.png"
+  },
+  {
+    "id": "26",
+    "category": "mask",
+    "url": "https://pparttypeople.kro.kr/sticker/mask/mask9.png"
+  },
+  {
+    "id": "27",
+    "category": "eyes",
+    "url": "https://pparttypeople.kro.kr/sticker/glasses/glasses1.png"
+  },
+  {
+    "id": "28",
+    "category": "eyes",
+    "url": "https://pparttypeople.kro.kr/sticker/glasses/glasses2.png"
+  },
+  {
+    "id": "29",
+    "category": "eyes",
+    "url": "https://pparttypeople.kro.kr/sticker/glasses/glasses3.png"
+  },
+  {
+    "id": "30",
+    "category": "eyes",
+    "url": "https://pparttypeople.kro.kr/sticker/glasses/glasses4.png"
+  },
+  {
+    "id": "31",
+    "category": "eyes",
+    "url": "https://pparttypeople.kro.kr/sticker/glasses/glasses5.png"
+  },
+  {
+    "id": "32",
+    "category": "eyes",
+    "url": "https://pparttypeople.kro.kr/sticker/glasses/glasses6.png"
+  },
+  {
+    "id": "33",
+    "category": "eyes",
+    "url": "https://pparttypeople.kro.kr/sticker/glasses/glasses7.png"
+  },
+  {
+    "id": "34",
+    "category": "eyes",
+    "url": "https://pparttypeople.kro.kr/sticker/glasses/glasses8.png"
   }
 ]
