@@ -94,7 +94,7 @@ export default {
         state.form.passwordconfirm = ''
         state.form.email = ''
         state.form.tel = ''
-        router.push({ name: 'Home' })
+        close()
       })
       .catch((err) => {
         console.log(err)

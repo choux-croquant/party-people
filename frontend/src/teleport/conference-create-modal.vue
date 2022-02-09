@@ -82,8 +82,8 @@ input:focus, textarea:focus {
 <script>
 import { reactive, ref } from 'vue'
 import BaseModal from './base-modal.vue'
-// import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 export default {
   name: 'Home',
@@ -94,6 +94,7 @@ export default {
     // const router = useRouter()
     const store = useStore()
     const baseModal = ref(null)
+    const router = useRouter()
 
     const state = reactive({
       capacity: '',
@@ -134,9 +135,34 @@ export default {
       store.dispatch('root/createRoom', roomData)
       .then((res) => {
         console.log('요청은 성공')
-        console.log(res)
+        store.dispatch('root/roomLinkEntry', res.data.id)
+        .then((res) => {
+          console.log(res.data)
+          if (res.data.locked) {
+            passwordConfirmModal.value.open(res.data.id)
+          }
+          else {
+            store.dispatch('root/passwordConfirm', { roomId: res.data.id, password: null })
+            .then((res) => {
+              console.log(res)
+              router.push({
+                name: 'ConferenceDetail',
+                params: {
+                  conferenceId: res.data.id,
+                  userName: store.getters['auth/getUserName']
+                }
+              })
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+        })
         // router.push({ name: 'ConferenceDetail' })
-      })
       .catch((err) => {
         console.log('실패')
         console.log(err)
