@@ -26,10 +26,8 @@
 
 * [하윤주](https://lab.ssafy.com/hayj04) - 백엔드 리더
   * 파티룸 수정/퇴장 API 개발
-  
 * [박건우](https://lab.ssafy.com/hggygw77) - 서버 환경 구축/관리
   * 파티룸 조회/검색 API 개발
-  
 * [선민기](https://lab.ssafy.com/suns1502) - QA
   * 파티룸 입장/삭제 API 개발
   
