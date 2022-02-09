@@ -33,6 +33,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
     @Value("${static.upload.location}")
     private String staticUploadLocation;
+    @Value("${static.sticker.location}")
+    private String staticStickerLocation;
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     		registry.addResourceHandler("/resources/**")
@@ -61,6 +63,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 				.addResourceLocations("classpath:/dist/js/");
         registry.addResourceHandler("/upload/**")
                 .addResourceLocations(staticUploadLocation);
+        registry.addResourceHandler("/sticker/**")
+                .addResourceLocations(staticStickerLocation);
 
     }
 
