@@ -222,7 +222,6 @@ export default {
 			state.fileName = state.thumbnailImg.name;
 		};
 
-<<<<<<< HEAD
       store.dispatch('root/createRoom', roomData)
       .then((res) => {
         console.log('요청은 성공')
@@ -258,7 +257,6 @@ export default {
         console.log('실패')
         console.log(err)
       })
-    }
     // const createRoom = () => {
     //   store.dispatch('root/createRoom', {
     //     thumbnail: thumbnailUrl,
@@ -278,44 +276,31 @@ export default {
     // }
     // const createRoom = () => {
     //   const roomData = new FormData()
-=======
-		const createRoom = () => {
-			// thumbnailImg = document.getElementById("thumbnail").files[0]
-			const room = {
-				capacity: state.capacity,
-				description: state.description,
-				password: state.password,
-				title: state.title,
-			};
->>>>>>> 92456dc8d03e1aa3265a409bc13c7ac80c27d363
 
-			const roomData = new FormData();
-			roomData.append('thumbnail', state.thumbnailImg);
-			roomData.append(
-				'room',
-				new Blob([JSON.stringify(room)], { type: 'application/json' }),
-			);
+    const roomData = new FormData();
+    roomData.append('thumbnail', state.thumbnailImg);
+    roomData.append(
+      'room',
+      new Blob([JSON.stringify(room)], { type: 'application/json' }),
+    );
 
-			store
-				.dispatch('root/createRoom', roomData)
-				.then(res => {
-					console.log('요청은 성공');
-					console.log(res);
-					// router.push({ name: 'ConferenceDetail' })
-					close();
-					state.capacity = '';
-					state.description = '';
-					state.password = '';
-					state.title = '';
-					state.thumbnailImg = null;
-					state.fileName = '';
-				})
-				.catch(err => {
-					console.log('실패');
-					console.log(err);
-				});
-		};
-
+    store.dispatch('root/createRoom', roomData)
+    .then(res => {
+      console.log('요청은 성공');
+      console.log(res);
+      // router.push({ name: 'ConferenceDetail' })
+      close();
+      state.capacity = '';
+      state.description = '';
+      state.password = '';
+      state.title = '';
+      state.thumbnailImg = null;
+      state.fileName = '';
+    })
+    .catch(err => {
+      console.log('실패');
+      console.log(err);
+    });
 		return { state, open, close, onUploadImage, createRoom, baseModal };
 	},
 };

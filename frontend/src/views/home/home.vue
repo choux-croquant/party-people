@@ -1,6 +1,6 @@
 <template>
 	<main-header />
-
+	
 	<div class="conference-list-wrap pl-0" style="overflow: auto">
 		<infinite-scroll @infinite-scroll="infiniteHandler">
 			<conference
