@@ -1,7 +1,5 @@
 <template>
 	<router-view></router-view>
-	<!-- <img alt="Vue logo" src="./assets/logo.png">
-  <div class="bg-tc-100">메인페이지</div> -->
 </template>
 
 <script>
