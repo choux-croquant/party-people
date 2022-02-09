@@ -9,6 +9,8 @@
 2. 파티 컨텐츠 추가(룰렛, 뽑기, 타이머, 화이트보드를 통한 커뮤니케이션)
 3. 파티 시각, 음성 효과 추가(얼굴, 프레임, 배경 커스터마이징)
 
+
+
 ## 👩‍💻 팀원 구성
 
 ### Front-End
@@ -28,6 +30,8 @@
   * 파티룸 조회/검색 API 개발
 * [선민기](https://lab.ssafy.com/suns1502) - QA
   * 파티룸 입장/삭제 API 개발
+  
+  
 
 ## 🌱 개발 환경
 
@@ -61,134 +65,57 @@
 * Kurento-media-server 6.16.0
 * openVidu-Server  2.20.0
 
+
+
 ## 📝 기획/설계 문서
 
-### 와이어 프레임
+[빠뤼 피플 기획/설계 문서](./result/README.md)
 
-* 랜딩 페이지
 
-![Landing-Page](./result/Wireframe/Landing-Page.png)
 
-* 메인 페이지
+## 변경 기록
 
-![Main-Page](./result/Wireframe/Main-Page.png)
+### 0.2.1 (2022-02-09)
 
-* 파티룸 페이지
+#### 변경 사항
 
-![Partyroom-Page](./result/Wireframe/Partyroom-Page.png)
+* README 기획/설계 항목 파일 분리
+* Swagger-API 문서 추가
 
-* 파티룸 컴포넌트 배치 및 Modal
 
-![Contents-Component](./result/Wireframe/Contents-Component.png)
 
-* 파티룸 꾸미기 Modal
+### 0.2 (2022-02-08)
 
-![Partyroom-Customizing-Modal](./result/Wireframe/Partyroom-Customizing-Modal.png)
+#### 변경 사항
 
-* 화면 꾸미기 Modal
+* Front-End 파일 구조 변경
 
-![Display-Customizing-Modal](./result/Wireframe/Display-Customizing-Modal.png)
+#### 구현 기능
 
-### 컬러 시스템
+* 회원 기능
+  * 로그인
+  * 회원 가입
+* 파티룸 외부 기능
+  * 파티룸 리스트 조회
+  * 파티룸 입장
+  * 파티룸 비밀번호 입장
+  * 파티룸 생성
+  * 파티룸 썸네일 업로드
+* 파티룸 내부 기능 
+  * 채팅
+  * 화상 채팅
+  * 마이크 On/Off
+  * 카메라 On/Off
+  * 타이머
+  * 룰렛
+  * 투표
+  * 화이트보드
+  * 화면 스티커 꾸미기
 
-![ColorSystem](./result/Color-System.png)
 
-### 프로토타입
 
-#### 랜딩 페이지
+### 0.1 (2022-02-09)
 
-![Landing-Page](./result/Prototype/Landing-Page.png)
+#### 변경 사항
 
-#### 메인 페이지
-
-* 메인 페이지
-
-![Main-Page](./result/Prototype/Main-Page/Main-Page.png)
-
-* 로그인 Modal
-
-![Login-Modal](./result/Prototype/Main-Page/Login-Modal.png)
-
-* 회원가입 Modal
-
-![Signin-Modal](./result/Prototype/Main-Page/Signin-Modal.png)
-
-* 방 생성 Modal
-
-![Create-Partyroom-Modal](./result/Prototype/Main-Page/Create-Partyroom-Modal.png)
-
-* 방 입장 Modal
-
-![Enter-Password-Modal](./result/Prototype/Main-Page/Enter-Password-Modal.png)
-
-#### 파티룸 페이지
-
-* 파티룸 메인 페이지
-
-![Partyroom-Page](./result/Prototype/Partyroom-Page/Partyroom-Page.png)
-
-* 파티룸 꾸미기 Modal
-
-![Partyroom-Customizing-Modal](./result/Prototype/Partyroom-Page/Partyroom-Customizing-Modal.png)
-
-* 비디오 꾸미기 Modal
-
-![Video-Customizing-Modal](./result/Prototype/Partyroom-Page/Video-Customizing-Modal.png)
-
-* 룰렛 기능
-
-![Roulette](./result/Prototype/Partyroom-Page/Roulette.png)
-
-* 화이트보드 기능
-
-![Whiteboard](./result/Prototype/Partyroom-Page/Whiteboard.png)
-
-* 타이머 Modal
-
-![Timer-Modal](./result/Prototype/Partyroom-Page/Timer-Modal.png)
-
-* 투표 생성 Modal
-
-![Vote-Create-Modal](./result/Prototype/Partyroom-Page/Vote-Create-Modal.png)
-
-* 투표 Modal
-
-![Vote-Modal](./result/Prototype/Partyroom-Page/Vote-Modal.png)
-
-### 시퀀스 다이어그램
-
-* 파티룸 리스트 조회
-
-![List](./result/Sequence-Diagram/List.png)
-
-* 파티룸 리스트 검색
-
-![Search](./result/Sequence-Diagram/Search.png)
-
-* 방 생성
-
-![Create](./result/Sequence-Diagram/Create.png)
-
-* 방 퇴장
-
-![Exit](./result/Sequence-Diagram/Exit.png)
-
-* 채팅
-
-![Chat](./result/Sequence-Diagram/Chat.png)
-
-* 룰렛
-
-![Roulette](./result/Sequence-Diagram/Roulette.png)
-
-* 타이머
-
-![Timer](./result/Sequence-Diagram/Timer.png)
-
-### ERD
-
-![ERD](./result/ERD.png)
-
-### 시스템 구성도
-
-![Architecture](./result/Architecture.png)
+* 스켈레톤 코드 작성
