@@ -2,7 +2,6 @@
 	<div class="h-screen w-screen flex bg-tc-500">
 		<div class="fixed inset-0 flex z-40">
 			<div class="mx-auto">
-				<timer></timer>
 				<!-- 룰렛 컴포넌트(실행시에만 show) -->
 				<roulette
 					v-show="isRouletteOpen"
