@@ -14,6 +14,9 @@
 				@startVote="startVote"
 				@sendVoteResult="sendVoteResult"
 				@open-whiteboard="openWhiteboard"
+				@stickerOverlay="applyStickerFilter"
+				@visualFilter="applyVisualFilter"
+				@textOverlay="applyTextFilter"
 				ref="roomSidebar"
 			></room-sidebar>
 			<!-- 위치는 나중에 옮길 예정 -->
@@ -267,14 +270,12 @@ export default {
 			// whiteboard signal 받기
 			this.session.on('signal:whiteboard', event => {
 				this.$refs.whiteboard.addWhiteboardSignal(event.data);
-				console.log('[S-3] ', event.data);
 			});
 
 			// painting state 정보 보내기 step 3
 			// painting state signal 받기
 			this.session.on('signal:painting-state', event => {
 				this.$refs.whiteboard.addPaintingSignal(event.data);
-				console.log('[P-3] ', event.data);
 			});
 
 			// --- Connect to the session with a valid user token ---
@@ -584,13 +585,13 @@ export default {
 			this.isRouletteOpen = false;
 		},
 
-		// Kurento faceOverlayFilter 적용
-		applyKurentoFilter() {
+		// Kurento faceOverlayFilter 적용한 스티커 필터
+		applyStickerFilter(filterInfo) {
 			this.publisher.stream.applyFilter('FaceOverlayFilter').then(filter => {
 				console.log('-- kurento filter applied --');
 
 				filter.execMethod('setOverlayedImage', {
-					uri: 'https://cdn.crowdpic.net/list-thumb/thumb_l_02F4A9A335F63872A1C75E9FAFE16241.png',
+					uri: filterInfo.url,
 					offsetXPercent: '-0.4F',
 					offsetYPercent: '-0.6F',
 					widthPercent: '1.7F',
@@ -601,8 +602,25 @@ export default {
 			this.$refs.bottombar.state.filter = true;
 		},
 
-		// Kurento GStreamerFilter 적용
-		applyGStreamerFilter() {
+		// Kurento GStreamerFilter 적용한 비주얼 필터
+		applyVisualFilter(filterInfo) {
+			this.publisher.stream
+				.applyFilter('GStreamerFilter', {
+					command:
+						'textoverlay text="PartyPeople" valignment=top halignment=center font-desc="Cantarell 25"',
+				})
+				.then(() => {
+					console.log('Video flipped!!!!');
+					// bottombar 필터 해제 버튼 활성화
+					this.$refs.bottombar.state.filter = true;
+				})
+				.catch(e => {
+					console.log('err ::::: ', e);
+				});
+		},
+
+		// Kurento GStreamerFilter 적용한 텍스트 필터
+		applyTextFilter(filterInfo) {
 			this.publisher.stream
 				.applyFilter('GStreamerFilter', {
 					command:
@@ -647,8 +665,6 @@ export default {
 		// ctx 정보 보내기 step 2
 		// 현재 좌표, 색깔, 굵기 정보를 받아 파티룸 내의 전체 사용자에게 전송
 		sendWhiteboardSignal(x, y, color, width) {
-			console.log('[S-2] ', x, y, color, width);
-
 			let data = {
 				currentX: x,
 				currentY: y,
@@ -670,8 +686,6 @@ export default {
 		// painting state 정보 보내기 step 2
 		// painting state를 받아 파티룸 내의 전체 사용자에게 전송
 		sendPaintingSignal(is_painting) {
-			console.log('[P-2] ', is_painting);
-
 			this.session
 				.signal({
 					data: JSON.stringify(is_painting),
