@@ -622,10 +622,17 @@ export default {
 
 		// Kurento GStreamerFilter 적용한 텍스트 필터
 		applyTextFilter(filterInfo) {
+			let command = `textoverlay text="${
+				filterInfo.inputText ? filterInfo.inputText : 'PartyPeople~'
+			}" valignment=${
+				filterInfo.valignment ? filterInfo.valignment : 'top'
+			} halignment=${
+				filterInfo.halignment ? filterInfo.halignment : 'center'
+			} font-desc="${filterInfo.font ? filterInfo.font : 'Cantarell'}
+				${filterInfo.fontSize ? filterInfo.fontSize : 25}"`;
 			this.publisher.stream
 				.applyFilter('GStreamerFilter', {
-					command:
-						'textoverlay text="PartyPeople" valignment=top halignment=center font-desc="Cantarell 25"',
+					command: command,
 				})
 				.then(() => {
 					console.log('Video flipped!!!!');
