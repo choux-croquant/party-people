@@ -173,6 +173,7 @@ export default {
 		const state = reactive({
 			selectedCategory: '스티커',
 			selectedCustom: null,
+			isClicked: false,
 
 			categories: [
 				{ id: 1, name: '스티커' },
@@ -215,24 +216,29 @@ export default {
 
 		const clickVideoCustom = customObject => {
 			console.log('선택된 항목 : ' + customObject);
-			state.selectedCustom === customObject
-				? (state.selectedCustom = null)
-				: (state.selectedCustom = customObject);
+			state.selectedCustom = customObject;
+			state.isClicked = true;
 		};
 
 		// 카테고리에 따라 파티룸 내부 함수 호출(emit)
 		const applyVideoCustom = () => {
-			var selected = state.selectedCategory;
-			console.log('apply 클릭 : ' + selected);
-			if (selected === '스티커') {
-				emit('stickerOverlay', state.selectedCustom);
-			} else if (selected === '필터') {
-				emit('visualFilter', state.selectedCustom);
-			} else if (selected === '문구') {
-				emit('textOverlay', state.selectedCustom);
-			} else {
-				cancelVideoCustom();
+			if (state.selectedCustom != null && state.isClicked) {
+				// 이전에 적용된 필터 해제 후 새롭게 적용
+				emit('filterOff');
+
+				var selected = state.selectedCategory;
+				console.log('apply 클릭 : ' + selected);
+				if (selected === '스티커') {
+					emit('stickerOverlay', state.selectedCustom);
+				} else if (selected === '필터') {
+					emit('visualFilter', state.selectedCustom);
+				} else if (selected === '문구') {
+					emit('textOverlay', state.selectedCustom);
+				}
 			}
+			state.isClicked = false;
+			// 모달 창 닫기
+			cancelVideoCustom();
 		};
 
 		// TODO: 비디오 커스텀 적용 취소 - bottombar의 filterOff 버튼과 연동
