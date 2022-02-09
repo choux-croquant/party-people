@@ -1,15 +1,27 @@
 // 회원 가입 모달 컴포넌트
 <template>
 	<teleport to="#modal-area">
-		<div
-			v-show="isOpen"
-			class="overflow-y-auto overflow-x-hidden fixed inset-1/4 z-50 justify-center items-center md:h-full"
-		>
-			<slot></slot>
-		</div>
+		<transition name="fade">
+			<div
+				v-show="isOpen"
+				class="overflow-y-auto overflow-x-hidden fixed inset-1/4 z-50 justify-center items-center md:h-full"
+			>
+				<slot></slot>
+			</div>
+		</transition>
 	</teleport>
 </template>
-<style></style>
+<style>
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 0.4s ease-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+	opacity: 0;
+}
+</style>
 <script>
 import { ref } from 'vue';
 

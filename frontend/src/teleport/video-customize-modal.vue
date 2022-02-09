@@ -1,13 +1,15 @@
 // 비디오 커스터마이징 모달
 <template>
 	<base-modal ref="baseModal">
-		<div class="w-full max-w-2xl bg-main-300 shadow-md rounded px-6 pt-6 pb-4">
+		<div
+			class="w-full max-w-2xl bg-main-300 shadow-md rounded-xl px-6 pt-6 pb-4"
+		>
 			<!-- close button -->
 			<div class="flex justify-between items-start rounded-t bg-main-300">
 				<button
 					@click="close()"
 					type="button"
-					class="text-tc-500 bg-alert-200 hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+					class="text-tc-500 bg-alert-200 hover:bg-alert-100 hover:text-tc-500 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
 				>
 					<svg
 						class="w-5 h-5"
