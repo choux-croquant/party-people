@@ -146,6 +146,11 @@
 					</div>
 				</div>
 			</div>
+			<a
+				href="https://www.freepik.com/vectors/design"
+				class="font-thin m-2 text-xs text-gray-400"
+				>Design vector created by macrovector - www.freepik.com</a
+			>
 		</div>
 	</base-modal>
 </template>
