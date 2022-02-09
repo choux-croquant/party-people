@@ -107,18 +107,19 @@
 						<div
 							v-for="custom in state.visualFilterList"
 							:key="custom.id"
-							class="w-1/4 cursor-pointer h-full px-4 flex-shrink-0"
-							v-show="showCategory(custom.category)"
+							class="w-1/4 cursor-pointer h-full px-4 flex-shrink-0 text-center"
+							v-show="true"
 							@click="clickVideoCustom(custom)"
 						>
-							<img
-								:src="custom.url"
+							<div
 								:class="[
-									custom.id === state.selectedCustomId
+									custom.id === state.selectedCustom
 										? 'border-4 border-sub-200'
-										: '',
+										: 'mt-3 border-4 border-main-100 py-4 rounded-xl bg-main-200 text-tc-500',
 								]"
-							/>
+							>
+								{{ custom.url }}
+							</div>
 						</div>
 					</div>
 					<!-- 문구 선택 -->
@@ -131,7 +132,6 @@
 							v-for="custom in state.textList"
 							:key="custom.id"
 							class="w-1/4 cursor-pointer h-full px-4 flex-shrink-0"
-							v-show="showCategory(custom.category)"
 							@click="clickVideoCustom(custom)"
 						>
 							<img
@@ -154,6 +154,7 @@
 import { ref, reactive } from 'vue';
 import BaseModal from './base-modal.vue';
 import stickerListJson from '@/assets/json-assets/stickerList.json';
+import visualFilterJson from '@/assets/json-assets/visualFilterList.json';
 
 export default {
 	name: 'VideoCustomizeModal',
@@ -178,18 +179,7 @@ export default {
 			// 각 항목을 json 파일로 따로 저장하여 json파일 불러옴
 			stickerList: stickerListJson,
 
-			visualFilterList: [
-				{
-					id: 1,
-					url: 'https://cdn.crowdpic.net/list-thumb/thumb_l_02F4A9A335F63872A1C75E9FAFE16241.png',
-					command: 'videoflip method=vertical-flip',
-				},
-				{
-					id: 2,
-					url: 'https://cdn.crowdpic.net/list-thumb/thumb_l_02F4A9A335F63872A1C75E9FAFE16241.png',
-					command: 'videoflip method=vertical-flip',
-				},
-			],
+			visualFilterList: visualFilterJson,
 
 			textList: null,
 		});
