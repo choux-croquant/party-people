@@ -95,10 +95,8 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public boolean checkRoomUserExist(Long roomId) {
         List<Session> sessions = getSessionsByRoomId(roomId);
-        for (Session session : sessions) {
-            if (session.getEndTime() == null) return true;
-        }
-        return false;
+        if(sessions.isEmpty()) return false;
+        return true;
     }
 
     @Override
@@ -167,8 +165,8 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     // 해당 방에 접속해있는 사용자인지 확인
-    public boolean isUserNotInCurrentSession(Long roomId, Long userId) {
-        return sessionRepositorySupport.isUserNotInCurrentSession(roomId, userId);
+    public boolean isUserInCurrentSession(Long roomId, Long userId) {
+        return sessionRepositorySupport.isUserInCurrentSession(roomId, userId);
     }
 
     @Override
