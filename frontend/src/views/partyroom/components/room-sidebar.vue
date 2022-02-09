@@ -373,6 +373,7 @@
 		@stickerOverlay="stickerOverlay"
 		@visualFilter="visualFilter"
 		@textOverlay="textOverlay"
+		@filterOff="filterOff"
 		ref="videoCustomizeModal"
 	/>
 	<theme-customize-modal ref="themeCustomizeModal" />
@@ -460,6 +461,10 @@ export default {
 			emit('textOverlay', filterInfo);
 		};
 
+		const filterOff = () => {
+			emit('filterOff');
+		};
+
 		return {
 			clickTimer,
 			voteCreateModal,
@@ -477,6 +482,7 @@ export default {
 			stickerOverlay,
 			visualFilter,
 			textOverlay,
+			filterOff,
 		};
 	},
 
