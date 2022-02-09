@@ -189,7 +189,7 @@ import BaseModal from './base-modal.vue';
 import { useStore } from 'vuex';
 
 export default {
-	name: 'Home',
+	name: 'ConferenceCreateModal',
 	components: {
 		BaseModal,
 	},
