@@ -154,7 +154,8 @@ export default {
 					state.form.passwordconfirm = '';
 					state.form.email = '';
 					state.form.tel = '';
-					router.push({ name: 'Home' });
+					close();
+					// router.push({ name: 'Home' });
 				})
 				.catch(err => {
 					console.log(err);

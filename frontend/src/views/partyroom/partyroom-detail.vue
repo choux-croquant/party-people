@@ -2,7 +2,6 @@
 	<div class="h-screen w-screen flex bg-tc-500">
 		<div class="fixed inset-0 flex z-40">
 			<div class="mx-auto">
-				<timer></timer>
 				<!-- 룰렛 컴포넌트(실행시에만 show) -->
 				<roulette
 					v-show="isRouletteOpen"
@@ -263,7 +262,8 @@ export default {
 				}
 				console.log('sum:', sum, '참가자 수:', this.subscribers.length);
 				if (sum == this.subscribers.length + 1) {
-					alert(JSON.stringify(voteResult));
+					// alert(`투표결과\n${JSON.stringify(voteResult)}`);
+					this.voteComplete(voteResult);
 				}
 			});
 
@@ -271,14 +271,12 @@ export default {
 			// whiteboard signal 받기
 			this.session.on('signal:whiteboard', event => {
 				this.$refs.whiteboard.addWhiteboardSignal(event.data);
-				console.log('[S-3] ', event.data);
 			});
 
 			// painting state 정보 보내기 step 3
 			// painting state signal 받기
 			this.session.on('signal:painting-state', event => {
 				this.$refs.whiteboard.addPaintingSignal(event.data);
-				console.log('[P-3] ', event.data);
 			});
 
 			// --- Connect to the session with a valid user token ---
@@ -505,6 +503,24 @@ export default {
 					console.log('투표 결과 전송 실패', error);
 				});
 		},
+
+		voteComplete(voteResult) {
+			let now = new Date();
+			let current = now.toLocaleTimeString([], {
+				hour: '2-digit',
+				minute: '2-digit',
+				hour12: false, // true인 경우 오후 10:25와 같이 나타냄.
+			});
+			let voteMessage = `투표 결과입니다. ${JSON.stringify(voteResult)}`;
+			let messageData = {
+				content: voteMessage,
+				sender: 'System',
+				time: current,
+			};
+			// 자신의 채팅창에 당첨자 로그 출력
+			this.$refs.chat.addMessage(JSON.stringify(messageData), false);
+		},
+
 		audioOnOff({ audio }) {
 			console.log('audio');
 			this.publisher.publishAudio(audio);
@@ -611,11 +627,10 @@ export default {
 		applyVisualFilter(filterInfo) {
 			this.publisher.stream
 				.applyFilter('GStreamerFilter', {
-					command:
-						'textoverlay text="PartyPeople" valignment=top halignment=center font-desc="Cantarell 25"',
+					command: filterInfo.command,
 				})
 				.then(() => {
-					console.log('Video flipped!!!!');
+					console.log('Visual-filter applied');
 					// bottombar 필터 해제 버튼 활성화
 					this.$refs.bottombar.state.filter = true;
 				})
@@ -626,10 +641,17 @@ export default {
 
 		// Kurento GStreamerFilter 적용한 텍스트 필터
 		applyTextFilter(filterInfo) {
+			let command = `textoverlay text="${
+				filterInfo.inputText ? filterInfo.inputText : 'PartyPeople~'
+			}" valignment=${
+				filterInfo.valignment ? filterInfo.valignment : 'top'
+			} halignment=${
+				filterInfo.halignment ? filterInfo.halignment : 'center'
+			} font-desc="${filterInfo.font ? filterInfo.font : 'Cantarell'}
+				${filterInfo.fontSize ? filterInfo.fontSize : 25}"`;
 			this.publisher.stream
 				.applyFilter('GStreamerFilter', {
-					command:
-						'textoverlay text="PartyPeople" valignment=top halignment=center font-desc="Cantarell 25"',
+					command: command,
 				})
 				.then(() => {
 					console.log('Video flipped!!!!');
@@ -670,8 +692,6 @@ export default {
 		// ctx 정보 보내기 step 2
 		// 현재 좌표, 색깔, 굵기 정보를 받아 파티룸 내의 전체 사용자에게 전송
 		sendWhiteboardSignal(x, y, color, width) {
-			console.log('[S-2] ', x, y, color, width);
-
 			let data = {
 				currentX: x,
 				currentY: y,
@@ -693,8 +713,6 @@ export default {
 		// painting state 정보 보내기 step 2
 		// painting state를 받아 파티룸 내의 전체 사용자에게 전송
 		sendPaintingSignal(is_painting) {
-			console.log('[P-2] ', is_painting);
-
 			this.session
 				.signal({
 					data: JSON.stringify(is_painting),

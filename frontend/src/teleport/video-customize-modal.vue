@@ -107,42 +107,67 @@
 						<div
 							v-for="custom in state.visualFilterList"
 							:key="custom.id"
-							class="w-1/4 cursor-pointer h-full px-4 flex-shrink-0"
-							v-show="showCategory(custom.category)"
+							class="w-1/4 cursor-pointer h-full px-4 flex-shrink-0 text-center"
+							v-show="true"
 							@click="clickVideoCustom(custom)"
 						>
-							<img
-								:src="custom.url"
+							<div
 								:class="[
-									custom.id === state.selectedCustomId
+									custom.id === state.selectedCustom
 										? 'border-4 border-sub-200'
-										: '',
+										: 'mt-3 border-4 border-main-100 py-4 rounded-xl bg-main-200 text-tc-500',
 								]"
-							/>
+							>
+								{{ custom.url }}
+							</div>
 						</div>
 					</div>
 					<!-- 문구 선택 -->
 					<div
 						v-if="state.selectedCategory === '문구'"
 						id="scrolling-content"
-						class="flex overflow-x-auto h-full"
+						class="flex-col overflow-x-auto h-full"
 					>
-						<div
-							v-for="custom in state.textList"
-							:key="custom.id"
-							class="w-1/4 cursor-pointer h-full px-4 flex-shrink-0"
-							v-show="showCategory(custom.category)"
-							@click="clickVideoCustom(custom)"
-						>
-							<img
-								:src="custom.url"
-								:class="[
-									custom.id === state.selectedCustomId
-										? 'border-4 border-sub-200'
-										: '',
-								]"
+						<div>
+							<select
+								v-model="state.textList.font"
+								class="m-1 border-main-100 border-2 cursor-pointer font-bold py-0 text-sm form-select border-0 rounded-md text-gray-600 h-7.5 border-transparent focus:border-transparent focus:ring-0 appearance-none"
+							>
+								<option value="" disabled selected>글꼴 선택</option>
+								<option
+									v-for="font in state.fonts"
+									:value="font.name"
+									:key="font.id"
+								>
+									{{ font.name }}
+								</option>
+							</select>
+							<select
+								v-model="state.textList.location"
+								class="m-1 border-main-100 border-2 cursor-pointer font-bold py-0 text-sm form-select rounded-md text-gray-600 h-7.5 border-transparent focus:border-transparent focus:ring-0 appearance-none"
+							>
+								<option value="" disabled selected>위치 선택</option>
+								<option
+									v-for="location in state.locations"
+									:value="location.name"
+									:key="location.id"
+								>
+									{{ location.name }}
+								</option>
+							</select>
+							<input
+								type="number"
+								placeholder="글자 크기"
+								v-model="state.textList.fontSize"
+								class="m-1 border-main-100 border-2 cursor-pointer font-bold py-0 text-sm form-select rounded-md text-gray-600 h-7.5 border-transparent focus:border-transparent focus:ring-0 appearance-none"
 							/>
 						</div>
+						<input
+							type="text"
+							placeholder="입력할 문구"
+							v-model="state.textList.inputText"
+							class="overflow-x-auto w-full h-14 border-main-100 border-2 font-bold text-sm rounded-md text-gray-600 border-transparent focus:border-transparent focus:ring-0 appearance-none"
+						/>
 					</div>
 				</div>
 			</div>
@@ -159,6 +184,7 @@
 import { ref, reactive } from 'vue';
 import BaseModal from './base-modal.vue';
 import stickerListJson from '@/assets/json-assets/stickerList.json';
+import visualFilterJson from '@/assets/json-assets/visualFilterList.json';
 
 export default {
 	name: 'VideoCustomizeModal',
@@ -181,23 +207,34 @@ export default {
 				{ id: 3, name: '문구' },
 			],
 
+			fonts: [
+				{ id: 1, name: 'Cantarell' },
+				{ id: 2, name: 'Sans' },
+			],
+
+			locations: [
+				{ id: 1, name: 'Top|Right' },
+				{ id: 2, name: 'Top|Center' },
+				{ id: 3, name: 'Top|Left' },
+				{ id: 4, name: 'Center|Right' },
+				{ id: 5, name: 'Center|Center' },
+				{ id: 6, name: 'Center|Left' },
+				{ id: 7, name: 'Bottom|Right' },
+				{ id: 8, name: 'Bottom|Center' },
+				{ id: 9, name: 'Bottom|Left' },
+			],
+
 			// 각 항목을 json 파일로 따로 저장하여 json파일 불러옴
 			stickerList: stickerListJson,
 
-			visualFilterList: [
-				{
-					id: 1,
-					url: 'https://cdn.crowdpic.net/list-thumb/thumb_l_02F4A9A335F63872A1C75E9FAFE16241.png',
-					command: 'videoflip method=vertical-flip',
-				},
-				{
-					id: 2,
-					url: 'https://cdn.crowdpic.net/list-thumb/thumb_l_02F4A9A335F63872A1C75E9FAFE16241.png',
-					command: 'videoflip method=vertical-flip',
-				},
-			],
+			visualFilterList: visualFilterJson,
 
-			textList: null,
+			textList: {
+				inputText: '',
+				location: '',
+				font: '',
+				fontSize: 25,
+			},
 		});
 
 		const open = () => {
@@ -228,12 +265,23 @@ export default {
 
 				var selected = state.selectedCategory;
 				console.log('apply 클릭 : ' + selected);
+
 				if (selected === '스티커') {
 					emit('stickerOverlay', state.selectedCustom);
 				} else if (selected === '필터') {
 					emit('visualFilter', state.selectedCustom);
 				} else if (selected === '문구') {
-					emit('textOverlay', state.selectedCustom);
+					emit('textOverlay', {
+						inputText: state.textList.inputText,
+						valignment: state.textList.location
+							? state.textList.location.split('|')[0].toLowerCase()
+							: '',
+						halignment: state.textList.location
+							? state.textList.location.split('|')[1].toLowerCase()
+							: '',
+						font: state.textList.font,
+						fontSize: state.textList.fontSize,
+					});
 				}
 			}
 			state.isClicked = false;
