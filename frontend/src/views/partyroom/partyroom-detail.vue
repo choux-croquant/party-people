@@ -579,14 +579,14 @@ export default {
 
 				if (filterInfo.category === 'hat') {
 					offsetX = '-0.5F';
-					offsetY = '-1.1F';
+					offsetY = '-1.0F';
 					width = '2.1F';
 					height = '1.5F';
 				} else if (filterInfo.category === 'mask') {
-					offsetX = '-0.8F';
-					offsetY = '-0.8F';
-					width = '2.5';
-					height = '2.5';
+					offsetX = '-0.7F';
+					offsetY = '-0.7F';
+					width = '2.3';
+					height = '2.3';
 				} else if (filterInfo.category === 'eyes') {
 					offsetX = '0.02F';
 					offsetY = '0.1F';
