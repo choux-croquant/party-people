@@ -18,6 +18,7 @@
 				@stickerOverlay="applyStickerFilter"
 				@visualFilter="applyVisualFilter"
 				@textOverlay="applyTextFilter"
+				@filterOff="filterOff"
 				ref="roomSidebar"
 			></room-sidebar>
 			<!-- 위치는 나중에 옮길 예정 -->
@@ -642,7 +643,7 @@ export default {
 
 		// 필터 해제
 		filterOff() {
-			console.log('filter');
+			console.log('filter Off called');
 			this.publisher.stream
 				.removeFilter()
 				.then(() => {
