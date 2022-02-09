@@ -201,7 +201,7 @@ export default {
 
 			fonts: [
 				{ id: 1, name: 'Cantarell' },
-				{ id: 2, name: 'Cantarell' },
+				{ id: 2, name: 'Sans' },
 			],
 
 			locations: [
