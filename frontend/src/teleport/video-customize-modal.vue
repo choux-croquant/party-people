@@ -107,18 +107,19 @@
 						<div
 							v-for="custom in state.visualFilterList"
 							:key="custom.id"
-							class="w-1/4 cursor-pointer h-full px-4 flex-shrink-0"
+							class="w-1/4 cursor-pointer h-full px-4 flex-shrink-0 text-center"
 							v-show="true"
 							@click="clickVideoCustom(custom)"
 						>
-							<img
-								:src="custom.url"
+							<div
 								:class="[
-									custom.id === state.selectedCustomId
+									custom.id === state.selectedCustom
 										? 'border-4 border-sub-200'
-										: '',
+										: 'mt-3 border-4 border-main-100 py-4 rounded-xl bg-main-200 text-tc-500',
 								]"
-							/>
+							>
+								{{ custom.url }}
+							</div>
 						</div>
 					</div>
 					<!-- 문구 선택 -->

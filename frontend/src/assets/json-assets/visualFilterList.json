@@ -1,12 +1,37 @@
 [
   {
     "id": "1",
-    "command": "videoflip method=vertical-flip",
-    "url": "https://www.crowdpic.net/photo/동물-animal-pet-cat-고양이-2249647"
+    "command": "agingtv",
+    "url": "옛날풍"
   },
   {
     "id": "2",
-    "command": "gamma gamma=5.0",
-    "url": "https://www.crowdpic.net/photo/동물-animal-pet-cat-고양이-2249647"
+    "command": "quarktv",
+    "url": "쿼크"
+  },
+  {
+    "id": "3",
+    "command": "radioactv",
+    "url": "하이라이트"
+  },
+  {
+    "id": "4",
+    "command": "rippletv",
+    "url": "물방울"
+  },
+  {
+    "id": "5",
+    "command": "streaktv",
+    "url": "잔상효과"
+  },
+  {
+    "id": "6",
+    "command": "vertigotv",
+    "url": "현기증"
+  },
+  {
+    "id": "7",
+    "command": "warptv",
+    "url": "워프"
   }
 ]
