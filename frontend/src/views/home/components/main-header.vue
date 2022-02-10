@@ -61,7 +61,7 @@
             내용
           </button>
           <button
-            @click="changeOption('hastag')"
+            @click="changeOption('hashtag')"
             class="rounded-full w-32 h-10 mt-2 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100"
             type="button"
           >
@@ -171,7 +171,7 @@ export default {
       state.searchOption = option;
       console.log(state.searchOption);
 
-      if (option === "hastag") {
+      if (option === "hashtag") {
         // 이미 입력된 내용의 공백을 ' #'으로 치환
         state.searchValue = state.searchValue.replace(/ /g, " #");
 
@@ -187,7 +187,7 @@ export default {
     };
 
     const roomSearch = () => {
-      if (state.searchOption === "hastag") {
+      if (state.searchOption === "hashtag") {
 				state.searchValue = state.searchValue.replace(/ /g, "");
       }
       store.commit("root/setSearchValue", state.searchValue);
