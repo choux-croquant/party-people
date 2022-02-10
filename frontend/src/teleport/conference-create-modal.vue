@@ -2,13 +2,13 @@
 
 <template>
 	<base-modal ref="baseModal">
-		<div class="w-full max-w-2xl bg-main-300 shadow-md rounded px-6 py-6">
+		<div class="w-full max-w-2xl bg-main-300 shadow-md rounded-xl px-6 py-6">
 			<!-- close button -->
 			<div class="flex justify-between items-start rounded-t bg-main-300">
 				<button
 					@click="close()"
 					type="button"
-					class="text-tc-500 bg-alert-200 hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+					class="text-tc-500 bg-alert-200 hover:bg-alert-100 hover:text-tc-500 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
 				>
 					<svg
 						class="w-5 h-5"
@@ -183,21 +183,20 @@ textarea:focus {
 </style>
 
 <script>
-import { reactive, ref } from 'vue'
-import BaseModal from './base-modal.vue'
-import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { reactive, ref } from 'vue';
+import BaseModal from './base-modal.vue';
+// import { useRouter } from 'vue-router'
+import { useStore } from 'vuex';
 
 export default {
-  name: 'Home',
-  components: {
-    BaseModal
-  },
-  setup () {
-    // const router = useRouter()
-    const store = useStore()
-    const baseModal = ref(null)
-    const router = useRouter()
+	name: 'ConferenceCreateModal',
+	components: {
+		BaseModal,
+	},
+	setup() {
+		// const router = useRouter()
+		const store = useStore();
+		const baseModal = ref(null);
 
 		const state = reactive({
 			capacity: '',
@@ -222,85 +221,42 @@ export default {
 			state.fileName = state.thumbnailImg.name;
 		};
 
-      store.dispatch('root/createRoom', roomData)
-      .then((res) => {
-        console.log('요청은 성공')
-        store.dispatch('root/roomLinkEntry', res.data.id)
-        .then((res) => {
-          console.log(res.data)
-          if (res.data.locked) {
-            passwordConfirmModal.value.open(res.data.id)
-          }
-          else {
-            store.dispatch('root/passwordConfirm', { roomId: res.data.id, password: null })
-            .then((res) => {
-              console.log(res)
-              router.push({
-                name: 'ConferenceDetail',
-                params: {
-                  conferenceId: res.data.id,
-                  userName: store.getters['auth/getUserName']
-                }
-              })
-            })
-            .catch((err) => {
-              console.log(err)
-            })
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-        })
-        // router.push({ name: 'ConferenceDetail' })
-      .catch((err) => {
-        console.log('실패')
-        console.log(err)
-      })
-    // const createRoom = () => {
-    //   store.dispatch('root/createRoom', {
-    //     thumbnail: thumbnailUrl,
-    //     room: {
-    //       capacity: state.capacity,
-    //       description: state.description,
-    //       password: state.password,
-    //       title: state.title,
-    //     }
-    //   })
-    //   .then(() => {
-    //     router.push({ name: 'ConferenceDetail' })
-    //   })
-    //   .catch((err) => {
-    //     console.log(err)
-    //   })
-    // }
-    // const createRoom = () => {
-    //   const roomData = new FormData()
+		const createRoom = () => {
+			// thumbnailImg = document.getElementById("thumbnail").files[0]
+			const room = {
+				capacity: state.capacity,
+				description: state.description,
+				password: state.password,
+				title: state.title,
+			};
 
-    const roomData = new FormData();
-    roomData.append('thumbnail', state.thumbnailImg);
-    roomData.append(
-      'room',
-      new Blob([JSON.stringify(room)], { type: 'application/json' }),
-    );
+			const roomData = new FormData();
+			roomData.append('thumbnail', state.thumbnailImg);
+			roomData.append(
+				'room',
+				new Blob([JSON.stringify(room)], { type: 'application/json' }),
+			);
 
-    store.dispatch('root/createRoom', roomData)
-    .then(res => {
-      console.log('요청은 성공');
-      console.log(res);
-      // router.push({ name: 'ConferenceDetail' })
-      close();
-      state.capacity = '';
-      state.description = '';
-      state.password = '';
-      state.title = '';
-      state.thumbnailImg = null;
-      state.fileName = '';
-    })
-    .catch(err => {
-      console.log('실패');
-      console.log(err);
-    });
+			store
+				.dispatch('root/createRoom', roomData)
+				.then(res => {
+					console.log('요청은 성공');
+					console.log(res);
+					// router.push({ name: 'ConferenceDetail' })
+					close();
+					state.capacity = '';
+					state.description = '';
+					state.password = '';
+					state.title = '';
+					state.thumbnailImg = null;
+					state.fileName = '';
+				})
+				.catch(err => {
+					console.log('실패');
+					console.log(err);
+				});
+		};
+
 		return { state, open, close, onUploadImage, createRoom, baseModal };
 	},
 };
