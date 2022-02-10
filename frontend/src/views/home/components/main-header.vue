@@ -21,7 +21,9 @@
 							></path>
 						</svg>
 					</div>
+					<!-- TODO : 검색 필터링 조건이 hashtag이고 띄어쓰기, 엔터, # 입력 시 현재 value를 list에 추가하여 list를 axios 요청보내도록 -->
 					<input
+						ref="searchInput"
 						v-model="state.searchValue"
 						@keyup.enter="roomSearch()"
 						type="text"
@@ -58,6 +60,13 @@
 						type="button"
 					>
 						내용
+					</button>
+					<button
+						@click="changeOption('hastag')"
+						class="rounded-full w-32 h-10 mt-2 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100"
+						type="button"
+					>
+						해시 태그
 					</button>
 				</ul>
 			</div>
@@ -124,13 +133,14 @@ export default {
 	setup() {
 		const store = useStore();
 		const router = useRouter();
+		const searchInput = ref(null);
 		const signupModal = ref(null);
 		const loginModal = ref(null);
 		const conferenceCreateModal = ref(null);
 		const state = reactive({
 			loginState: computed(() => store.getters['auth/getLoginState']),
-			searchValue: null,
-			searchOption: 'title',
+			searchValue: '', // 현재 검색 키워드
+			searchOption: 'title', // 검색 필터링 조건
 		});
 
 		const clickLogin = () => {
@@ -157,12 +167,28 @@ export default {
 			conferenceCreateModal.value.open();
 		};
 
+		// 검색 필터링 조건 변경
 		const changeOption = option => {
-			console.log(option);
 			state.searchOption = option;
-			console.log(state.searchOption);
+			console.log(option);
+			// 해시태그 조건 선택 시 키워드 앞에 해시태그 추가
+			if (option === 'hastag') {
+				// 현재 입력된 내용 공백제거
+				state.searchValue = state.searchValue.replace(/ /g, '');
+
+				if (state.searchValue.length !== 0) {
+					if (state.searchValue.charAt(0) !== '#')
+						// 이미 입력된 내용이 있고 '#'로 시작하지 않으면 공백제거하여 맨 앞에 '#' 붙임
+						state.searchValue = '#' + state.searchValue;
+				} else {
+					// 입력된 내용이 없으면 '#'로 시작
+					state.searchValue += '#';
+				}
+				searchInput.value.focus();
+			}
 		};
 
+		// 파티룸 검색 시 백엔드 요청(키워드 배열 형태로 요청)
 		const roomSearch = () => {
 			console.log(state.searchValue);
 			store
@@ -181,6 +207,7 @@ export default {
 
 		return {
 			state,
+			searchInput,
 			loginModal,
 			signupModal,
 			conferenceCreateModal,
