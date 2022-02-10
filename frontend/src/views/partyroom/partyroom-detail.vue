@@ -1,14 +1,6 @@
 <template>
 	<div class="h-screen w-screen flex bg-tc-500">
 		<div class="fixed inset-0 flex z-40">
-			<div class="mx-auto">
-				<!-- 룰렛 컴포넌트(실행시에만 show) -->
-				<roulette
-					v-show="isRouletteOpen"
-					ref="apiRequest"
-					@closeRoulette="closeRoulette"
-				></roulette>
-			</div>
 			<room-sidebar
 				@sendRouletteSignal="sendRouletteSignal"
 				@startVote="startVote"
@@ -27,57 +19,87 @@
 						<timer @startCountdown="startCountdown" ref="timer"></timer>
 					</div>
 				</div>
-				<div
-					v-if="currentUserCount == 0"
-					id="video-container-1"
-					class="flex flex-wrap mx-8 justify-center gap-4"
-				>
-					<user-video class="userVideo-1" :stream-manager="publisher" />
-					<user-video
-						class="userVideo-1"
-						v-for="sub in subscribers"
-						:key="sub.stream.connection.connectionId"
-						:stream-manager="sub"
-					/>
+				<!-- 컨텐츠가 없을 경우 표시되는 화면 -->
+				<div v-if="!isWhiteboardOpen">
+					<div
+						v-if="currentUserCount == 0"
+						id="video-container-1"
+						class="flex flex-wrap mx-8 justify-center gap-4"
+					>
+						<user-video class="userVideo-1" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-1"
+							v-for="sub in subscribers"
+							:key="sub.stream.connection.connectionId"
+							:stream-manager="sub"
+						/>
+					</div>
+					<div
+						v-else-if="currentUserCount < 4"
+						id="video-container-2"
+						class="flex flex-wrap mx-8 justify-center gap-4"
+					>
+						<user-video class="userVideo-2" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-2"
+							v-for="sub in subscribers"
+							:key="sub.stream.connection.connectionId"
+							:stream-manager="sub"
+						/>
+					</div>
+					<div
+						v-else-if="currentUserCount < 6"
+						id="video-container-3"
+						class="flex flex-wrap mx-8 justify-center gap-4"
+					>
+						<user-video class="userVideo-3" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-3"
+							v-for="sub in subscribers"
+							:key="sub.stream.connection.connectionId"
+							:stream-manager="sub"
+						/>
+					</div>
+					<div
+						v-else
+						id="video-container-4"
+						class="flex flex-wrap mx-8 justify-center gap-4"
+					>
+						<user-video class="userVideo-4" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-4"
+							v-for="sub in subscribers"
+							:key="sub.stream.connection.connectionId"
+							:stream-manager="sub"
+						/>
+					</div>
 				</div>
-				<div
-					v-else-if="currentUserCount < 4"
-					id="video-container-2"
-					class="flex flex-wrap mx-8 justify-center gap-4"
-				>
-					<user-video class="userVideo-2" :stream-manager="publisher" />
-					<user-video
-						class="userVideo-2"
-						v-for="sub in subscribers"
-						:key="sub.stream.connection.connectionId"
-						:stream-manager="sub"
-					/>
-				</div>
-				<div
-					v-else-if="currentUserCount < 6"
-					id="video-container-3"
-					class="flex flex-wrap mx-8 justify-center gap-4"
-				>
-					<user-video class="userVideo-3" :stream-manager="publisher" />
-					<user-video
-						class="userVideo-3"
-						v-for="sub in subscribers"
-						:key="sub.stream.connection.connectionId"
-						:stream-manager="sub"
-					/>
-				</div>
-				<div
-					v-else
-					id="video-container-4"
-					class="flex flex-wrap mx-8 justify-center gap-4"
-				>
-					<user-video class="userVideo-4" :stream-manager="publisher" />
-					<user-video
-						class="userVideo-4"
-						v-for="sub in subscribers"
-						:key="sub.stream.connection.connectionId"
-						:stream-manager="sub"
-					/>
+				<div v-else-if="isWhiteboardOpen" class="grid grid-rows-4">
+					<div class="grid grid-cols-4 row-span-1">
+						<user-video
+							class="col-span-1 max-h-48"
+							:stream-manager="publisher"
+						/>
+						<user-video
+							class="col-span-1 max-h-48"
+							v-for="sub in subscribers"
+							:key="sub.stream.connection.connectionId"
+							:stream-manager="sub"
+						/>
+					</div>
+					<whiteboard
+						class="row-span-3 justify-center"
+						@send-whiteboard-signal="sendWhiteboardSignal"
+						@send-painting-signal="sendPaintingSignal"
+						@close-whiteboard="closeWhiteboard"
+						ref="whiteboard"
+					></whiteboard>
+					<!-- 룰렛 컴포넌트(실행시에만 show) -->
+					<roulette
+						v-show="isRouletteOpen"
+						ref="apiRequest"
+						@closeRoulette="closeRoulette"
+					></roulette>
 				</div>
 
 				<!-- Kurento faceOverlayFilter 동작버튼 -->
@@ -85,13 +107,6 @@
 				<!-- Kurento GStreamerFilter 동작버튼 -->
 				<button @click="applyGStreamerFilter">Kurento TextOverlay Btn |</button>
 			</div>
-			<whiteboard
-				v-show="isWhiteboardOpen"
-				@send-whiteboard-signal="sendWhiteboardSignal"
-				@send-painting-signal="sendPaintingSignal"
-				@close-whiteboard="closeWhiteboard"
-				ref="whiteboard"
-			></whiteboard>
 			<room-chat
 				@message="sendMessage"
 				ref="chat"
@@ -124,6 +139,10 @@
 	width: 24%;
 	height: 100%;
 }
+/* .contents-container {
+  padding-left: 5%;
+  padding-right: 5%;
+} */
 </style>
 <script>
 import { ref } from 'vue';
