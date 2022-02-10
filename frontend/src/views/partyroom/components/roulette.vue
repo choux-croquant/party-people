@@ -8,9 +8,19 @@
 			<!-- 룰렛 원판 -->
 			<div class="roulette" v-bind:style="this.state.rouletteStyle">
 				<!-- 룰렛 아이템(참가자 리스트) -->
-				<div class="item-wrapper">
+				<div v-if="state.items.length < 4" class="item-wrapper text-2xl">
 					<div
-						class="item text-tc-500"
+						class="item pt-20 text-tc-500"
+						:key="item.value"
+						v-for="(item, index) in this.state.items"
+						v-bind:style="this.state.itemStyles[index]"
+					>
+						{{ item.value }}
+					</div>
+				</div>
+        <div v-else class="item-wrapper text-xs">
+					<div
+						class="item pt-8 text-tc-500"
 						:key="item.value"
 						v-for="(item, index) in this.state.items"
 						v-bind:style="this.state.itemStyles[index]"
@@ -154,7 +164,8 @@ export default {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	padding-top: 10%;
+  font-family: Pretendard;
+  font-weight: bold;
 	text-align: center;
 	display: flex;
 	justify-content: center;
