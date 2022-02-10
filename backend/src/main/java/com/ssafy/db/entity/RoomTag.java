@@ -2,6 +2,7 @@ package com.ssafy.db.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -22,4 +23,11 @@ public class RoomTag extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "tag_id")
     private Tag tag;
+
+    @Override
+    public String toString() {
+        return "RoomTag{" +
+                "tag=" + tag +
+                '}';
+    }
 }
