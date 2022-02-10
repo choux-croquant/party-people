@@ -103,6 +103,7 @@ export default {
 					else {
 						state.noResult = true
 						state.message = "No result found"
+						store.commit("root/setPage", page)
 					}
 					state.listLoading = false
         })

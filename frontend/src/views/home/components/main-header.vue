@@ -172,8 +172,8 @@ export default {
       console.log(state.searchOption);
 
       if (option === "hastag") {
-        // 현재 입력된 내용 공백제거
-        state.searchValue = state.searchValue.replace(/ /g, "");
+        // 이미 입력된 내용의 공백을 ' #'으로 치환
+        state.searchValue = state.searchValue.replace(/ /g, " #");
 
         if (state.searchValue.length !== 0) {
           if (state.searchValue.charAt(0) !== "#")
@@ -183,14 +183,16 @@ export default {
           // 입력된 내용이 없으면 '#'로 시작
           state.searchValue += "#";
         }
-        // searchInput.focus();
       }
     };
 
     const roomSearch = () => {
-			store.commit("root/setSearchValue", state.searchValue)
-			store.commit("root/setSearchOption", state.searchOption)
-			store.commit("root/setPage", 1)
+      if (state.searchOption === "hastag") {
+				state.searchValue = state.searchValue.replace(/ /g, "");
+      }
+      store.commit("root/setSearchValue", state.searchValue);
+      store.commit("root/setSearchOption", state.searchOption);
+      store.commit("root/setPage", 1);
       store
         .dispatch("root/requestRoomList")
         .then((res) => {
