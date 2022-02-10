@@ -1,14 +1,6 @@
 <template>
 	<div class="h-screen w-screen flex bg-tc-500">
 		<div class="fixed inset-0 flex z-40">
-			<div class="mx-auto">
-				<!-- 룰렛 컴포넌트(실행시에만 show) -->
-				<roulette
-					v-show="isRouletteOpen"
-					ref="apiRequest"
-					@closeRoulette="closeRoulette"
-				></roulette>
-			</div>
 			<room-sidebar
 				@sendRouletteSignal="sendRouletteSignal"
 				@startVote="startVote"
@@ -21,63 +13,100 @@
 				ref="roomSidebar"
 			></room-sidebar>
 			<!-- 위치는 나중에 옮길 예정 -->
-			<div id="session" class="w-full" v-if="session">
+			<div id="session" class="w-full pl-32 pr-80" v-if="session">
 				<div id="session-header">
 					<div class="mx-auto">
 						<timer @startCountdown="startCountdown" ref="timer"></timer>
 					</div>
 				</div>
-				<div
-					v-if="currentUserCount == 0"
-					id="video-container-1"
-					class="flex flex-wrap mx-8 justify-center gap-4"
-				>
-					<user-video class="userVideo-1" :stream-manager="publisher" />
-					<user-video
-						class="userVideo-1"
-						v-for="sub in subscribers"
-						:key="sub.stream.connection.connectionId"
-						:stream-manager="sub"
-					/>
+				<!-- 컨텐츠가 없는 경우 -->
+				<div v-show="!isWhiteboardOpen && !isRouletteOpen">
+					<div
+						v-if="currentUserCount == 0"
+						id="video-container-1"
+						class="flex flex-wrap mx-8 justify-center gap-4"
+					>
+						<user-video class="userVideo-1" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-1"
+							v-for="sub in subscribers"
+							:key="sub.stream.connection.connectionId"
+							:stream-manager="sub"
+						/>
+					</div>
+					<div
+						v-else-if="currentUserCount < 4"
+						id="video-container-2"
+						class="flex flex-wrap mx-8 justify-center gap-4"
+					>
+						<user-video class="userVideo-2" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-2"
+							v-for="sub in subscribers"
+							:key="sub.stream.connection.connectionId"
+							:stream-manager="sub"
+						/>
+					</div>
+					<div
+						v-else-if="currentUserCount < 6"
+						id="video-container-3"
+						class="flex flex-wrap mx-8 justify-center gap-4"
+					>
+						<user-video class="userVideo-3" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-3"
+							v-for="sub in subscribers"
+							:key="sub.stream.connection.connectionId"
+							:stream-manager="sub"
+						/>
+					</div>
+					<div
+						v-else
+						id="video-container-4"
+						class="flex flex-wrap mx-8 justify-center gap-4"
+					>
+						<user-video class="userVideo-4" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-4"
+							v-for="sub in subscribers"
+							:key="sub.stream.connection.connectionId"
+							:stream-manager="sub"
+						/>
+					</div>
 				</div>
-				<div
-					v-else-if="currentUserCount < 4"
-					id="video-container-2"
-					class="flex flex-wrap mx-8 justify-center gap-4"
-				>
-					<user-video class="userVideo-2" :stream-manager="publisher" />
-					<user-video
-						class="userVideo-2"
-						v-for="sub in subscribers"
-						:key="sub.stream.connection.connectionId"
-						:stream-manager="sub"
-					/>
-				</div>
-				<div
-					v-else-if="currentUserCount < 6"
-					id="video-container-3"
-					class="flex flex-wrap mx-8 justify-center gap-4"
-				>
-					<user-video class="userVideo-3" :stream-manager="publisher" />
-					<user-video
-						class="userVideo-3"
-						v-for="sub in subscribers"
-						:key="sub.stream.connection.connectionId"
-						:stream-manager="sub"
-					/>
-				</div>
-				<div
-					v-else
-					id="video-container-4"
-					class="flex flex-wrap mx-8 justify-center gap-4"
-				>
-					<user-video class="userVideo-4" :stream-manager="publisher" />
-					<user-video
-						class="userVideo-4"
-						v-for="sub in subscribers"
-						:key="sub.stream.connection.connectionId"
-						:stream-manager="sub"
-					/>
+				<!-- 컨텐츠(룰렛 / 화이트보드)를 실행중인 경우 -->
+				<div class="grid grid-rows-4">
+					<div
+						class="grid grid-cols-4 row-span-1 p-3"
+						v-show="isWhiteboardOpen || isRouletteOpen"
+					>
+						<user-video
+							class="col-span-1 max-h-48 p-3"
+							:stream-manager="publisher"
+						/>
+						<user-video
+							class="col-span-1 max-h-48 p-3"
+							v-for="sub in subscribers"
+							:key="sub.stream.connection.connectionId"
+							:stream-manager="sub"
+						/>
+					</div>
+					<!-- 화이트보드 컴포넌트 (실행시에만 show) -->
+					<whiteboard
+						v-show="isWhiteboardOpen"
+						class="row-span-3 justify-center items-center mb-16"
+						@send-whiteboard-signal="sendWhiteboardSignal"
+						@send-painting-signal="sendPaintingSignal"
+						@close-whiteboard="closeWhiteboard"
+						ref="whiteboard"
+					></whiteboard>
+					<!-- 룰렛 컴포넌트 (실행시에만 show) -->
+					<roulette
+						v-show="isRouletteOpen"
+						class="row-span-3 justify-center items-center mb-16"
+						ref="apiRequest"
+						@closeRoulette="closeRoulette"
+					></roulette>
 				</div>
 
 				<!-- Kurento faceOverlayFilter 동작버튼 -->
@@ -85,13 +114,6 @@
 				<!-- Kurento GStreamerFilter 동작버튼 -->
 				<button @click="applyGStreamerFilter">Kurento TextOverlay Btn |</button>
 			</div>
-			<whiteboard
-				v-show="isWhiteboardOpen"
-				@send-whiteboard-signal="sendWhiteboardSignal"
-				@send-painting-signal="sendPaintingSignal"
-				@close-whiteboard="closeWhiteboard"
-				ref="whiteboard"
-			></whiteboard>
 			<room-chat
 				@message="sendMessage"
 				ref="chat"
@@ -124,6 +146,10 @@
 	width: 24%;
 	height: 100%;
 }
+/* .contents-container {
+  padding-left: 5%;
+  padding-right: 5%;
+} */
 </style>
 <script>
 import { ref } from 'vue';
@@ -138,6 +164,7 @@ import roomBottombar from './components/room-bottombar.vue';
 import timer from './components/timer.vue';
 import Roulette from './components/roulette.vue';
 import Whiteboard from './components/whiteboard.vue';
+import Swal from 'sweetalert2';
 
 const OPENVIDU_SERVER_URL = 'https://pparttypeople.kro.kr:4443';
 const OPENVIDU_SERVER_SECRET = 'a106ssafy0183';
@@ -319,6 +346,19 @@ export default {
 					});
 			});
 
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-right',
+				showConfirmButton: false,
+				timer: 1500,
+				timerProgressBar: true,
+			});
+
+			Toast.fire({
+				icon: 'success',
+				title: '파티룸에 입장하셨습니다.',
+			});
+
 			window.addEventListener('beforeunload', this.leaveSession);
 		},
 
@@ -336,6 +376,19 @@ export default {
 
 			window.removeEventListener('beforeUnmount', this.leaveSession);
 			this.router.push({ name: 'Home' });
+
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-right',
+				showConfirmButton: false,
+				timer: 1500,
+				timerProgressBar: true,
+			});
+
+			Toast.fire({
+				icon: 'success',
+				title: '파티룸에서 퇴장하셨습니다.',
+			});
 		},
 
 		getToken(mySessionId) {

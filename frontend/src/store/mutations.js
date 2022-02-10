@@ -7,6 +7,13 @@ export function setRoomList(state, roomList) {
 	state.roomList = roomList;
 }
 
+export function pushRoomList(state, roomList) {
+	console.log(roomList);
+	roomList.forEach((room) => {
+		state.roomList.push(room);
+	})
+}
+
 export function setTimer(state, timerTime) {
 	console.log(timerTime);
 	state.timerTime = timerTime;
@@ -33,4 +40,19 @@ export function setVote(state, voteInfo) {
 export function setVoteResult(state, voteResult) {
 	console.log(voteResult);
 	state.voteResult = voteResult;
+}
+
+export function setPage(state, page) {
+	console.log(page)
+	state.page = page
+}
+
+export function setSearchValue (state, searchValue) {
+	console.log(searchValue)
+	state.searchValue = searchValue
+}
+
+export function setSearchOption (state, searchOption) {
+	console.log(searchOption)
+	state.searchOption = searchOption
 }

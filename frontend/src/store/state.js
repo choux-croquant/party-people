@@ -55,4 +55,7 @@ export default {
 		winner: null,
 	},
 	roomId: null,
+	searchValue: "",
+	searchOption: "title",
+	page: 1
 };

@@ -25,6 +25,7 @@
 					<input
 						ref="searchInput"
 						v-model="state.searchValue"
+						ref="serachInput"
 						@keyup.enter="roomSearch()"
 						type="text"
 						id="party-room-search"
@@ -62,7 +63,7 @@
 						내용
 					</button>
 					<button
-						@click="changeOption('hastag')"
+						@click="changeOption('hashtag')"
 						class="rounded-full w-32 h-10 mt-2 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100"
 						type="button"
 					>
@@ -121,6 +122,7 @@ import { useRouter } from 'vue-router';
 import SignupModal from '@/teleport/signup-modal.vue';
 import LoginModal from '@/teleport/login-modal.vue';
 import ConferenceCreateModal from '@/teleport/conference-create-modal.vue';
+import Swal from 'sweetalert2';
 
 export default {
 	name: 'main-header',
@@ -136,11 +138,12 @@ export default {
 		const searchInput = ref(null);
 		const signupModal = ref(null);
 		const loginModal = ref(null);
+		const searchInput = ref(null);
 		const conferenceCreateModal = ref(null);
 		const state = reactive({
 			loginState: computed(() => store.getters['auth/getLoginState']),
-			searchValue: '', // 현재 검색 키워드
-			searchOption: 'title', // 검색 필터링 조건
+			searchValue: '',
+			searchOption: 'title',
 		});
 
 		const clickLogin = () => {
@@ -153,6 +156,19 @@ export default {
 			localStorage.removeItem('access_token');
 			store.commit('auth/setLoginState', false);
 			router.push({ name: 'Home' });
+
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top',
+				showConfirmButton: false,
+				timer: 1500,
+				timerProgressBar: true,
+			});
+
+			Toast.fire({
+				icon: 'success',
+				title: '로그아웃되었습니다.',
+			});
 		};
 
 		const clickSignup = () => {
@@ -170,11 +186,11 @@ export default {
 		// 검색 필터링 조건 변경
 		const changeOption = option => {
 			state.searchOption = option;
-			console.log(option);
-			// 해시태그 조건 선택 시 키워드 앞에 해시태그 추가
-			if (option === 'hastag') {
-				// 현재 입력된 내용 공백제거
-				state.searchValue = state.searchValue.replace(/ /g, '');
+			console.log(state.searchOption);
+
+			if (option === 'hashtag') {
+				// 이미 입력된 내용의 공백을 ' #'으로 치환
+				state.searchValue = state.searchValue.replace(/ /g, ' #');
 
 				if (state.searchValue.length !== 0) {
 					if (state.searchValue.charAt(0) !== '#')
@@ -184,18 +200,19 @@ export default {
 					// 입력된 내용이 없으면 '#'로 시작
 					state.searchValue += '#';
 				}
-				searchInput.value.focus();
 			}
 		};
 
 		// 파티룸 검색 시 백엔드 요청(키워드 배열 형태로 요청)
 		const roomSearch = () => {
-			console.log(state.searchValue);
+			if (state.searchOption === 'hashtag') {
+				state.searchValue = state.searchValue.replace(/ /g, '');
+			}
+			store.commit('root/setSearchValue', state.searchValue);
+			store.commit('root/setSearchOption', state.searchOption);
+			store.commit('root/setPage', 1);
 			store
-				.dispatch('root/roomSearch', {
-					include: state.searchOption,
-					word: state.searchValue,
-				})
+				.dispatch('root/requestRoomList')
 				.then(res => {
 					store.commit('root/setRoomList', res.data.contents.content);
 				})
