@@ -13,14 +13,14 @@
 				ref="roomSidebar"
 			></room-sidebar>
 			<!-- 위치는 나중에 옮길 예정 -->
-			<div id="session" class="w-full" v-if="session">
+			<div id="session" class="w-full pl-32 pr-80" v-if="session">
 				<div id="session-header">
 					<div class="mx-auto">
 						<timer @startCountdown="startCountdown" ref="timer"></timer>
 					</div>
 				</div>
-				<!-- 컨텐츠가 없을 경우 표시되는 화면 -->
-				<div v-if="!isWhiteboardOpen">
+				<!-- 컨텐츠가 없는 경우 -->
+				<div v-show="!isWhiteboardOpen && !isRouletteOpen">
 					<div
 						v-if="currentUserCount == 0"
 						id="video-container-1"
@@ -74,29 +74,36 @@
 						/>
 					</div>
 				</div>
-				<div v-else-if="isWhiteboardOpen" class="grid grid-rows-4">
-					<div class="grid grid-cols-4 row-span-1">
+				<!-- 컨텐츠(룰렛 / 화이트보드)를 실행중인 경우 -->
+				<div class="grid grid-rows-4">
+					<div
+						class="grid grid-cols-4 row-span-1 p-3"
+						v-show="isWhiteboardOpen || isRouletteOpen"
+					>
 						<user-video
-							class="col-span-1 max-h-48"
+							class="col-span-1 max-h-48 p-3"
 							:stream-manager="publisher"
 						/>
 						<user-video
-							class="col-span-1 max-h-48"
+							class="col-span-1 max-h-48 p-3"
 							v-for="sub in subscribers"
 							:key="sub.stream.connection.connectionId"
 							:stream-manager="sub"
 						/>
 					</div>
+					<!-- 화이트보드 컴포넌트 (실행시에만 show) -->
 					<whiteboard
-						class="row-span-3 justify-center"
+						v-show="isWhiteboardOpen"
+						class="row-span-3 justify-center items-center mb-16"
 						@send-whiteboard-signal="sendWhiteboardSignal"
 						@send-painting-signal="sendPaintingSignal"
 						@close-whiteboard="closeWhiteboard"
 						ref="whiteboard"
 					></whiteboard>
-					<!-- 룰렛 컴포넌트(실행시에만 show) -->
+					<!-- 룰렛 컴포넌트 (실행시에만 show) -->
 					<roulette
 						v-show="isRouletteOpen"
+						class="row-span-3 justify-center items-center mb-16"
 						ref="apiRequest"
 						@closeRoulette="closeRoulette"
 					></roulette>
