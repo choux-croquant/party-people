@@ -96,11 +96,11 @@
 
 <style>
 .h-700 {
-	height: 700px;
+	height: 600px;
 }
 
 .canvas {
-	width: 700px;
+	width: 1000px;
 	border-radius: 15px;
 	box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
@@ -137,13 +137,13 @@ export default {
 			const eraser = document.querySelector('#eraser');
 
 			const INITIAL_COLOR = '#2c2c2c';
-			const CANVAS_SIZE = 700;
+			const CANVAS_SIZE = 600;
 
-			state.canvas.width = CANVAS_SIZE;
+			state.canvas.width = 1000;
 			state.canvas.height = CANVAS_SIZE;
 
 			state.ctx.fillStyle = 'white';
-			state.ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+			state.ctx.fillRect(0, 0, 1200, CANVAS_SIZE);
 			state.ctx.strokeStyle = INITIAL_COLOR;
 			state.ctx.lineWidth = 2.5;
 			state.painting = false;
@@ -259,7 +259,7 @@ export default {
 		// 화이트보드 초기화 (자기 화면에만 적용)
 		const resetWhiteboard = () => {
 			console.log('asdf');
-			state.ctx.fillRect(0, 0, 700, 700);
+			state.ctx.fillRect(0, 0, 1000, 600);
 		};
 
 		return {

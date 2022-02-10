@@ -1,4 +1,3 @@
-// 회원 가입 모달 컴포넌트
 <template>
 	<base-modal ref="baseModal">
 		<div class="flex justify-center">
