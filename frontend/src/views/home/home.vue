@@ -125,15 +125,6 @@ export default {
       });
     };
 
-		const clickConference = function (id) {
-			router.push({
-				name: 'ConferenceDetail',
-				params: {
-					conferenceId: id,
-				},
-			});
-		};
-
 		const handleClick = id => {
 			store
 				.dispatch('root/roomLinkEntry', id)
