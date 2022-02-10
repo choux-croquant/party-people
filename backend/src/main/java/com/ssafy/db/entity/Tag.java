@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -15,12 +16,13 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@ToString
 public class Tag extends BaseEntity{
     private String tagName;
 
-    @OneToMany(mappedBy = "tag")
-    private List<UserTag> userTags;
-
-    @OneToMany(mappedBy = "tag")
-    private List<RoomTag> roomTags;
+//    @OneToMany(mappedBy = "tag")
+//    private List<UserTag> userTags;
+//
+//    @OneToMany(mappedBy = "tag")
+//    private List<RoomTag> roomTags;
 }

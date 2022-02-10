@@ -45,7 +45,7 @@ export async function requestRoomUserList({ state }, payload) {
 
 export function roomSearch({ state }, payload) {
 	console.log('roomSearch', state, payload);
-	const url = `/list/roomSearch?include=${payload.include}&word=${payload.word}`;
+	const url = `/list/roomsearch?include=${payload.include}&word=${payload.word}`;
 
 	return backAxios.get(url);
 }

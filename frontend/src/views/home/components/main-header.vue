@@ -21,9 +21,10 @@
 							></path>
 						</svg>
 					</div>
+					<!-- TODO : 검색 필터링 조건이 hashtag이고 띄어쓰기, 엔터, # 입력 시 현재 value를 list에 추가하여 list를 axios 요청보내도록 -->
 					<input
+						ref="searchInput"
 						v-model="state.searchValue"
-						ref="serachInput"
 						@keyup.enter="roomSearch()"
 						type="text"
 						id="party-room-search"
@@ -133,9 +134,9 @@ export default {
 	setup() {
 		const store = useStore();
 		const router = useRouter();
+		const searchInput = ref(null);
 		const signupModal = ref(null);
 		const loginModal = ref(null);
-		const searchInput = ref(null);
 		const conferenceCreateModal = ref(null);
 		const state = reactive({
 			loginState: computed(() => store.getters['auth/getLoginState']),
@@ -180,8 +181,8 @@ export default {
 			conferenceCreateModal.value.open();
 		};
 
+		// 검색 필터링 조건 변경
 		const changeOption = option => {
-			console.log(option);
 			state.searchOption = option;
 			console.log(state.searchOption);
 
@@ -200,6 +201,7 @@ export default {
 			}
 		};
 
+		// 파티룸 검색 시 백엔드 요청(키워드 배열 형태로 요청)
 		const roomSearch = () => {
 			if (state.searchOption === 'hashtag') {
 				state.searchValue = state.searchValue.replace(/ /g, '');
