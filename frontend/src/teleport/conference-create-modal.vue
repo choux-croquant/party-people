@@ -185,7 +185,7 @@ textarea:focus {
 <script>
 import { reactive, ref } from 'vue';
 import BaseModal from './base-modal.vue';
-// import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 export default {
@@ -194,7 +194,7 @@ export default {
 		BaseModal,
 	},
 	setup() {
-		// const router = useRouter()
+		const router = useRouter();
 		const store = useStore();
 		const baseModal = ref(null);
 
@@ -206,7 +206,6 @@ export default {
 			thumbnailImg: null,
 			fileName: '',
 		});
-		// const thumbnailUrl = ref(null)
 
 		const open = () => {
 			console.log('rcopen');
@@ -222,34 +221,49 @@ export default {
 		};
 
 		const createRoom = () => {
-			// thumbnailImg = document.getElementById("thumbnail").files[0]
 			const room = {
 				capacity: state.capacity,
 				description: state.description,
 				password: state.password,
 				title: state.title,
 			};
-
+			// 방 생성 시 필요한 데이터를 form 형태로 전달
 			const roomData = new FormData();
 			roomData.append('thumbnail', state.thumbnailImg);
 			roomData.append(
 				'room',
 				new Blob([JSON.stringify(room)], { type: 'application/json' }),
 			);
-
+			// createRoom을 비동기 호출한 뒤 바로 passwordConfirm도 호출하여 생성과 동시에 입장
 			store
 				.dispatch('root/createRoom', roomData)
 				.then(res => {
-					console.log('요청은 성공');
 					console.log(res);
-					// router.push({ name: 'ConferenceDetail' })
+					store
+						.dispatch('root/passwordConfirm', {
+							roomId: res.data.id,
+							password: state.password,
+						})
+						.then(() => {
+							console.log(res);
+							state.capacity = '';
+							state.description = '';
+							state.password = '';
+							state.title = '';
+							state.thumbnailImg = null;
+							state.fileName = '';
+							router.push({
+								name: 'ConferenceDetail',
+								params: {
+									conferenceId: res.data.id,
+									userName: store.getters['auth/getUserName'],
+								},
+							});
+						})
+						.catch(err => {
+							console.log(err);
+						});
 					close();
-					state.capacity = '';
-					state.description = '';
-					state.password = '';
-					state.title = '';
-					state.thumbnailImg = null;
-					state.fileName = '';
 				})
 				.catch(err => {
 					console.log('실패');
