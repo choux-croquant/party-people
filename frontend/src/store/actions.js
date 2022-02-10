@@ -11,17 +11,18 @@ const ovAxios = $axios.create({
 	},
 });
 
-export function requestRoomList({ state }, page) {
-	console.log('requestRoomList', state, page);
+export function requestRoomList({ state }) {
+	console.log('requestRoomList', state);
+	if(state.searchValue == null) state.searchValue = ""
 	const url = `/list/roomsearch`;
 	
 	return new Promise((resolve, reject) => {
 		backAxios.get(url, {
 			params: {
-				page: page,
+				page: state.page,
 				size: 6,
-				include: state.roomSearch.include,
-				word: state.roomSearch.word
+				word: state.searchValue,
+				include: state.searchOption
 			}
 		})
 		.then(res => resolve(res))
