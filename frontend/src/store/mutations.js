@@ -19,9 +19,9 @@ export function setTimer(state, timerTime) {
 	state.timerTime = timerTime;
 }
 
-export function pushRoomUserList(state, roomUserList) {
+export function setRoomUserList(state, roomUserList) {
 	console.log(roomUserList);
-	state.roomUserList.push(roomUserList);
+	state.roomUserList = roomUserList;
 }
 
 export function setRouletteSignalData(state, rouletteSignalData) {
