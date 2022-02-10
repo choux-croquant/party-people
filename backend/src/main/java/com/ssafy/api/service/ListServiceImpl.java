@@ -64,7 +64,8 @@ public class ListServiceImpl implements ListService {
 				List<Room> roomContainingHashtags = new ArrayList<>();
 				int size = hashtags.length;
 				for (Map.Entry<Room, Integer> entry : roomTagMap.entrySet()) {
-					if (entry.getValue() == size) roomContainingHashtags.add(entry.getKey());
+					// 종료된 파티룸 제외
+					if (entry.getValue() == size && entry.getKey().getEndTime() == null) roomContainingHashtags.add(entry.getKey());
 				}
 
 				roomList = new PageImpl<>(roomContainingHashtags, sort, roomContainingHashtags.size());
