@@ -24,7 +24,7 @@
 						</button>
 					</div>
 					<div class="text-center mb-5">
-						<p>채팅방을 나가시겠습니까?</p>
+						<p>파티룸에서 나가시겠습니까?</p>
 					</div>
 					<div class="flex items-center justify-evenly">
 						<button
