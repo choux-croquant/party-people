@@ -7,14 +7,21 @@ export function setRoomList(state, roomList) {
 	state.roomList = roomList;
 }
 
+export function pushRoomList(state, roomList) {
+	console.log(roomList);
+	roomList.forEach((room) => {
+		state.roomList.push(room);
+	})
+}
+
 export function setTimer(state, timerTime) {
 	console.log(timerTime);
 	state.timerTime = timerTime;
 }
 
-export function setRoomUserList(state, roomUserList) {
+export function pushRoomUserList(state, roomUserList) {
 	console.log(roomUserList);
-	state.roomUserList = roomUserList;
+	state.roomUserList.push(roomUserList);
 }
 
 export function setRouletteSignalData(state, rouletteSignalData) {
