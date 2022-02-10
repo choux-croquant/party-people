@@ -25,7 +25,6 @@
 					<input
 						ref="searchInput"
 						v-model="state.searchValue"
-						ref="serachInput"
 						@keyup.enter="roomSearch()"
 						type="text"
 						id="party-room-search"
@@ -138,7 +137,6 @@ export default {
 		const searchInput = ref(null);
 		const signupModal = ref(null);
 		const loginModal = ref(null);
-		const searchInput = ref(null);
 		const conferenceCreateModal = ref(null);
 		const state = reactive({
 			loginState: computed(() => store.getters['auth/getLoginState']),
