@@ -421,7 +421,7 @@ import videoCustomizeModal from '@/teleport/video-customize-modal.vue';
 import themeCustomizeModal from '@/teleport/theme-customize-modal.vue';
 import timerCreateModal from '@/teleport/timer-create-modal.vue';
 import rouletteCreateModal from '@/teleport/roulette-create-modal';
-// import { reactive } from 'vue'
+import Swal from 'sweetalert2';
 
 export default {
 	name: 'room-sidebar',
@@ -577,10 +577,21 @@ export default {
 			document.body.appendChild(t);
 			t.value = window.document.location.href; // 현재 접속 중인 url
 			t.select();
-			document.execCommand('copy');
+			document.execCommand('copy'); // url 복사
 			document.body.removeChild(t);
 
-			console.log('url 복사 완료!');
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-start',
+				showConfirmButton: false,
+				timer: 1500,
+				timerProgressBar: true,
+			});
+
+			Toast.fire({
+				icon: 'success',
+				title: '링크가 복사되었습니다.',
+			});
 		},
 		startVote(voteInfo) {
 			this.$refs.voteCreateModal.startVote(voteInfo);

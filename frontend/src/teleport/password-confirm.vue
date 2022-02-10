@@ -65,6 +65,7 @@ import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import BaseModal from './base-modal.vue';
 import { useStore } from 'vuex';
+import Swal from 'sweetalert2';
 
 export default {
 	name: 'PasswordConfirm',
@@ -108,6 +109,21 @@ export default {
 					});
 				})
 				.catch(err => {
+					// 403 Forbidden Error => 비밀번호 오류
+					if (err.response.status === 403) {
+						const Toast = Swal.mixin({
+							toast: true,
+							position: 'top',
+							showConfirmButton: false,
+							timer: 2000,
+							timerProgressBar: true,
+						});
+
+						Toast.fire({
+							icon: 'error',
+							title: '비밀번호를 다시 확인해주세요.',
+						});
+					}
 					console.log(err);
 				});
 		};
