@@ -577,21 +577,21 @@ export default {
 			document.body.appendChild(t);
 			t.value = window.document.location.href; // 현재 접속 중인 url
 			t.select();
-			document.execCommand('copy');  // url 복사
+			document.execCommand('copy'); // url 복사
 			document.body.removeChild(t);
 
 			const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-start',
-        showConfirmButton: false,
-        timer: 1500,
-        timerProgressBar: true,
-			})
+				toast: true,
+				position: 'top-start',
+				showConfirmButton: false,
+				timer: 1500,
+				timerProgressBar: true,
+			});
 
-      Toast.fire({
-        icon: 'success',
-        title: '링크가 복사되었습니다.'
-      })
+			Toast.fire({
+				icon: 'success',
+				title: '링크가 복사되었습니다.',
+			});
 		},
 		startVote(voteInfo) {
 			this.$refs.voteCreateModal.startVote(voteInfo);
