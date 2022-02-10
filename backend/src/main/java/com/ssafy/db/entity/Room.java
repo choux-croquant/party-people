@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.Entity;
@@ -18,6 +19,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@ToString
 @DynamicInsert
 public class Room extends BaseEntity{
     private String title;
