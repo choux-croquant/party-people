@@ -213,7 +213,7 @@ export default {
 						return acc;
 					}, []);
 
-					store.commit('root/setRoomUserList', roomUserList);
+					store.commit('root/pushRoomUserList', roomUserList);
 				})
 				.catch(err => {
 					console.log('실패');
