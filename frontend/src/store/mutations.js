@@ -41,3 +41,18 @@ export function setVoteResult(state, voteResult) {
 	console.log(voteResult);
 	state.voteResult = voteResult;
 }
+
+export function setPage(state, page) {
+	console.log(page)
+	state.page = page
+}
+
+export function setSearchValue (state, searchValue) {
+	console.log(searchValue)
+	state.searchValue = searchValue
+}
+
+export function setSearchOption (state, searchOption) {
+	console.log(searchOption)
+	state.searchOption = searchOption
+}

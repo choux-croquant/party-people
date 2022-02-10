@@ -62,55 +62,68 @@ export default {
 		PasswordConfirm,
 	},
 
-	setup() {
-		const router = useRouter();
-		const store = useStore();
-		const passwordConfirmModal = ref(null);
-		const state = reactive({
-			page: 1,
-			roomList: computed(() => store.getters['root/getRoomList']),
+  setup() {
+    const router = useRouter();
+    const store = useStore();
+    const passwordConfirmModal = ref(null);
+    const state = reactive({
+      roomList: computed(() => store.getters["root/getRoomList"]),
 			noResult: false,
 			message: '',
 			listLoading: false,
 			lastPage: false,
 		});
 
-		onBeforeMount(() => {
-			store
-				.dispatch('root/requestRoomList', state.page)
-				.then(res => {
-					store.commit('root/setRoomList', res.data.contents.content);
-				})
-				.catch(err => {
-					console.log(err);
-				});
-		});
+    onBeforeMount(() => {
+			store.commit("root/setSearchValue", "")
+			store.commit("root/setSearchOption", "title")
+			store.commit("root/setPage", 1)
+      store
+        .dispatch("root/requestRoomList")
+        .then((res) => {
+          store.commit("root/setRoomList", res.data.contents.content);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
 
-		// 백엔드에 axios 요청 보내서 응답 받아올 부분
-		const infiniteHandler = () => {
-			if (state.listLoading || state.lastPage) return;
-			state.listLoading = true;
-			store
-				.dispatch('root/requestRoomList', state.page)
-				.then(res => {
-					if (!res.data.contents.empty) {
-						console.log('data : ', res.data.contents);
-						store.commit('root/pushRoomList', res.data.contents.content);
-						console.log('roomlist : ', state.roomList);
-						state.page++;
-						state.noResult = false;
-						state.lastPage = res.data.contents.last;
-					} else {
-						state.noResult = true;
-						state.message = 'No result found';
+    // 백엔드에 axios 요청 보내서 응답 받아올 부분
+    const infiniteHandler = () => {
+			if(state.listLoading) return
+			state.listLoading = true
+			var page = store.getters["root/getPage"]
+			store.commit("root/setPage", page + 1)
+      store
+        .dispatch("root/requestRoomList")
+        .then((res) => {
+					if(!res.data.contents.empty) {
+						console.log('data : ', res.data.contents)
+						store.commit("root/pushRoomList", res.data.contents.content);
+						console.log('roomlist : ', state.roomList)
+						state.noResult = false
 					}
-					state.listLoading = false;
-				})
-				.catch(err => {
-					console.log(err);
-					state.listLoading = false;
-				});
-		};
+					else {
+						state.noResult = true
+						state.message = "No result found"
+						store.commit("root/setPage", page)
+					}
+					state.listLoading = false
+        })
+        .catch((err) => {
+          console.log(err);
+					state.listLoading = false
+        });
+    };
+
+    const clickConference = function (id) {
+      router.push({
+        name: "ConferenceDetail",
+        params: {
+          conferenceId: id,
+        },
+      });
+    };
 
 		const clickConference = function (id) {
 			router.push({
