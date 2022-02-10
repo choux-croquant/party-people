@@ -40,10 +40,6 @@ export default {
 		{ id: 2, title: '파티룸 2번' },
 		{ id: 3, title: '파티룸 3번' },
 	],
-	roomSearch: {
-		include: 'title',
-		word: '',
-	},
 	timerTime: {
 		min: null,
 		sec: null,
@@ -59,4 +55,7 @@ export default {
 		winner: null,
 	},
 	roomId: null,
+	searchValue: "",
+	searchOption: "title",
+	page: 1
 };
