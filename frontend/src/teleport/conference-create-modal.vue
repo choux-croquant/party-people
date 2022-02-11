@@ -191,6 +191,7 @@ import { reactive, ref, computed } from 'vue';
 import BaseModal from './base-modal.vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import Swal from 'sweetalert2';
 
 export default {
 	name: 'ConferenceCreateModal',
@@ -230,9 +231,9 @@ export default {
 			state.hashtag = state.hashtag.replace(/ /g, '');
 			if (state.capacity > 8) {
 				state.capacity = 8;
-				state.capacityErr = true;
+				// state.capacityErr = true;
 			} else {
-				state.capacityErr = false;
+				// state.capacityErr = false;
 			}
 			const room = {
 				capacity: state.capacity,
@@ -276,6 +277,18 @@ export default {
 									userName: store.getters['auth/getUserName'],
 								},
 							});
+							const Toast = Swal.mixin({
+								toast: true,
+								position: 'top',
+								showConfirmButton: false,
+								timer: 1500,
+								timerProgressBar: true,
+							});
+
+							Toast.fire({
+								icon: 'success',
+								title: '이제 파티를 시작해보세요!',
+							});
 						})
 						.catch(err => {
 							console.log(err);
@@ -285,6 +298,22 @@ export default {
 				.catch(err => {
 					console.log('실패');
 					console.log(err);
+					const Toast = Swal.mixin({
+						toast: true,
+						position: 'top',
+						showConfirmButton: false,
+						timer: 1500,
+						timerProgressBar: true,
+						didOpen: toast => {
+							toast.addEventListener('mouseenter', Swal.stopTimer);
+							toast.addEventListener('mouseleave', Swal.resumeTimer);
+						},
+					});
+
+					Toast.fire({
+						icon: 'error',
+						title: '파티룸 생성에 실패했습니다. 입력 값을 다시 확인해주세요.',
+					});
 				});
 		};
 
