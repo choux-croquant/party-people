@@ -49,23 +49,40 @@
 			:class="[state.isSidebarOpen ? 'max-w-lg' : 'max-w-0']"
 		>
 			<!-- 채팅 내용 -->
-			<ul class="border-2 h-4/5 w-5/6 border-main-100 p-4 overflow-y-auto">
+			<ul
+				class="border-2 h-4/5 w-5/6 border-main-100 p-4 overflow-y-auto"
+				id="chat-bar"
+			>
 				<li
 					class="flex flex-col mb-2"
 					v-for="(chat, idx) in state.chats"
 					:key="idx"
 				>
-					<div class="flex flex-row items-center">
-						<!-- TODO: 내가 보낸 채팅 다르게 표시하기 -->
-						<span class="text-main-100 text-md mr-2 font-bold">{{
-							chat.userId
-						}}</span>
-						<span class="text-tc-400 text-xs">{{ chat.time }}</span>
+					<!-- 내가 보낸 채팅인 경우 -->
+					<div v-if="chat.isMyMessage" class="border-r-2 border-sub-200 pr-2">
+						<div class="flex flex-row-reverse items-center">
+							<span class="text-sub-200 text-md ml-2 font-bold">Me</span>
+							<span class="text-tc-400 text-xs">{{ chat.time }}</span>
+						</div>
+						<div>
+							<p class="text-tc-300 text-sm break-all text-right">
+								{{ chat.content }}
+							</p>
+						</div>
 					</div>
-					<div>
-						<p class="text-tc-300 text-sm break-all text-left">
-							{{ chat.content }}
-						</p>
+					<!-- 다른 사람이 보낸 채팅인 경우 -->
+					<div v-else class="border-l-2 border-main-100 pl-2">
+						<div class="flex flex-row items-center">
+							<span class="text-main-100 text-md mr-2 font-bold">{{
+								chat.userId
+							}}</span>
+							<span class="text-tc-400 text-xs">{{ chat.time }}</span>
+						</div>
+						<div>
+							<p class="text-tc-300 text-sm break-all text-left">
+								{{ chat.content }}
+							</p>
+						</div>
 					</div>
 				</li>
 			</ul>
@@ -94,7 +111,7 @@
 				<textarea
 					v-model="state.message"
 					@keydown.enter="sendMessage"
-					class="message-box w-5/6 border-2 border-main-100 text-xs focus:border-main-100 focus:border-2"
+					class="w-5/6 border-2 border-main-100 text-xs focus:border-main-100 focus:border-2 resize-none"
 					cols=""
 					rows="2"
 				></textarea>
@@ -186,7 +203,7 @@ export default {
 			console.log(state.subscribers);
 		};
 
-		const addMessage = (messageData, isMyMessage, isPrivate) => {
+		const addMessage = async (messageData, isMyMessage, isPrivate) => {
 			let message = JSON.parse(messageData);
 
 			// 내가 보낸 메시지인 경우
@@ -199,11 +216,22 @@ export default {
 				message.content += ' (private)';
 			}
 
-			state.chats.push({
+			let chatBar = document.querySelector('#chat-bar');
+			let isScrollBottom =
+				chatBar.scrollHeight - chatBar.scrollTop <= chatBar.clientHeight + 2;
+
+			// await 키워드 => 새로운 채팅 메시지 추가 완료 후 스크롤바가 아래로 이동되도록 함.
+			await state.chats.push({
 				userId: message.sender,
 				time: message.time,
 				content: message.content,
+				isMyMessage: isMyMessage,
 			});
+
+			// 채팅 스크롤이 끝까지 내려가 있는 경우 => 스크롤바 맨 아래로 이동시키기
+			if (isScrollBottom) {
+				chatBar.scrollTo({ top: chatBar.scrollHeight, behavior: 'smooth' });
+			}
 
 			console.log('메시지 수신 완료');
 		};
