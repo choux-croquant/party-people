@@ -2,6 +2,7 @@ package com.ssafy.db.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,6 @@ import javax.persistence.ManyToOne;
 @Getter
 @Setter
 @NoArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class RoomTag extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "room_id")
@@ -28,6 +28,7 @@ public class RoomTag extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "tag_id")
+    @JsonManagedReference
     private Tag tag;
 
     public RoomTag(Room room, Tag tag) {
