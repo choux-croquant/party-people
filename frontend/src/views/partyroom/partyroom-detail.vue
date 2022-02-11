@@ -5,7 +5,7 @@
 				@sendRouletteSignal="sendRouletteSignal"
 				@startVote="startVote"
 				@sendVoteResult="sendVoteResult"
-				@open-whiteboard="openWhiteboard"
+				@toggle-whiteboard="toggleWhiteboard"
 				@stickerOverlay="applyStickerFilter"
 				@visualFilter="applyVisualFilter"
 				@textOverlay="applyTextFilter"
@@ -730,9 +730,9 @@ export default {
 		},
 
 		// 화이트보드 창 열기
-		openWhiteboard() {
-			console.log('open whiteboard');
-			this.isWhiteboardOpen = true;
+		toggleWhiteboard() {
+			console.log('toggle whiteboard');
+			this.isWhiteboardOpen = !this.isWhiteboardOpen;
 		},
 
 		// 화이트보드 창 닫기
