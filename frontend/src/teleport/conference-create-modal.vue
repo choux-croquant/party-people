@@ -58,6 +58,9 @@
 									required
 								/>
 							</div>
+							<p class="text-xs text-red-600" v-if="state.capacityErr">
+								* 최대 8명까지만 입장할 수 있어요.
+							</p>
 							<!-- 비밀번호 -->
 							<div
 								class="bg-tc-500 p-0 rounded-sm flex flex-row items-center border-tc-300 border-1"
@@ -184,7 +187,7 @@ textarea:focus {
 </style>
 
 <script>
-import { reactive, ref } from 'vue';
+import { reactive, ref, computed } from 'vue';
 import BaseModal from './base-modal.vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -207,6 +210,7 @@ export default {
 			thumbnailImg: null,
 			fileName: '',
 			hashtag: '',
+			capacityErr: computed(() => (state.capacity > 8 ? true : false)),
 		});
 
 		const open = () => {
@@ -224,6 +228,12 @@ export default {
 
 		const createRoom = () => {
 			state.hashtag = state.hashtag.replace(/ /g, '');
+			if (state.capacity > 8) {
+				state.capacity = 8;
+				state.capacityErr = true;
+			} else {
+				state.capacityErr = false;
+			}
 			const room = {
 				capacity: state.capacity,
 				description: state.description,
@@ -231,7 +241,7 @@ export default {
 				title: state.title,
 				hashtag: state.hashtag,
 			};
-			console.log('room : ', room)
+			console.log('room : ', room);
 			// 방 생성 시 필요한 데이터를 form 형태로 전달
 			const roomData = new FormData();
 			roomData.append('thumbnail', state.thumbnailImg);
@@ -258,6 +268,7 @@ export default {
 							state.thumbnailImg = null;
 							state.fileName = '';
 							state.hashtag = '';
+							state.capacityErr = false;
 							router.push({
 								name: 'ConferenceDetail',
 								params: {
