@@ -212,6 +212,7 @@ export default {
 			fileName: '',
 			hashtag: '',
 			capacityErr: computed(() => (state.capacity > 8 ? true : false)),
+			roomCreateErr: false,
 		});
 
 		const open = () => {
@@ -229,12 +230,13 @@ export default {
 
 		const createRoom = () => {
 			state.hashtag = state.hashtag.replace(/ /g, '');
-			if (state.capacity > 8) {
-				state.capacity = 8;
-				// state.capacityErr = true;
-			} else {
-				// state.capacityErr = false;
+
+			checkCreateValidation();
+
+			if (state.roomCreateErr) {
+				return popUpfailToast();
 			}
+
 			const room = {
 				capacity: state.capacity,
 				description: state.description,
@@ -255,6 +257,19 @@ export default {
 				.dispatch('root/createRoom', roomData)
 				.then(res => {
 					console.log(res);
+					const Toast = Swal.mixin({
+						toast: true,
+						position: 'top',
+						showConfirmButton: false,
+						timer: 1500,
+						timerProgressBar: true,
+					});
+
+					Toast.fire({
+						icon: 'success',
+						title: '이제 파티를 시작해보세요!',
+					});
+
 					store
 						.dispatch('root/passwordConfirm', {
 							roomId: res.data.id,
@@ -269,25 +284,13 @@ export default {
 							state.thumbnailImg = null;
 							state.fileName = '';
 							state.hashtag = '';
-							state.capacityErr = false;
+							state.roomCreateErr = false;
 							router.push({
 								name: 'ConferenceDetail',
 								params: {
 									conferenceId: res.data.id,
 									userName: store.getters['auth/getUserName'],
 								},
-							});
-							const Toast = Swal.mixin({
-								toast: true,
-								position: 'top',
-								showConfirmButton: false,
-								timer: 1500,
-								timerProgressBar: true,
-							});
-
-							Toast.fire({
-								icon: 'success',
-								title: '이제 파티를 시작해보세요!',
 							});
 						})
 						.catch(err => {
@@ -298,26 +301,52 @@ export default {
 				.catch(err => {
 					console.log('실패');
 					console.log(err);
-					const Toast = Swal.mixin({
-						toast: true,
-						position: 'top',
-						showConfirmButton: false,
-						timer: 1500,
-						timerProgressBar: true,
-						didOpen: toast => {
-							toast.addEventListener('mouseenter', Swal.stopTimer);
-							toast.addEventListener('mouseleave', Swal.resumeTimer);
-						},
-					});
-
-					Toast.fire({
-						icon: 'error',
-						title: '파티룸 생성에 실패했습니다. 입력 값을 다시 확인해주세요.',
-					});
+					popUpfailToast();
 				});
 		};
 
-		return { state, open, close, onUploadImage, createRoom, baseModal };
+		const checkCreateValidation = () => {
+			state.roomCreateErr = false;
+
+			if (state.capacity > 8) {
+				state.capacity = 8;
+				state.roomCreateErr = true;
+			}
+
+			if (state.title.length === 0 || state.title.length === null) {
+				state.roomCreateErr = true;
+			}
+		};
+
+		const popUpfailToast = () => {
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top',
+				showConfirmButton: false,
+				timer: 1500,
+				timerProgressBar: true,
+				didOpen: toast => {
+					toast.addEventListener('mouseenter', Swal.stopTimer);
+					toast.addEventListener('mouseleave', Swal.resumeTimer);
+				},
+			});
+
+			Toast.fire({
+				icon: 'error',
+				title: '파티룸 생성에 실패했습니다. 입력 값을 다시 확인해주세요.',
+			});
+		};
+
+		return {
+			state,
+			open,
+			close,
+			onUploadImage,
+			createRoom,
+			checkCreateValidation,
+			popUpfailToast,
+			baseModal,
+		};
 	},
 };
 </script>
