@@ -1,6 +1,5 @@
 package com.ssafy.db.repository;
 
-import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.db.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ public class RoomTagRepositorySupport extends QuerydslRepositorySupport {
     private final JPAQueryFactory jpaQueryFactory;
     private final EntityManager entityManager;
     private QRoomTag qRoomTag = QRoomTag.roomTag;
-    private QRoom qRoom = QRoom.room;
 
     public RoomTagRepositorySupport(JPAQueryFactory jpaQueryFactory, EntityManager entityManager) {
         super(RoomTag.class);
@@ -30,13 +28,13 @@ public class RoomTagRepositorySupport extends QuerydslRepositorySupport {
         this.entityManager = entityManager;
     }
 
-    public Page<Room> getRoomByTag(List<Tag> hashtags, Pageable sort) {
-        JPQLQuery<Room> query = jpaQueryFactory.select(qRoomTag.room).from(qRoomTag)
-                .where(qRoomTag.tag.in(hashtags))
-                .groupBy(qRoom)
-                .having(qRoomTag.tag.count().eq((long) hashtags.size()));
+    public Page<Room> getRoomTagByTagName(String[] hashtags, Pageable sort) {
+        List<Room> roomList = jpaQueryFactory.select(qRoomTag.room).from(qRoomTag)
+                .where(qRoomTag.tag.tagName.in(hashtags))
+                .groupBy(qRoomTag.room)
+                .having(qRoomTag.tag.count().eq((long) hashtags.length))
+                .fetch();
 
-        List<Room> roomList = getQuerydsl().applyPagination(sort, query).fetch();
-        return new PageImpl<>(roomList, sort, query.fetchCount());
+        return new PageImpl<>(roomList, sort, roomList.size());
     }
 }
