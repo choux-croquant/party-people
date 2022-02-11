@@ -35,6 +35,9 @@ public class RoomTagRepositorySupport extends QuerydslRepositorySupport {
                 .having(qRoomTag.tag.count().eq((long) hashtags.length))
                 .fetch();
 
-        return new PageImpl<>(roomList, sort, roomList.size());
+        int start = (int) sort.getOffset();
+        int end = (start + sort.getPageSize()) > roomList.size() ? roomList.size() : (start + sort.getPageSize());
+
+        return new PageImpl<>(roomList.subList(start, end), sort, roomList.size());
     }
 }
