@@ -15,7 +15,9 @@
 		<!-- 파티룸 정보 -->
 		<div class="px-5 py-4 flex flex-col h-28">
 			<div class="flex flex-row justify-between items-center">
-				<div class="border-l-2 border-sub-200 font-bold text-xl pl-1">
+				<div
+					class="border-l-2 border-sub-200 font-bold text-xl pl-1 room-title"
+				>
 					{{ room.title }}
 				</div>
 				<div class="inline px-1">
@@ -26,8 +28,6 @@
 			</div>
 			<p class="text-gray-700 mx-1 mt-3 text-sm card-description text-left">
 				{{ room.description }}
-				I just created this room to test the result when creating a room with
-				such a long, long, everlasting description.
 			</p>
 		</div>
 		<!-- 파티룸 태그 -->
@@ -75,6 +75,7 @@
 .room-title {
 	max-width: 200px;
 	overflow: hidden;
+	word-break: break-all;
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 1;
