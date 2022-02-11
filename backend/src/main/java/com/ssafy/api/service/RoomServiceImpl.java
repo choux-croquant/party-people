@@ -63,6 +63,7 @@ public class RoomServiceImpl implements RoomService {
     // tag 테이블에 태그를 저장하고 room_tag 테이블에 반영한다
     @Override
     public List<RoomTag> saveAndGetRoomTags(Room room, String tagString) {
+        if (tagString.length() == 0 || tagString == null) return null;
         String[] hashtags = tagString.substring(1).split("#");
         List<RoomTag> roomTagList = updateTags(room, hashtags);
         return roomTagRepository.saveAll(roomTagList);
@@ -74,7 +75,11 @@ public class RoomServiceImpl implements RoomService {
 
         for (String hashtag : hashtags) {
             Tag tag = tagRepository.findByTagName(hashtag);
-            if (tag == null) roomTagList.add(new RoomTag(room, tagRepository.save(tag)));
+            if (tag == null) {
+                Tag newTag = new Tag();
+                newTag.setTagName(hashtag);
+                roomTagList.add(new RoomTag(room, tagRepository.save(newTag)));
+            }
             else roomTagList.add(new RoomTag(room, tag));
         }
         return roomTagList;

@@ -1,7 +1,6 @@
 package com.ssafy.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +14,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Tag extends BaseEntity{
     private String tagName;
 
@@ -23,6 +21,7 @@ public class Tag extends BaseEntity{
     private List<UserTag> userTags;
 
     @OneToMany(mappedBy = "tag")
+    @JsonBackReference
     private List<RoomTag> roomTags;
 
     @Override

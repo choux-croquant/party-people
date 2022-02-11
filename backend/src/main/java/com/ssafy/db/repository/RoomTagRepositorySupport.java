@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 
@@ -30,11 +31,15 @@ public class RoomTagRepositorySupport extends QuerydslRepositorySupport {
 
     public Page<Room> getRoomTagByTagName(String[] hashtags, Pageable sort) {
         List<Room> roomList = jpaQueryFactory.select(qRoomTag.room).from(qRoomTag)
-                .where(qRoomTag.tag.tagName.in(hashtags))
+                .where(qRoomTag.tag.tagName.in(hashtags).and(qRoomTag.room.endTime.isNull()))
                 .groupBy(qRoomTag.room)
                 .having(qRoomTag.tag.count().eq((long) hashtags.length))
+                .orderBy(qRoomTag.room.id.desc())
                 .fetch();
 
-        return new PageImpl<>(roomList, sort, roomList.size());
+        int start = (int) sort.getOffset();
+        int end = (start + sort.getPageSize()) > roomList.size() ? roomList.size() : (start + sort.getPageSize());
+
+        return new PageImpl<>(roomList.subList(start, end), sort, roomList.size());
     }
 }

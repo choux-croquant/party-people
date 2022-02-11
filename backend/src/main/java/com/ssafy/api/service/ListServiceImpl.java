@@ -40,6 +40,7 @@ public class ListServiceImpl implements ListService {
 				roomList = roomTagRepositorySupport.getRoomTagByTagName(hashtags, sort);
 				break;
 		}
+
 		return roomList;
 	}
 }
