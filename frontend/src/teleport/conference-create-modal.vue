@@ -151,6 +151,7 @@
 					<!-- 태그 -->
 					<div class="w-full mt-5">
 						<input
+							v-model="state.hashtag"
 							type="text"
 							placeholder="태그입력"
 							class="text-tc-200 w-full p-2 rounded-sm"
@@ -205,6 +206,7 @@ export default {
 			title: '',
 			thumbnailImg: null,
 			fileName: '',
+			hashtag: '',
 		});
 
 		const open = () => {
@@ -221,12 +223,15 @@ export default {
 		};
 
 		const createRoom = () => {
+			state.hashtag = state.hashtag.replace(/ /g, '');
 			const room = {
 				capacity: state.capacity,
 				description: state.description,
 				password: state.password,
 				title: state.title,
+				hashtag: state.hashtag,
 			};
+			console.log('room : ', room)
 			// 방 생성 시 필요한 데이터를 form 형태로 전달
 			const roomData = new FormData();
 			roomData.append('thumbnail', state.thumbnailImg);
@@ -252,6 +257,7 @@ export default {
 							state.title = '';
 							state.thumbnailImg = null;
 							state.fileName = '';
+							state.hashtag = '';
 							router.push({
 								name: 'ConferenceDetail',
 								params: {

@@ -74,7 +74,11 @@ public class RoomServiceImpl implements RoomService {
 
         for (String hashtag : hashtags) {
             Tag tag = tagRepository.findByTagName(hashtag);
-            if (tag == null) roomTagList.add(new RoomTag(room, tagRepository.save(tag)));
+            if (tag == null) {
+                Tag newTag = new Tag();
+                newTag.setTagName(hashtag);
+                roomTagList.add(new RoomTag(room, tagRepository.save(newTag)));
+            }
             else roomTagList.add(new RoomTag(room, tag));
         }
         return roomTagList;
