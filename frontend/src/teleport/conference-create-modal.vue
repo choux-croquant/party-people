@@ -58,6 +58,9 @@
 									required
 								/>
 							</div>
+							<p class="text-xs text-red-600" v-if="state.capacityErr">
+								* 최대 8명까지만 입장할 수 있어요.
+							</p>
 							<!-- 비밀번호 -->
 							<div
 								class="bg-tc-500 p-0 rounded-sm flex flex-row items-center border-tc-300 border-1"
@@ -184,10 +187,11 @@ textarea:focus {
 </style>
 
 <script>
-import { reactive, ref } from 'vue';
+import { reactive, ref, computed } from 'vue';
 import BaseModal from './base-modal.vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import Swal from 'sweetalert2';
 
 export default {
 	name: 'ConferenceCreateModal',
@@ -207,6 +211,8 @@ export default {
 			thumbnailImg: null,
 			fileName: '',
 			hashtag: '',
+			capacityErr: computed(() => (state.capacity > 8 ? true : false)),
+			roomCreateErr: false,
 		});
 
 		const open = () => {
@@ -224,6 +230,13 @@ export default {
 
 		const createRoom = () => {
 			state.hashtag = state.hashtag.replace(/ /g, '');
+
+			checkCreateValidation();
+
+			if (state.roomCreateErr) {
+				return popUpfailToast();
+			}
+
 			const room = {
 				capacity: state.capacity,
 				description: state.description,
@@ -231,7 +244,7 @@ export default {
 				title: state.title,
 				hashtag: state.hashtag,
 			};
-			console.log('room : ', room)
+			console.log('room : ', room);
 			// 방 생성 시 필요한 데이터를 form 형태로 전달
 			const roomData = new FormData();
 			roomData.append('thumbnail', state.thumbnailImg);
@@ -244,6 +257,19 @@ export default {
 				.dispatch('root/createRoom', roomData)
 				.then(res => {
 					console.log(res);
+					const Toast = Swal.mixin({
+						toast: true,
+						position: 'top',
+						showConfirmButton: false,
+						timer: 1500,
+						timerProgressBar: true,
+					});
+
+					Toast.fire({
+						icon: 'success',
+						title: '이제 파티를 시작해보세요!',
+					});
+
 					store
 						.dispatch('root/passwordConfirm', {
 							roomId: res.data.id,
@@ -258,6 +284,7 @@ export default {
 							state.thumbnailImg = null;
 							state.fileName = '';
 							state.hashtag = '';
+							state.roomCreateErr = false;
 							router.push({
 								name: 'ConferenceDetail',
 								params: {
@@ -274,10 +301,56 @@ export default {
 				.catch(err => {
 					console.log('실패');
 					console.log(err);
+					popUpfailToast();
 				});
 		};
 
-		return { state, open, close, onUploadImage, createRoom, baseModal };
+		const checkCreateValidation = () => {
+			state.roomCreateErr = false;
+
+			if (state.capacity <= 0) {
+				state.roomCreateErr = true;
+			}
+
+			if (state.capacity > 8) {
+				state.capacity = 8;
+				state.roomCreateErr = true;
+			}
+
+			if (state.title.length === 0 || state.title.length === null) {
+				state.roomCreateErr = true;
+			}
+		};
+
+		const popUpfailToast = () => {
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top',
+				showConfirmButton: false,
+				timer: 1500,
+				timerProgressBar: true,
+				didOpen: toast => {
+					toast.addEventListener('mouseenter', Swal.stopTimer);
+					toast.addEventListener('mouseleave', Swal.resumeTimer);
+				},
+			});
+
+			Toast.fire({
+				icon: 'error',
+				title: '파티룸 생성에 실패했습니다. 입력 값을 다시 확인해주세요.',
+			});
+		};
+
+		return {
+			state,
+			open,
+			close,
+			onUploadImage,
+			createRoom,
+			checkCreateValidation,
+			popUpfailToast,
+			baseModal,
+		};
 	},
 };
 </script>
