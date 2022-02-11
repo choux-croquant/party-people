@@ -223,6 +223,7 @@ export default {
 		};
 
 		const createRoom = () => {
+			state.hashtag = state.hashtag.replace(/ /g, '');
 			const room = {
 				capacity: state.capacity,
 				description: state.description,
@@ -230,6 +231,7 @@ export default {
 				title: state.title,
 				hashtag: state.hashtag,
 			};
+			console.log('room : ', room)
 			// 방 생성 시 필요한 데이터를 form 형태로 전달
 			const roomData = new FormData();
 			roomData.append('thumbnail', state.thumbnailImg);
