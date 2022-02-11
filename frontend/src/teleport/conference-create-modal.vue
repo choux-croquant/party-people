@@ -308,6 +308,10 @@ export default {
 		const checkCreateValidation = () => {
 			state.roomCreateErr = false;
 
+			if (state.capacity <= 0) {
+				state.roomCreateErr = true;
+			}
+
 			if (state.capacity > 8) {
 				state.capacity = 8;
 				state.roomCreateErr = true;
