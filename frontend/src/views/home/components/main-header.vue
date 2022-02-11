@@ -38,6 +38,7 @@
 			<div class="inline-block flex-none relative w-20 ml-2">
 				<select
 					v-model="state.searchOption"
+					@change="changeOption"
 					class="pl-4 cursor-pointer w-24 font-bold px-3 text-md form-select rounded-md shadow-lg bg-main-200 text-tc-500 h-10 border-transparent focus:border-transparent focus:ring-0 appearance-none"
 				>
 					<option
@@ -172,23 +173,23 @@ export default {
 			conferenceCreateModal.value.open();
 		};
 
-		// 검색 필터링 조건 변경
-		const changeOption = option => {
-			state.searchOption = option;
-			console.log(state.searchOption);
+		// 검색 필터링 조건 변경시 실행되는 함수
+		const changeOption = () => {
+			console.log('선택된 옵션:', state.searchOption);
+			if (state.searchOption !== 'hashtag') {
+				return;
+			}
 
-			if (option === 'hashtag') {
-				// 이미 입력된 내용의 공백을 ' #'으로 치환
-				state.searchValue = state.searchValue.replace(/ /g, ' #');
+			// 이미 입력된 내용의 공백을 ' #'으로 치환
+			state.searchValue = state.searchValue.replace(/ /g, ' #');
 
-				if (state.searchValue.length !== 0) {
-					if (state.searchValue.charAt(0) !== '#')
-						// 이미 입력된 내용이 있고 '#'로 시작하지 않으면 공백제거하여 맨 앞에 '#' 붙임
-						state.searchValue = '#' + state.searchValue;
-				} else {
-					// 입력된 내용이 없으면 '#'로 시작
-					state.searchValue += '#';
-				}
+			if (state.searchValue.trimlength !== 0) {
+				if (state.searchValue.charAt(0) !== '#')
+					// 이미 입력된 내용이 있고 '#'로 시작하지 않으면 공백제거하여 맨 앞에 '#' 붙임
+					state.searchValue = '#' + state.searchValue;
+			} else {
+				// 입력된 내용이 없으면 '#'로 시작
+				state.searchValue += '#';
 			}
 		};
 
@@ -208,7 +209,12 @@ export default {
 				.catch(err => {
 					console.log(err);
 				});
-			state.searchValue = null;
+			// 해시태그 옵션이 선택된 경우, 검색 이후 다시 '#'으로 초기화
+			if (state.searchOption === 'hashtag') {
+				state.searchValue = '#';
+			} else {
+				state.searchValue = null;
+			}
 		};
 
 		return {
@@ -227,8 +233,4 @@ export default {
 	},
 };
 </script>
-<style>
-/* .dropdown:hover .dropdown-menu {
-	display: block;
-} */
-</style>
+<style></style>
