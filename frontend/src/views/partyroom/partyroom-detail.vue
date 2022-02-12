@@ -163,7 +163,7 @@ import roomBottombar from './components/room-bottombar.vue';
 import timer from './components/timer.vue';
 import Roulette from './components/roulette.vue';
 import Whiteboard from './components/whiteboard.vue';
-import Swal from 'sweetalert2';
+import { swal } from '@/assets/js/common';
 import { VueAgile } from 'vue-agile';
 
 const OPENVIDU_SERVER_URL = 'https://pparttypeople.kro.kr:4443';
@@ -355,18 +355,14 @@ export default {
 					});
 			});
 
-			const Toast = Swal.mixin({
-				toast: true,
-				position: 'top-right',
-				showConfirmButton: false,
-				timer: 1500,
-				timerProgressBar: true,
-			});
-
-			Toast.fire({
-				icon: 'success',
-				title: '파티룸에 입장하셨습니다.',
-			});
+			swal(
+				true,
+				'top-right',
+				1500,
+				'success',
+				'파티룸에 입장하셨습니다.',
+				null,
+			);
 
 			window.addEventListener('beforeunload', this.leaveSession);
 		},
@@ -386,18 +382,14 @@ export default {
 			window.removeEventListener('beforeUnmount', this.leaveSession);
 			this.router.push({ name: 'Home' });
 
-			const Toast = Swal.mixin({
-				toast: true,
-				position: 'top-right',
-				showConfirmButton: false,
-				timer: 1500,
-				timerProgressBar: true,
-			});
-
-			Toast.fire({
-				icon: 'success',
-				title: '파티룸에서 퇴장하셨습니다.',
-			});
+			swal(
+				true,
+				'top-right',
+				1500,
+				'success',
+				'파티룸에서 퇴장하셨습니다.',
+				null,
+			);
 		},
 
 		getToken(mySessionId) {

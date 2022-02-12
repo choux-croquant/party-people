@@ -114,7 +114,7 @@ import { useRouter } from 'vue-router';
 import SignupModal from '@/teleport/signup-modal.vue';
 import LoginModal from '@/teleport/login-modal.vue';
 import ConferenceCreateModal from '@/teleport/conference-create-modal.vue';
-import Swal from 'sweetalert2';
+import { swal } from '@/assets/js/common';
 
 export default {
 	name: 'main-header',
@@ -148,18 +148,7 @@ export default {
 			store.commit('auth/setLoginState', false);
 			router.push({ name: 'Home' });
 
-			const Toast = Swal.mixin({
-				toast: true,
-				position: 'top',
-				showConfirmButton: false,
-				timer: 1500,
-				timerProgressBar: true,
-			});
-
-			Toast.fire({
-				icon: 'success',
-				title: '로그아웃되었습니다.',
-			});
+			swal(true, 'top', 1500, 'success', '로그아웃되었습니다.', null);
 		};
 
 		const clickSignup = () => {

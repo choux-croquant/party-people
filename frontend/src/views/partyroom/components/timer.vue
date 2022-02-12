@@ -63,7 +63,7 @@
 <script>
 import { computed, reactive } from 'vue';
 import { useStore } from 'vuex';
-import Swal from 'sweetalert2';
+import { swal } from '@/assets/js/common';
 
 export default {
 	name: 'timer',
@@ -105,18 +105,7 @@ export default {
 			state.time.min = null;
 			state.time.sec = null;
 
-			const Toast = Swal.mixin({
-				toast: true,
-				position: 'top-right',
-				showConfirmButton: false,
-				timer: 1500,
-				timerProgressBar: true,
-			});
-
-			Toast.fire({
-				icon: 'info',
-				title: '타이머가 종료되었습니다.',
-			});
+			swal(true, 'top-right', 1500, 'info', '타이머가 종료되었습니다.', null);
 		};
 		const stopCountdown = () => {
 			state.counting = false;

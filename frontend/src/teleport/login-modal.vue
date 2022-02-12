@@ -75,7 +75,7 @@ import { reactive, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import BaseModal from './base-modal.vue';
-import Swal from 'sweetalert2';
+import { swal } from '@/assets/js/common';
 
 export default {
 	name: 'LoginModal',
@@ -117,38 +117,10 @@ export default {
 					state.loginErr = false;
 					router.push({ name: 'Home' });
 					close();
-
-					const Toast = Swal.mixin({
-						toast: true,
-						position: 'top',
-						showConfirmButton: false,
-						timer: 1500,
-						timerProgressBar: true,
-					});
-
-					Toast.fire({
-						icon: 'success',
-						title: '로그인에 성공했습니다.',
-					});
+					swal(true, 'top', 1500, 'success', '로그인에 성공했습니다.', null);
 				})
 				.catch(err => {
-					const Toast = Swal.mixin({
-						toast: true,
-						position: 'top',
-						showConfirmButton: false,
-						timer: 1500,
-						timerProgressBar: true,
-						didOpen: toast => {
-							toast.addEventListener('mouseenter', Swal.stopTimer);
-							toast.addEventListener('mouseleave', Swal.resumeTimer);
-						},
-					});
-
-					Toast.fire({
-						icon: 'error',
-						title: '로그인에 실패했습니다.',
-					});
-
+					swal(true, 'top', 1500, 'error', '로그인에 실패했습니다.', null);
 					state.loginErr = true;
 				});
 		};
