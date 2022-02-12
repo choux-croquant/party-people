@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -53,10 +55,11 @@ public class ListServiceImpl implements ListService {
 	void deleteCloseSession(Page<Room> roomList) {
 		for(Room room : roomList) {
 			List<Session> sessionList = room.getSessions();
-			for(Session session : sessionList) {
-				if(session.getEndTime() != null) {
-					sessionList.remove(session);
-				}
+
+			Iterator<Session> iter = sessionList.iterator();
+			while(iter.hasNext()) {
+				Session session = iter.next();
+				if(session.getEndTime() != null) iter.remove();
 			}
 		}
 	}
