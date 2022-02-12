@@ -1,10 +1,13 @@
 package com.ssafy.api.service;
 
 import com.ssafy.db.entity.Room;
+import com.ssafy.db.entity.Session;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 /**
@@ -41,6 +44,20 @@ public class ListServiceImpl implements ListService {
 				break;
 		}
 
+		deleteCloseSession(roomList); // 얕은 복사
 		return roomList;
+	}
+
+	// roomList 안에 있는 session 중에서 endTime 값이 있는(접속을 종료한) 것을 삭제하는 코드
+	// TODO: JPA 단에서 개선이 가능하다면 개선 시키기
+	void deleteCloseSession(Page<Room> roomList) {
+		for(Room room : roomList) {
+			List<Session> sessionList = room.getSessions();
+			for(Session session : sessionList) {
+				if(session.getEndTime() != null) {
+					sessionList.remove(session);
+				}
+			}
+		}
 	}
 }
