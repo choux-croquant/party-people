@@ -56,7 +56,7 @@ import Conference from "./components/conference.vue";
 import InfiniteScroll from "infinite-loading-vue3";
 import PasswordConfirm from "@/teleport/password-confirm.vue";
 import LoginModal from "@/teleport/login-modal.vue";
-import Swal from "sweetalert2";
+import { swal } from '@/assets/js/common';
 
 export default {
   name: "Home",
@@ -139,19 +139,7 @@ export default {
       else curConnCnt = sessions.length;
 
       if (curConnCnt >= capacity) {
-        const Toast = Swal.mixin({
-          toast: true,
-          position: "top",
-          showConfirmButton: false,
-          timer: 2000,
-          timerProgressBar: true,
-        });
-
-        Toast.fire({
-          icon: "warning",
-          title: "파티 룸이 꽉 찼습니다.",
-        });
-
+        swal("top", 2000, "warning", "파티 룸이 꽉 찼습니다.");
         return;
       }
 
