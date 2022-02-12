@@ -174,7 +174,7 @@
 							type="button"
 							@click="rouletteStart"
 						>
-							룰렛시작
+							START
 						</button>
 					</div>
 				</form>
