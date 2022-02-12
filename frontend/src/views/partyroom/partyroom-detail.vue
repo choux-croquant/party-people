@@ -76,21 +76,24 @@
 				</div>
 				<!-- 컨텐츠(룰렛 / 화이트보드)를 실행중인 경우 -->
 				<div class="grid grid-rows-4">
-					<div
-						class="grid grid-cols-4 row-span-1 p-3"
+					<vue-agile
+						class="row-span-1 p-3"
+            :slides-to-show="3"
+            :infinite="false"
+            :nav-buttons="false"
 						v-show="isWhiteboardOpen || isRouletteOpen"
 					>
 						<user-video
-							class="col-span-1 max-h-48 p-3"
+							class="h-full slide max-h-48 p-3"
 							:stream-manager="publisher"
 						/>
 						<user-video
-							class="col-span-1 max-h-48 p-3"
+							class="h-full slide max-h-48 p-3"
 							v-for="sub in subscribers"
 							:key="sub.stream.connection.connectionId"
 							:stream-manager="sub"
 						/>
-					</div>
+					</vue-agile>
 					<!-- 화이트보드 컴포넌트 (실행시에만 show) -->
 					<whiteboard
 						v-show="isWhiteboardOpen"
@@ -108,11 +111,6 @@
 						@closeRoulette="closeRoulette"
 					></roulette>
 				</div>
-
-				<!-- Kurento faceOverlayFilter 동작버튼 -->
-				<button @click="applyKurentoFilter">Kurento apply Btn |</button>
-				<!-- Kurento GStreamerFilter 동작버튼 -->
-				<button @click="applyGStreamerFilter">Kurento TextOverlay Btn |</button>
 			</div>
 			<room-chat
 				@message="sendMessage"
@@ -165,6 +163,7 @@ import timer from './components/timer.vue';
 import Roulette from './components/roulette.vue';
 import Whiteboard from './components/whiteboard.vue';
 import Swal from 'sweetalert2';
+import { VueAgile } from 'vue-agile';
 
 const OPENVIDU_SERVER_URL = 'https://pparttypeople.kro.kr:4443';
 const OPENVIDU_SERVER_SECRET = 'a106ssafy0183';
@@ -178,6 +177,7 @@ export default {
 		roomBottombar,
 		Roulette,
 		Whiteboard,
+    VueAgile,
 	},
 	name: 'conference-detail',
 	props: {
