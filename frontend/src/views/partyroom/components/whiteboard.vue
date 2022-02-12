@@ -83,7 +83,7 @@
 					<!-- 초기화 버튼 -->
 					<button
 						class="bg-transparent hover:bg-sub-100 text-sub-100 text-sm font-semibold hover:text-tc-500 py-2 px-4 border border-sub-100 hover:border-transparent rounded"
-						@click="resetWhiteboard"
+						@click="onClickResetBtn"
 					>
 						Reset
 					</button>
@@ -260,9 +260,14 @@ export default {
 			emit('close-whiteboard');
 		};
 
-		// 화이트보드 초기화 (자기 화면에만 적용)
+		// 모든 참가자의 화이트보드 초기화 step 1
+		const onClickResetBtn = () => {
+			emit('send-reset-signal');
+			// state.ctx.fillRect(0, 0, 1000, 500);
+		};
+
+		// 모든 참가자의 화이트보드 초기화 step 4
 		const resetWhiteboard = () => {
-			console.log('asdf');
 			state.ctx.fillRect(0, 0, 1000, 500);
 		};
 
@@ -273,6 +278,7 @@ export default {
 			sendPaintingState,
 			addPaintingSignal,
 			closeWhiteboard,
+			onClickResetBtn,
 			resetWhiteboard,
 		};
 	},
