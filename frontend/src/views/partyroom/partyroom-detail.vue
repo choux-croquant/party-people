@@ -93,18 +93,18 @@
 					</div>
 					<!-- 화이트보드 컴포넌트 (실행시에만 show) -->
 					<whiteboard
+						ref="whiteboard"
 						v-show="isWhiteboardOpen"
 						class="row-span-3 justify-center items-center mb-16"
 						@send-whiteboard-signal="sendWhiteboardSignal"
 						@send-painting-signal="sendPaintingSignal"
 						@close-whiteboard="closeWhiteboard"
-						ref="whiteboard"
 					></whiteboard>
 					<!-- 룰렛 컴포넌트 (실행시에만 show) -->
 					<roulette
+						ref="roulette"
 						v-show="isRouletteOpen"
 						class="row-span-3 justify-center items-center mb-16"
-						ref="apiRequest"
 						@closeRoulette="closeRoulette"
 					></roulette>
 				</div>
@@ -115,8 +115,8 @@
 				<button @click="applyGStreamerFilter">Kurento TextOverlay Btn |</button>
 			</div>
 			<room-chat
-				@message="sendMessage"
 				ref="chat"
+				@message="sendMessage"
 				:subscribers="subscribers"
 			></room-chat>
 			<room-bottombar
@@ -271,8 +271,10 @@ export default {
 				this.rouletteTopic = JSON.parse(event.data).rouletteTopic;
 				// 룰렛 컴포넌트 show
 				this.isRouletteOpen = true;
+				// 사이드바 모달 열려있는 상태 설정
+				this.$refs.roomSidebar.state.isAnyModalOpen = true;
 				// 룰렛 애니메이션 실행
-				this.$refs.apiRequest.playRoulette();
+				this.$refs.roulette.playRoulette();
 			});
 
 			// 투표 signal 받기
@@ -638,6 +640,8 @@ export default {
 			this.$refs.chat.addMessage(JSON.stringify(messageData), false);
 			// 룰렛 컴포넌트 show 해제
 			this.isRouletteOpen = false;
+			// 사이드바 모달 열려있는 상태 해제
+			this.$refs.roomSidebar.state.isAnyModalOpen = false;
 		},
 
 		// Kurento faceOverlayFilter 적용한 스티커 필터
