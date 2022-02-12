@@ -63,6 +63,7 @@
 <script>
 import { computed, reactive } from 'vue';
 import { useStore } from 'vuex';
+import Swal from 'sweetalert2';
 
 export default {
 	name: 'timer',
@@ -93,11 +94,29 @@ export default {
 			});
 		};
 		const onCountdownEnd = () => {
-			let alarm = new Audio('https://t1.daumcdn.net/cfile/tistory/991DD6475CF6C09E07?original');
+			let alarm = new Audio(
+				'https://t1.daumcdn.net/cfile/tistory/991DD6475CF6C09E07?original',
+			);
 			// https://t1.daumcdn.net/cfile/tistory/99412B355CF6B93806?original
 			alarm.play();
 			state.counting = false;
-			console.log('완료');
+
+			// 타이머 시간 초기화
+			state.time.min = null;
+			state.time.sec = null;
+
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-right',
+				showConfirmButton: false,
+				timer: 1500,
+				timerProgressBar: true,
+			});
+
+			Toast.fire({
+				icon: 'info',
+				title: '타이머가 종료되었습니다.',
+			});
 		};
 		const stopCountdown = () => {
 			state.counting = false;

@@ -34,41 +34,33 @@
 				</div>
 			</div>
 
-			<div class="dropdown inline-block flex-none relative">
-				<button class="flex-none rounded-full shadow-lg w-10 h-10 bg-main-200">
-					<svg
-						class="fill-current text-tc-500 ml-3 h-4 w-4"
-						xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 20 20"
-					>
-						<path
-							d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
-						/>
-					</svg>
-				</button>
-				<ul class="dropdown-menu absolute hidden right-0 w-40 text-gray-700">
-					<button
-						@click="changeOption('title')"
-						class="rounded-full w-32 h-10 mt-2 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100"
-						type="button"
+			<!-- 검색 옵션 -->
+			<div class="inline-block flex-none relative w-20 ml-2">
+				<select
+					v-model="state.searchOption"
+					@change="changeOption"
+					class="pl-4 cursor-pointer w-24 font-bold px-3 text-md form-select rounded-md shadow-lg bg-main-200 text-tc-500 h-10 border-transparent focus:border-transparent focus:ring-0 appearance-none"
+				>
+					<option
+						class="w-24 h-16 font-bold bg-tc-500 text-main-100"
+						value="title"
+						selected="selected"
 					>
 						제목
-					</button>
-					<button
-						@click="changeOption('des')"
-						class="rounded-full w-32 h-10 mt-2 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100"
-						type="button"
+					</option>
+					<option
+						class="w-24 h-16 font-bold bg-tc-500 text-main-100"
+						value="des"
 					>
 						내용
-					</button>
-					<button
-						@click="changeOption('hashtag')"
-						class="rounded-full w-32 h-10 mt-2 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100"
-						type="button"
+					</option>
+					<option
+						class="w-24 h-16 font-bold bg-tc-500 text-main-100"
+						value="hashtag"
 					>
-						해시 태그
-					</button>
-				</ul>
+						태그
+					</option>
+				</select>
 			</div>
 
 			<div class="flex-none hidden md:block w-1/6"></div>
@@ -181,23 +173,23 @@ export default {
 			conferenceCreateModal.value.open();
 		};
 
-		// 검색 필터링 조건 변경
-		const changeOption = option => {
-			state.searchOption = option;
-			console.log(state.searchOption);
+		// 검색 필터링 조건 변경시 실행되는 함수
+		const changeOption = () => {
+			console.log('선택된 옵션:', state.searchOption);
+			if (state.searchOption !== 'hashtag') {
+				return;
+			}
 
-			if (option === 'hashtag') {
-				// 이미 입력된 내용의 공백을 ' #'으로 치환
-				state.searchValue = state.searchValue.replace(/ /g, ' #');
+			// 이미 입력된 내용의 공백을 ' #'으로 치환
+			state.searchValue = state.searchValue.replace(/ /g, ' #');
 
-				if (state.searchValue.length !== 0) {
-					if (state.searchValue.charAt(0) !== '#')
-						// 이미 입력된 내용이 있고 '#'로 시작하지 않으면 공백제거하여 맨 앞에 '#' 붙임
-						state.searchValue = '#' + state.searchValue;
-				} else {
-					// 입력된 내용이 없으면 '#'로 시작
-					state.searchValue += '#';
-				}
+			if (state.searchValue.trimlength !== 0) {
+				if (state.searchValue.charAt(0) !== '#')
+					// 이미 입력된 내용이 있고 '#'로 시작하지 않으면 공백제거하여 맨 앞에 '#' 붙임
+					state.searchValue = '#' + state.searchValue;
+			} else {
+				// 입력된 내용이 없으면 '#'로 시작
+				state.searchValue += '#';
 			}
 		};
 
@@ -217,7 +209,12 @@ export default {
 				.catch(err => {
 					console.log(err);
 				});
-			state.searchValue = null;
+			// 해시태그 옵션이 선택된 경우, 검색 이후 다시 '#'으로 초기화
+			if (state.searchOption === 'hashtag') {
+				state.searchValue = '#';
+			} else {
+				state.searchValue = null;
+			}
 		};
 
 		return {
@@ -236,8 +233,4 @@ export default {
 	},
 };
 </script>
-<style>
-.dropdown:hover .dropdown-menu {
-	display: block;
-}
-</style>
+<style></style>

@@ -464,7 +464,7 @@ export default {
 		};
 
 		const clickWhiteboardBtn = () => {
-			emit('open-whiteboard');
+			emit('toggle-whiteboard');
 			console.log('click whiteboard');
 		};
 

@@ -5,15 +5,15 @@
 				@sendRouletteSignal="sendRouletteSignal"
 				@startVote="startVote"
 				@sendVoteResult="sendVoteResult"
-				@open-whiteboard="openWhiteboard"
+				@toggle-whiteboard="toggleWhiteboard"
 				@stickerOverlay="applyStickerFilter"
 				@visualFilter="applyVisualFilter"
 				@textOverlay="applyTextFilter"
 				@filterOff="filterOff"
 				ref="roomSidebar"
 			></room-sidebar>
-			<!-- 위치는 나중에 옮길 예정 -->
 			<div id="session" class="w-full pl-32 pr-80" v-if="session">
+				<!-- 타이머 -->
 				<div id="session-header">
 					<div class="mx-auto">
 						<timer @startCountdown="startCountdown" ref="timer"></timer>
@@ -191,6 +191,7 @@ export default {
 	setup() {
 		const isRouletteOpen = ref(false);
 		const isWhiteboardOpen = ref(false);
+		// const isTimerOpen = ref(false);
 
 		return { isRouletteOpen, isWhiteboardOpen };
 	},
@@ -730,9 +731,9 @@ export default {
 		},
 
 		// 화이트보드 창 열기
-		openWhiteboard() {
-			console.log('open whiteboard');
-			this.isWhiteboardOpen = true;
+		toggleWhiteboard() {
+			console.log('toggle whiteboard');
+			this.isWhiteboardOpen = !this.isWhiteboardOpen;
 		},
 
 		// 화이트보드 창 닫기
