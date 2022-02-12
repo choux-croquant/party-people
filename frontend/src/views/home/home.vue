@@ -5,6 +5,7 @@
     <infinite-scroll
       @infinite-scroll="infiniteHandler"
       :noResult="state.noResult"
+      :message="state.message"
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
     >
       <conference
@@ -79,6 +80,7 @@ export default {
       message: "",
       listLoading: false,
       lastPage: false,
+      message: "마지막 페이지입니다."
     });
 
     onBeforeMount(() => {
@@ -111,7 +113,6 @@ export default {
             state.noResult = false;
           } else {
             state.noResult = true;
-            state.message = "No result found";
             store.commit("root/setPage", page);
           }
           state.listLoading = false;

@@ -26,6 +26,7 @@
 						ref="searchInput"
 						v-model="state.searchValue"
 						@keyup.enter="roomSearch()"
+						@keyup.space="addHash()"
 						type="text"
 						id="party-room-search"
 						class="block border-0 appearance-none rounded-full shadow-md h-10 p-2 pl-10 w-full text-tc-200 bg-main-300 sm:text-sm focus:outline-none focus:border-main-100 focus:ring-2 focus:ring-main-100"
@@ -193,6 +194,11 @@ export default {
 			}
 		};
 
+		const addHash = () => {
+			if (state.searchOption !== 'hashtag') return;
+			state.searchValue += '#';
+		}
+
 		// 파티룸 검색 시 백엔드 요청(키워드 배열 형태로 요청)
 		const roomSearch = () => {
 			if (state.searchOption === 'hashtag') {
@@ -228,6 +234,7 @@ export default {
 			createRoom,
 			clickLogout,
 			changeOption,
+			addHash,
 			roomSearch,
 		};
 	},
