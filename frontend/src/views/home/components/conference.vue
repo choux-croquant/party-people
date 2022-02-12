@@ -1,33 +1,48 @@
 // 파티 룸 카드 컴포넌트
 
 <template>
-  <div class="max-w-sm rounded-xl overflow-hidden shadow-lg conference-card">
-    <img class="w-full" :src="room.thumbnailUrl" alt="PartyRoom Thumbnail" />
-    <div class="px-6 py-4">
-      <div class="flex flex-row justify-between">
-        <span class="font-bold text-xl mb-2">{{ room.title }}</span>
-        <div class="inline">
-          <span class="rounded-full main-bg-color ml-3 px-3 py-1 text-white h-8"
-            >{{ curConnCnt }} / {{ room.capacity }}</span
-          >
+	<div
+		class="max-w-sm rounded-xl overflow-hidden shadow-lg conference-card h-96 w-80"
+	>
+		<!-- 파티룸 썸네일 -->
+		<div class="w-80 h-48">
+			<img
+				:src="room.thumbnailUrl"
+				class="object-cover w-80 h-48"
+				alt="PartyRoom Thumbnail"
+			/>
+		</div>
+		<!-- 파티룸 정보 -->
+		<div class="px-5 py-4 flex flex-col h-28">
+			<div class="flex flex-row justify-between items-center">
+				<div
+					class="border-l-2 border-sub-200 font-bold text-xl pl-1 room-title"
+				>
+					{{ room.title }}
+				</div>
+				<div class="inline px-1">
+					<span class="rounded-full main-bg-color ml-3 px-3 py-1 text-white h-8"
+						>{{ curConnCnt }} / {{ room.capacity }}</span
+					>
+				</div>
+			</div>
+			<p class="text-gray-700 mx-1 mt-3 text-sm card-description text-left">
+				{{ room.description }}
+			</p>
+		</div>
+		<!-- 파티룸 태그 -->
+		<div
+            class="h-20 px-6 py-2 flex flex-row items-center flex-wrap bg-gradient-to-r from-main-200 to-sub-200"
+        >
+			<span
+				v-for="tags in room.roomTags"
+				:key="tags.id"
+				class="inline-block partyroom-tag rounded-full px-3 py-1 text-xs shadow-md font-semibold text-white mr-2 mb-1"
+			>
+				#{{ tags.tag.tagName }}
+			</span>
         </div>
-      </div>
-      <p class="text-gray-700 text-base line-clamp-3 card-description">
-        {{ room.description }}
-      </p>
-    </div>
-    <div
-      class="px-6 pt-4 pb-2 flex flex-row flex-wrap bg-gradient-to-r from-main-200 to-sub-200"
-    >
-      <span
-        v-for="tags in room.roomTags"
-        :key="tags.id"
-        class="inline-block partyroom-tag rounded-full px-3 py-1 text-sm font-semibold text-white mr-2 mb-2"
-      >
-        #{{ tags.tag.tagName }}
-      </span>
-    </div>
-  </div>
+	</div>
 </template>
 
 <style>
@@ -39,20 +54,30 @@
   background-color: #ff95b5;
 }
 
-/* 3줄 넘어가면 말줄임 표시 */
+/* title => 1줄 넘어가면 말줄임 표시 */
+.room-title {
+	max-width: 200px;
+	overflow: hidden;
+	word-break: break-all;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 1;
+}
+
+/* description => 2줄 넘어가면 말줄임 표시 */
 .card-description {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
 }
 
 /* 테블릿, 모바일은 2줄 넘어가면 말줄임 표시 */
-@media (max-width: 1269px) {
-  .card-description {
-    -webkit-line-clamp: 2;
-  }
-}
+/* @media (max-width: 1269px) {
+	.card-description {
+		-webkit-line-clamp: 2;
+	}
+} */
 </style>
 
 <script>

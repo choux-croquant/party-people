@@ -1,15 +1,16 @@
 <template>
 	<main-header />
 
-	<div class="conference-list-wrap pl-0" style="overflow: auto">
+	<div class="conference-list-wrap" style="overflow: auto">
 		<infinite-scroll
 			@infinite-scroll="infiniteHandler"
 			:noResult="state.noResult"
+			class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
 		>
 			<conference
 				v-for="room in state.roomList"
 				:key="room.id"
-				class="conference-card m-5"
+				class="conference-card mx-auto my-6 place-content-center col-span-1 content-center"
 				@click="handleClick(room.id)"
 				:room="room"
 			/>
@@ -24,9 +25,9 @@
 	<password-confirm ref="passwordConfirmModal" />
 </template>
 <style>
-.conference-list-wrap {
-	max-height: calc(100% - 35px);
-}
+/* .conference-list-wrap {
+	max-height: calc(70%);
+} */
 
 @media (min-width: 701px) and (max-width: 1269px) {
 	.conference-list-wrap {
@@ -41,8 +42,6 @@
 }
 
 .conference-list-wrap .conference-card {
-	min-width: 335px;
-	max-width: 25%;
 	display: inline-block;
 	cursor: pointer;
 }
