@@ -154,7 +154,7 @@
 									:value="location.name"
 									:key="location.id"
 								>
-									{{ location.name }}
+									{{ location.value }}
 								</option>
 							</select>
 							<input
@@ -215,15 +215,15 @@ export default {
 			],
 
 			locations: [
-				{ id: 1, name: 'Top|Right' },
-				{ id: 2, name: 'Top|Center' },
-				{ id: 3, name: 'Top|Left' },
-				{ id: 4, name: 'Center|Right' },
-				{ id: 5, name: 'Center|Center' },
-				{ id: 6, name: 'Center|Left' },
-				{ id: 7, name: 'Bottom|Right' },
-				{ id: 8, name: 'Bottom|Center' },
-				{ id: 9, name: 'Bottom|Left' },
+				{ id: 1, name: 'Top|Right', value: '↗' },
+				{ id: 2, name: 'Top|Center', value: '↑' },
+				{ id: 3, name: 'Top|Left', value: '↖' },
+				{ id: 4, name: 'Center|Right', value: '→' },
+				{ id: 5, name: 'Center|Center', value: '○' },
+				{ id: 6, name: 'Center|Left', value: '←' },
+				{ id: 7, name: 'Bottom|Right', value: '↘' },
+				{ id: 8, name: 'Bottom|Center', value: '↓' },
+				{ id: 9, name: 'Bottom|Left', value: '↙' },
 			],
 
 			// 각 항목을 json 파일로 따로 저장하여 json파일 불러옴
@@ -239,9 +239,12 @@ export default {
 			},
 		});
 
+		// 모달 열기
 		const open = () => {
 			baseModal.value.openModal();
 		};
+
+		// 모달 닫기
 		const close = () => {
 			baseModal.value.closeModal();
 		};
@@ -253,6 +256,7 @@ export default {
 			);
 		};
 
+		// 스티커, 비주얼 필터 선택 시 종류를 클릭했는지 여부 검사
 		const clickVideoCustom = customObject => {
 			console.log('선택된 항목 : ' + customObject);
 			state.selectedCustom = customObject;
@@ -261,11 +265,12 @@ export default {
 
 		// 카테고리에 따라 파티룸 내부 함수 호출(emit)
 		const applyVideoCustom = () => {
-			if (state.selectedCustom != null && state.isClicked) {
+			var selected = state.selectedCategory;
+
+			if (customizeValidationCheck()) {
 				// 이전에 적용된 필터 해제 후 새롭게 적용
 				emit('filterOff');
 
-				var selected = state.selectedCategory;
 				console.log('apply 클릭 : ' + selected);
 
 				if (selected === '스티커') {
@@ -291,6 +296,41 @@ export default {
 			cancelVideoCustom();
 		};
 
+		// 커스텀 적용 여부 체크
+		const customizeValidationCheck = () => {
+			if (state.selectedCategory === '문구') {
+				// 문구 필터 선택 시
+				if (
+					// 문구가 입력된 경우만 필터 적용
+					state.textList.inputText.length > 0 &&
+					state.textList.inputText != null
+				) {
+					if (
+						// 문구 위치를 선택하지 않았다면 기본값('Top|Center')으로 설정
+						state.textList.location.length === 0 ||
+						state.textList.location === null
+					) {
+						state.textList.location = 'Top|Center';
+					}
+					if (
+						// 문구 폰트를 선택하지 않았다면 기본값('Cantarell')으로 설정
+						state.textList.font.length === 0 ||
+						state.textList.font === null
+					) {
+						state.textList.font = 'Cantarell';
+					}
+					return true;
+				} else {
+					// 문구가 입력되지 않아 필터 적용 안함
+					return false;
+				}
+			} else {
+				// 스티커, 비주얼 필터 선택 시 스티커와 비주얼 필터 종류를 클릭할 경우만 적용
+				if (state.selectedCustom != null && state.isClicked) return true;
+				else return false;
+			}
+		};
+
 		// TODO: 비디오 커스텀 적용 취소 - bottombar의 filterOff 버튼과 연동
 		const cancelVideoCustom = () => {
 			close();
@@ -304,6 +344,7 @@ export default {
 			showCategory,
 			clickVideoCustom,
 			applyVideoCustom,
+			customizeValidationCheck,
 			cancelVideoCustom,
 		};
 	},

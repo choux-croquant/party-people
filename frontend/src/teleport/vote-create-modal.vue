@@ -91,7 +91,7 @@
 							type="button"
 							@click="sendVote"
 						>
-							투표시작
+							START
 						</button>
 					</div>
 				</form>
