@@ -72,7 +72,7 @@
 			@click="out()"
 			class="bg-alert-100 w-32 h-10 text-white rounded-full text-center mx-5"
 		>
-			<div class="mt-1.5 text-xl font-bold">OUT</div>
+			<div class="my-auto text-xl font-bold">OUT</div>
 		</button>
 	</div>
 	<out-modal @leaveSession="leaveSession" ref="outModal" />
