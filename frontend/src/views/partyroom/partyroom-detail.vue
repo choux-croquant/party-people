@@ -78,9 +78,9 @@
 				<div class="grid grid-rows-4">
 					<vue-agile
 						class="row-span-1 p-3"
-            :slides-to-show="3"
-            :infinite="false"
-            :nav-buttons="false"
+						:slides-to-show="3"
+						:infinite="false"
+						:nav-buttons="false"
 						v-show="isWhiteboardOpen || isRouletteOpen"
 					>
 						<user-video
@@ -101,6 +101,7 @@
 						class="row-span-3 justify-center items-center mb-16"
 						@send-whiteboard-signal="sendWhiteboardSignal"
 						@send-painting-signal="sendPaintingSignal"
+						@send-reset-signal="sendResetSignal"
 						@close-whiteboard="closeWhiteboard"
 					></whiteboard>
 					<!-- 룰렛 컴포넌트 (실행시에만 show) -->
@@ -177,7 +178,7 @@ export default {
 		roomBottombar,
 		Roulette,
 		Whiteboard,
-    VueAgile,
+		VueAgile,
 	},
 	name: 'conference-detail',
 	props: {
@@ -307,6 +308,11 @@ export default {
 			// painting state signal 받기
 			this.session.on('signal:painting-state', event => {
 				this.$refs.whiteboard.addPaintingSignal(event.data);
+			});
+
+			// 모든 참가자의 화이트보드 초기화 step 3
+			this.session.on('signal:reset-whiteboard', () => {
+				this.$refs.whiteboard.resetWhiteboard();
 			});
 
 			// --- Connect to the session with a valid user token ---
@@ -776,6 +782,18 @@ export default {
 					data: JSON.stringify(is_painting),
 					to: [],
 					type: 'painting-state',
+				})
+				.catch(error => {
+					console.log(error);
+				});
+		},
+
+		// 모든 참가자의 화이트보드 초기화 step 2
+		sendResetSignal() {
+			this.session
+				.signal({
+					to: [],
+					type: 'reset-whiteboard',
 				})
 				.catch(error => {
 					console.log(error);
