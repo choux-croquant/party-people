@@ -98,7 +98,11 @@
 			<!-- video customizing button -->
 			<transition name="slide-fade">
 				<div
-					class="hover:bg-sub-300 w-full cursor-pointer"
+					:class="[
+						state.isAnyModalOpen
+							? ''
+							: 'hover:bg-sub-300 w-full cursor-pointer',
+					]"
 					v-show="showVideoBtn"
 					@click="clickVideoCustomizingBtn()"
 				>
@@ -119,7 +123,11 @@
 			<!-- room customizing button -->
 			<transition name="slide-fade">
 				<div
-					class="hover:bg-sub-300 w-full cursor-pointer"
+					:class="[
+						state.isAnyModalOpen
+							? ''
+							: 'hover:bg-sub-300 w-full cursor-pointer',
+					]"
 					v-show="showRoomBtn"
 					@click="clickThemeBtn()"
 				>
@@ -151,7 +159,11 @@
 			<!-- link button -->
 			<transition name="slide-fade">
 				<div
-					class="hover:bg-sub-300 w-full cursor-pointer"
+					:class="[
+						state.isAnyModalOpen
+							? ''
+							: 'hover:bg-sub-300 w-full cursor-pointer',
+					]"
 					v-show="showLinkBtn"
 					@click="clickLinkBtn"
 				>
@@ -187,7 +199,11 @@
 			<!-- timer button -->
 			<transition name="slide-fade">
 				<div
-					class="hover:bg-sub-300 w-full cursor-pointer"
+					:class="[
+						state.isAnyModalOpen
+							? ''
+							: 'hover:bg-sub-300 w-full cursor-pointer',
+					]"
 					v-show="showTimerBtn"
 					@click="clickTimer()"
 				>
@@ -216,7 +232,11 @@
 			<!-- roulette button -->
 			<transition name="slide-fade">
 				<div
-					class="hover:bg-sub-300 w-full cursor-pointer"
+					:class="[
+						state.isAnyModalOpen
+							? ''
+							: 'hover:bg-sub-300 w-full cursor-pointer',
+					]"
 					v-show="showRouletteBtn"
 					@click="clickRoulette()"
 				>
@@ -289,7 +309,11 @@
 			<!-- whiteboard button -->
 			<transition name="slide-fade">
 				<div
-					class="hover:bg-sub-300 w-full cursor-pointer"
+					:class="[
+						state.isAnyModalOpen
+							? ''
+							: 'hover:bg-sub-300 w-full cursor-pointer',
+					]"
 					v-show="showWhiteboardBtn"
 					@click="clickWhiteboardBtn()"
 				>
@@ -319,7 +343,11 @@
 			<!-- vote button -->
 			<transition name="slide-fade">
 				<div
-					class="hover:bg-sub-300 w-full cursor-pointer"
+					:class="[
+						state.isAnyModalOpen
+							? ''
+							: 'hover:bg-sub-300 w-full cursor-pointer',
+					]"
 					v-show="showVoteBtn"
 					@click="clickVote()"
 					@startVote="sendVote"
@@ -371,23 +399,26 @@
 		</div>
 	</div>
 	<vote-create-modal
+		ref="voteCreateModal"
 		@startVote="sendVote"
 		@sendVoteResult="sendVoteResult"
-		ref="voteCreateModal"
+		@closeModal="closeModal"
 	/>
 	<roulette-create-modal
 		ref="rouletteCreateModal"
 		@sendRouletteSignal="sendRouletteSignal"
+		@closeModal="closeModal"
 	/>
 	<video-customize-modal
+		ref="videoCustomizeModal"
 		@stickerOverlay="stickerOverlay"
 		@visualFilter="visualFilter"
 		@textOverlay="textOverlay"
 		@filterOff="filterOff"
-		ref="videoCustomizeModal"
+		@closeModal="closeModal"
 	/>
-	<theme-customize-modal ref="themeCustomizeModal" />
-	<timer-create-modal ref="timerCreateModal" />
+	<theme-customize-modal ref="themeCustomizeModal" @closeModal="closeModal" />
+	<timer-create-modal ref="timerCreateModal" @closeModal="closeModal" />
 </template>
 
 <style>
@@ -415,7 +446,7 @@
 </style>
 
 <script>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import VoteCreateModal from '@/teleport/vote-create-modal.vue';
 import videoCustomizeModal from '@/teleport/video-customize-modal.vue';
 import themeCustomizeModal from '@/teleport/theme-customize-modal.vue';
@@ -440,32 +471,53 @@ export default {
 		const themeCustomizeModal = ref(null);
 		const timerCreateModal = ref(null);
 
+		const state = reactive({
+			isAnyModalOpen: false,
+		});
+
 		const clickVote = () => {
 			console.log('clickvote');
+			// 다른 모달 오픈 상태에서는 실행 금지
+			if (state.isAnyModalOpen) return;
 			voteCreateModal.value.open();
+			state.isAnyModalOpen = true;
 		};
 
 		const clickTimer = () => {
 			console.log('clickTimer');
+			// 다른 모달 오픈 상태에서는 실행 금지
+			if (state.isAnyModalOpen) return;
 			timerCreateModal.value.open();
+			state.isAnyModalOpen = true;
 		};
 
 		const clickVideoCustomizingBtn = () => {
+			// 다른 모달 오픈 상태에서는 실행 금지
+			if (state.isAnyModalOpen) return;
 			videoCustomizeModal.value.open();
+			state.isAnyModalOpen = true;
 		};
 
 		const clickThemeBtn = () => {
+			// 다른 모달 오픈 상태에서는 실행 금지
+			if (state.isAnyModalOpen) return;
 			themeCustomizeModal.value.open();
+			state.isAnyModalOpen = true;
 		};
 
 		const clickRoulette = () => {
 			console.log('click roulette');
+			// 다른 모달 오픈 상태에서는 실행 금지
+			if (state.isAnyModalOpen) return;
 			rouletteCreateModal.value.open();
+			state.isAnyModalOpen = true;
 		};
 
 		const clickWhiteboardBtn = () => {
-			emit('toggle-whiteboard');
 			console.log('click whiteboard');
+			// 다른 모달 오픈 상태에서는 실행 금지
+			if (state.isAnyModalOpen) return;
+			emit('toggle-whiteboard');
 		};
 
 		const sendVote = voteInfo => {
@@ -493,7 +545,12 @@ export default {
 			emit('filterOff');
 		};
 
+		const closeModal = () => {
+			state.isAnyModalOpen = false;
+		};
+
 		return {
+			state,
 			clickTimer,
 			voteCreateModal,
 			rouletteCreateModal,
@@ -511,6 +568,7 @@ export default {
 			visualFilter,
 			textOverlay,
 			filterOff,
+			closeModal,
 		};
 	},
 
@@ -594,6 +652,7 @@ export default {
 			});
 		},
 		startVote(voteInfo) {
+			this.state.isAnyModalOpen = true;
 			this.$refs.voteCreateModal.startVote(voteInfo);
 		},
 		// 룰렛 생성 모달(하위)에서 받은 data를 파티룸 내부 컴포넌트(상위)로 전달(emit)

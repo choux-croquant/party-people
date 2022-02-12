@@ -101,6 +101,7 @@ export default {
 
 		const close = () => {
 			baseModal.value.closeModal();
+			emit('closeModal');
 		};
 
 		const sendVoteResult = () => {

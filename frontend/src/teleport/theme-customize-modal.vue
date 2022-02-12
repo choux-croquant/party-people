@@ -91,7 +91,7 @@ export default {
 		BaseModal,
 	},
 
-	setup() {
+	setup(props, { emit }) {
 		const baseModal = ref(null);
 
 		const state = reactive({
@@ -123,6 +123,7 @@ export default {
 
 		const close = () => {
 			baseModal.value.closeModal();
+			emit('closeModal');
 		};
 
 		const clickTheme = id => {

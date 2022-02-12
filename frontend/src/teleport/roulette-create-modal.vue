@@ -196,7 +196,7 @@ export default {
 		BaseModal,
 	},
 	// Todo : props 추가하는 법, https://v3.ko.vuejs.org/ko-kr/guide/composition-api-setup.html
-	setup() {
+	setup(props, { emit }) {
 		const store = useStore();
 		const baseModal = ref(null);
 		const open = () => {
@@ -224,6 +224,7 @@ export default {
 		};
 		const close = () => {
 			baseModal.value.closeModal();
+			emit('closeModal');
 		};
 		return { baseModal, open, close, store };
 	},

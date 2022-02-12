@@ -100,7 +100,11 @@
 				</p>
 			</div>
 		</div>
-		<vote-modal @sendVoteResult="sendVoteResult" ref="voteModal" />
+		<vote-modal
+			ref="voteModal"
+			@sendVoteResult="sendVoteResult"
+			@closeModal="closeModal"
+		/>
 	</base-modal>
 </template>
 
@@ -129,17 +133,22 @@ export default {
 			},
 			itemNum: 2,
 		});
+
 		const open = () => {
 			console.log('voteopen');
 			baseModal.value.openModal();
 		};
+
 		const close = () => {
 			baseModal.value.closeModal();
+			closeModal();
 		};
+
 		const plusItem = () => {
 			state.itemNum++;
 			console.log(state.itemNum);
 		};
+
 		const minusItem = () => {
 			state.itemNum--;
 		};
@@ -164,6 +173,11 @@ export default {
 			console.log('2.sendVote');
 			emit('sendVoteResult');
 		};
+
+		const closeModal = () => {
+			emit('closeModal');
+		};
+
 		return {
 			baseModal,
 			open,
@@ -175,6 +189,7 @@ export default {
 			voteModal,
 			sendVote,
 			sendVoteResult,
+			closeModal,
 		};
 	},
 };

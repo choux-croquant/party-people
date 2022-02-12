@@ -247,6 +247,7 @@ export default {
 		// 모달 닫기
 		const close = () => {
 			baseModal.value.closeModal();
+			emit('closeModal');
 		};
 
 		// 옵션 카테고리가 기본값인 '스티커'이거나 함수의 인자로 들어온 category와 같은 경우에만 true 리턴
