@@ -8,7 +8,7 @@
         <span class="font-bold text-xl mb-2">{{ room.title }}</span>
         <div class="inline">
           <span class="rounded-full main-bg-color ml-3 px-3 py-1 text-white h-8"
-            >{{ currentUserCount }} / {{ room.capacity }}</span
+            >{{ curConnCnt }} / {{ room.capacity }}</span
           >
         </div>
       </div>
@@ -56,6 +56,8 @@
 </style>
 
 <script>
+import { ref } from 'vue'
+
 export default {
   name: "Home",
 
@@ -87,6 +89,14 @@ export default {
     },
   },
 
-  setup() {},
+  setup(props) {
+    let curConnCnt
+    if (props.room.sessions === undefined) curConnCnt = ref(0)
+    else curConnCnt = ref(props.room.sessions.length)
+
+    return {
+      curConnCnt
+    }
+  },
 };
 </script>
