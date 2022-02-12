@@ -112,7 +112,7 @@ export default {
 	components: {
 		BaseModal,
 	},
-	setup() {
+	setup(props, { emit }) {
 		const store = useStore();
 		const state = reactive({
 			timerTime: {
@@ -127,6 +127,7 @@ export default {
 		};
 		const close = () => {
 			baseModal.value.closeModal();
+			emit('closeModal');
 		};
 
 		const timerStart = () => {
