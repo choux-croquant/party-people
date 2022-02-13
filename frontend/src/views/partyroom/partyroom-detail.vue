@@ -100,7 +100,6 @@
 						v-show="isWhiteboardOpen"
 						class="row-span-3 justify-center items-center mb-16"
 						@send-whiteboard-signal="sendWhiteboardSignal"
-						@send-painting-signal="sendPaintingSignal"
 						@send-reset-signal="sendResetSignal"
 						@close-whiteboard="closeWhiteboard"
 					></whiteboard>
@@ -302,12 +301,6 @@ export default {
 			// whiteboard signal 받기
 			this.session.on('signal:whiteboard', event => {
 				this.$refs.whiteboard.addWhiteboardSignal(event.data);
-			});
-
-			// painting state 정보 보내기 step 3
-			// painting state signal 받기
-			this.session.on('signal:painting-state', event => {
-				this.$refs.whiteboard.addPaintingSignal(event.data);
 			});
 
 			// 모든 참가자의 화이트보드 초기화 step 3
@@ -755,8 +748,10 @@ export default {
 
 		// ctx 정보 보내기 step 2
 		// 현재 좌표, 색깔, 굵기 정보를 받아 파티룸 내의 전체 사용자에게 전송
-		sendWhiteboardSignal(x, y, color, width) {
+		sendWhiteboardSignal(lastX, lastY, x, y, color, width) {
 			let data = {
+				lastX: lastX,
+				lastY: lastY,
 				currentX: x,
 				currentY: y,
 				color: color,
@@ -768,20 +763,6 @@ export default {
 					data: JSON.stringify(data),
 					to: [],
 					type: 'whiteboard',
-				})
-				.catch(error => {
-					console.log(error);
-				});
-		},
-
-		// painting state 정보 보내기 step 2
-		// painting state를 받아 파티룸 내의 전체 사용자에게 전송
-		sendPaintingSignal(is_painting) {
-			this.session
-				.signal({
-					data: JSON.stringify(is_painting),
-					to: [],
-					type: 'painting-state',
 				})
 				.catch(error => {
 					console.log(error);
