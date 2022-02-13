@@ -116,8 +116,9 @@ export default {
 		const store = useStore();
 		const state = reactive({
 			timerTime: {
-				min: null,
-				sec: null,
+				min: 0,
+				sec: 0,
+				count: true,
 			},
 		});
 		const baseModal = ref(null);
