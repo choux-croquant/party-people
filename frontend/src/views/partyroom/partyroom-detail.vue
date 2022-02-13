@@ -17,6 +17,7 @@
 				@stickerOverlay="applyStickerFilter"
 				@visualFilter="applyVisualFilter"
 				@textOverlay="applyTextFilter"
+				@voiceFilter="applyVoiceFilter"
 				@filterOff="filterOff"
 				ref="roomSidebar"
 			></room-sidebar>
@@ -655,6 +656,23 @@ export default {
 				})
 				.then(() => {
 					console.log('Video flipped!!!!');
+					// bottombar 필터 해제 버튼 활성화
+					this.$refs.bottombar.state.filter = true;
+				})
+				.catch(e => {
+					console.log('err ::::: ', e);
+				});
+		},
+
+		// Kurento GStreamerFilter 적용한 음성 필터
+		applyVoiceFilter(filterInfo) {
+			let command = filterInfo;
+			this.publisher.stream
+				.applyFilter('GStreamerFilter', {
+					command: command,
+				})
+				.then(() => {
+					console.log('Voice transformed!!!!');
 					// bottombar 필터 해제 버튼 활성화
 					this.$refs.bottombar.state.filter = true;
 				})
