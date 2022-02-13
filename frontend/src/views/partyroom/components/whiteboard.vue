@@ -255,24 +255,21 @@ export default {
 		const addWhiteboardSignal = canvasData => {
 			let data = JSON.parse(canvasData);
 
-			state.ctx.strokeStyle = data.color;
-			state.ctx.lineWidth = data.width;
+			// 색깔, 두께 정보 임시로 저장
+			let tempColor = state.ctx.strokeStyle;
+			let tempWidth = state.ctx.lineWidth;
 
 			state.ctx.beginPath();
+			state.ctx.strokeStyle = data.color;
+			state.ctx.lineWidth = data.width;
 			state.ctx.moveTo(data.lastX, data.lastY);
 			state.ctx.lineTo(data.currentX, data.currentY);
 			state.ctx.stroke();
 			state.ctx.closePath();
 
-			// if (!state.painting) {
-			// 	state.ctx.beginPath();
-			// 	state.ctx.moveTo(data.currentX, data.currentY);
-			// } else {
-			// 	state.ctx.strokeStyle = data.color;
-			// 	state.ctx.lineWidth = data.width;
-			// 	state.ctx.lineTo(data.currentX, data.currentY);
-			// 	state.ctx.stroke();
-			// }
+			// 기존의 색깔, 두께 정보 다시 저장
+			state.ctx.strokeStyle = tempColor;
+			state.ctx.lineWidth = tempWidth;
 		};
 
 		// 화이트보드 창 닫기
