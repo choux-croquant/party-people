@@ -18,7 +18,7 @@
 						{{ item.value }}
 					</div>
 				</div>
-        <div v-else class="item-wrapper text-xs">
+				<div v-else class="item-wrapper text-xs">
 					<div
 						class="item pt-8 text-tc-500"
 						:key="item.value"
@@ -142,7 +142,7 @@ export default {
 	height: 0;
 	border-style: solid;
 	border-width: 50px 10px 0 10px;
-	border-color: #F65B65 transparent transparent transparent;
+	border-color: #f65b65 transparent transparent transparent;
 	margin-left: -10px;
 	z-index: 1;
 }
@@ -164,8 +164,8 @@ export default {
 	bottom: 0;
 	left: 0;
 	right: 0;
-  font-family: Pretendard;
-  font-weight: bold;
+	font-family: Pretendard;
+	font-weight: bold;
 	text-align: center;
 	display: flex;
 	justify-content: center;
