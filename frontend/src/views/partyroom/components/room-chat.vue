@@ -45,12 +45,12 @@
 		<!-- chat-bar -->
 		<div
 			ref="content"
-			class="transition-all pt-16 pb-12 w-80 duration-700 bg-main-300 overflow-hidden flex flex-col items-center justify-between"
+			class="transition-all pt-16 pb-12 px-8 w-80 duration-700 bg-main-300 overflow-hidden flex flex-col items-center justify-between"
 			:class="[state.isSidebarOpen ? 'max-w-lg' : 'max-w-0']"
 		>
 			<!-- 채팅 내용 -->
 			<ul
-				class="border-2 h-4/5 w-5/6 border-main-100 p-4 overflow-y-auto"
+				class="border-2 h-full w-full border-main-100 bg-tc-500 p-4 overflow-y-auto m-0"
 				id="chat-bar"
 			>
 				<li
@@ -87,64 +87,67 @@
 				</li>
 			</ul>
 
-			<!-- 메시지 보낼 유저 선택창 -->
-			<div
-				class="relative inline-flex border-3 rounded-lg border-main-100 w-1/2 m-0 h-7 p-0"
-			>
-				<select
-					v-model="state.selectedUser"
-					class="cursor-pointer font-bold px-4 py-0 text-sm form-select border-0 rounded-md text-gray-600 w-full h-5-5 border-transparent focus:border-transparent focus:ring-0 appearance-none"
+			<div class="flex flex-col items-start	w-full mt-8">
+				<!-- 메시지 보낼 유저 선택창 -->
+				<div
+					class="relative inline-flex border-3 rounded-lg border-main-100 w-1/2 mb-4 h-7 p-0"
 				>
-					<option selected="selected" value="all">all</option>
-					<option
-						v-for="(sub, idx) in state.subscribers"
-						:value="sub.stream.connection"
-						:key="idx"
+					<select
+						v-model="state.selectedUser"
+						class="cursor-pointer font-bold px-4 py-0 text-sm form-select border-0 rounded-md text-gray-600 w-full h-5-5 border-transparent focus:border-transparent focus:ring-0 appearance-none"
 					>
-						{{ JSON.parse(sub.stream.connection.data).clientData }}
-					</option>
-				</select>
+						<option selected="selected" value="all">all</option>
+						<option
+							v-for="(sub, idx) in state.subscribers"
+							:value="sub.stream.connection"
+							:key="idx"
+						>
+							{{ JSON.parse(sub.stream.connection.data).clientData }}
+						</option>
+					</select>
+				</div>
+
+				<!-- 메시지 작성 -->
+				<div class="w-full p-0 flex flex-row justify-between items-center">
+					<textarea
+						v-model="state.message"
+						@keydown.enter="sendMessage"
+						class="w-5/6 border-2 border-main-100 text-xs focus:border-main-100 focus:border-2 resize-none"
+						cols=""
+						rows="2"
+					></textarea>
+					<svg
+						@click="sendMessage()"
+						class="h-6 w-6 send-icon cursor-pointer"
+						version="1.1"
+						xmlns="http://www.w3.org/2000/svg"
+						xmlns:xlink="http://www.w3.org/1999/xlink"
+						x="0px"
+						y="0px"
+						viewBox="0 0 491.022 491.022"
+						style="enable-background: new 0 0 491.022 491.022"
+						xml:space="preserve"
+					>
+						<g>
+							<g>
+								<path
+									d="M490.916,13.991c-0.213-1.173-0.64-2.347-1.28-3.307c-0.107-0.213-0.213-0.533-0.32-0.747
+									c-0.107-0.213-0.32-0.32-0.533-0.533c-0.427-0.533-0.96-1.067-1.493-1.493c-0.427-0.32-0.853-0.64-1.28-0.96
+									c-0.213-0.107-0.32-0.32-0.533-0.427c-0.32-0.107-0.747-0.32-1.173-0.427c-0.533-0.213-1.067-0.427-1.6-0.533
+									c-0.64-0.107-1.28-0.213-1.92-0.213c-0.533,0-1.067,0-1.6,0c-0.747,0.107-1.493,0.32-2.133,0.533
+									c-0.32,0.107-0.747,0.107-1.067,0.213L6.436,209.085c-5.44,2.347-7.893,8.64-5.547,14.08c1.067,2.347,2.88,4.373,5.227,5.44
+									l175.36,82.453v163.947c0,5.867,4.8,10.667,10.667,10.667c3.733,0,7.147-1.92,9.067-5.12l74.133-120.533l114.56,60.373
+									c5.227,2.773,11.627,0.747,14.4-4.48c0.427-0.853,0.747-1.813,0.96-2.667l85.547-394.987c0-0.213,0-0.427,0-0.64
+									c0.107-0.64,0.107-1.173,0.213-1.707C491.022,15.271,491.022,14.631,490.916,13.991z M190.009,291.324L36.836,219.218
+									L433.209,48.124L190.009,291.324z M202.809,437.138V321.831l53.653,28.267L202.809,437.138z M387.449,394.898l-100.8-53.013
+									l-18.133-11.2l-0.747,1.28l-57.707-30.4L462.116,49.298L387.449,394.898z"
+								/>
+							</g>
+						</g>
+					</svg>
+				</div>
 			</div>
 
-			<!-- 메시지 작성 -->
-			<div class="w-4/5 p-0 flex flex-row justify-between items-center">
-				<textarea
-					v-model="state.message"
-					@keydown.enter="sendMessage"
-					class="w-5/6 border-2 border-main-100 text-xs focus:border-main-100 focus:border-2 resize-none"
-					cols=""
-					rows="2"
-				></textarea>
-				<svg
-					@click="sendMessage()"
-					class="h-6 w-6 send-icon cursor-pointer"
-					version="1.1"
-					xmlns="http://www.w3.org/2000/svg"
-					xmlns:xlink="http://www.w3.org/1999/xlink"
-					x="0px"
-					y="0px"
-					viewBox="0 0 491.022 491.022"
-					style="enable-background: new 0 0 491.022 491.022"
-					xml:space="preserve"
-				>
-					<g>
-						<g>
-							<path
-								d="M490.916,13.991c-0.213-1.173-0.64-2.347-1.28-3.307c-0.107-0.213-0.213-0.533-0.32-0.747
-                c-0.107-0.213-0.32-0.32-0.533-0.533c-0.427-0.533-0.96-1.067-1.493-1.493c-0.427-0.32-0.853-0.64-1.28-0.96
-                c-0.213-0.107-0.32-0.32-0.533-0.427c-0.32-0.107-0.747-0.32-1.173-0.427c-0.533-0.213-1.067-0.427-1.6-0.533
-                c-0.64-0.107-1.28-0.213-1.92-0.213c-0.533,0-1.067,0-1.6,0c-0.747,0.107-1.493,0.32-2.133,0.533
-                c-0.32,0.107-0.747,0.107-1.067,0.213L6.436,209.085c-5.44,2.347-7.893,8.64-5.547,14.08c1.067,2.347,2.88,4.373,5.227,5.44
-                l175.36,82.453v163.947c0,5.867,4.8,10.667,10.667,10.667c3.733,0,7.147-1.92,9.067-5.12l74.133-120.533l114.56,60.373
-                c5.227,2.773,11.627,0.747,14.4-4.48c0.427-0.853,0.747-1.813,0.96-2.667l85.547-394.987c0-0.213,0-0.427,0-0.64
-                c0.107-0.64,0.107-1.173,0.213-1.707C491.022,15.271,491.022,14.631,490.916,13.991z M190.009,291.324L36.836,219.218
-                L433.209,48.124L190.009,291.324z M202.809,437.138V321.831l53.653,28.267L202.809,437.138z M387.449,394.898l-100.8-53.013
-                l-18.133-11.2l-0.747,1.28l-57.707-30.4L462.116,49.298L387.449,394.898z"
-							/>
-						</g>
-					</g>
-				</svg>
-			</div>
 		</div>
 	</div>
 </template>
