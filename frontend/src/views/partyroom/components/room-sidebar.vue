@@ -416,6 +416,7 @@
 		@textOverlay="textOverlay"
 		@voiceFilter="voiceFilter"
 		@filterOff="filterOff"
+		@bottombarFilterBtn="bottombarFilterBtn"
 		@closeModal="closeModal"
 	/>
 	<theme-customize-modal ref="themeCustomizeModal" @closeModal="closeModal" />
@@ -550,6 +551,10 @@ export default {
 			emit('filterOff');
 		};
 
+		const bottombarFilterBtn = btnState => {
+			emit('bottombarFilterBtn', btnState);
+		};
+
 		const closeModal = () => {
 			state.isAnyModalOpen = false;
 		};
@@ -574,6 +579,7 @@ export default {
 			textOverlay,
 			voiceFilter,
 			filterOff,
+			bottombarFilterBtn,
 			closeModal,
 		};
 	},
