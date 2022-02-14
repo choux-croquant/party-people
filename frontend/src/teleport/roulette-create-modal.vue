@@ -2,7 +2,7 @@
 	<base-modal ref="baseModal">
 		<div class="flex justify-center">
 			<div class="w-full max-w-xs">
-				<form class="bg-main-300 shadow-md rounded px-8 pt-6 pb-8">
+				<form class="bg-main-300 shadow-md rounded-xl px-8 pt-6 pb-8">
 					<div
 						class="flex justify-between items-start rounded-t border-none bg-main-300"
 					>
@@ -142,7 +142,7 @@
 						<button
 							type="button"
 							@click="close()"
-							class="text-tc-500 bg-alert-200 hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+							class="text-tc-500 bg-alert-200 hover:bg-alert-100 hover:text-tc-500 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
 						>
 							<svg
 								class="w-5 h-5"
@@ -174,7 +174,7 @@
 							type="button"
 							@click="rouletteStart"
 						>
-							룰렛시작
+							START
 						</button>
 					</div>
 				</form>
@@ -196,7 +196,7 @@ export default {
 		BaseModal,
 	},
 	// Todo : props 추가하는 법, https://v3.ko.vuejs.org/ko-kr/guide/composition-api-setup.html
-	setup() {
+	setup(props, { emit }) {
 		const store = useStore();
 		const baseModal = ref(null);
 		const open = () => {
@@ -224,6 +224,7 @@ export default {
 		};
 		const close = () => {
 			baseModal.value.closeModal();
+			emit('closeModal');
 		};
 		return { baseModal, open, close, store };
 	},

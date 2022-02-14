@@ -11,13 +11,26 @@ const ovAxios = $axios.create({
 	},
 });
 
-export function requestRoomList({ state }, payload) {
-	console.log('requestRoomList', state, payload);
-	const url = `/list/room`;
-	return backAxios.get(url);
+export function requestRoomList({ state }) {
+	console.log('requestRoomList', state);
+	if(state.searchValue == null) state.searchValue = ""
+	const url = `/list/roomsearch`;
+	
+	return new Promise((resolve, reject) => {
+		backAxios.get(url, {
+			params: {
+				page: state.page,
+				size: 6,
+				word: state.searchValue,
+				include: state.searchOption
+			}
+		})
+		.then(res => resolve(res))
+		.catch(err => reject(err))
+	}) 
 }
 
-export function requestRoomUserList({ state }, payload) {
+export async function requestRoomUserList({ state }, payload) {
 	console.log('requestRoomList', state, payload);
 	const url = `/rooms/users/${payload.roomId}`;
 	let token = localStorage.getItem('access_token');
@@ -32,7 +45,7 @@ export function requestRoomUserList({ state }, payload) {
 
 export function roomSearch({ state }, payload) {
 	console.log('roomSearch', state, payload);
-	const url = `/list/roomSearch?include=${payload.include}&word=${payload.word}`;
+	const url = `/list/roomsearch?include=${payload.include}&word=${payload.word}`;
 
 	return backAxios.get(url);
 }

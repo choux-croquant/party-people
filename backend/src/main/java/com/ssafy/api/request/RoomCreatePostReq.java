@@ -15,12 +15,14 @@ import lombok.ToString;
 @ToString
 @ApiModel("RoomCreatePostRequest")
 public class RoomCreatePostReq {
-	@ApiModelProperty(name="방 제목", example="방 제목")
+	@ApiModelProperty(name="방 제목", example="ssafy 6기 모여라")
 	String title;
-	@ApiModelProperty(name="방 설명", example="방 설명")
+	@ApiModelProperty(name="방 설명", example="공통 프로젝트 뒤풀이합니다")
 	String description;
 	@ApiModelProperty(name="최대 인원수", example="8")
 	String capacity;
-	@ApiModelProperty(name="비밀번호", example="비밀번호")
+	@ApiModelProperty(name="비밀번호", example="1234")
 	String password;
+	@ApiModelProperty(name="해시태그", example="#ssafy#파티피플")
+	String hashtag;
 }

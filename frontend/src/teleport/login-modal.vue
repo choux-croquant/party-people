@@ -3,14 +3,14 @@
 	<base-modal ref="baseModal">
 		<div class="flex justify-center">
 			<div class="w-full max-w-xs">
-				<form class="bg-main-300 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+				<form class="bg-main-300 shadow-md rounded-xl px-8 pt-6 pb-8 mb-4">
 					<div
 						class="flex justify-between items-start rounded-t border-b bg-main-300"
 					>
 						<button
 							@click="close()"
 							type="button"
-							class="text-tc-500 bg-alert-200 hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+							class="text-tc-500 bg-alert-200 hover:bg-alert-100 hover:text-tc-500 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
 						>
 							<svg
 								class="w-5 h-5"
@@ -75,6 +75,7 @@ import { reactive, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import BaseModal from './base-modal.vue';
+import { swal } from '@/assets/js/common';
 
 export default {
 	name: 'LoginModal',
@@ -116,9 +117,10 @@ export default {
 					state.loginErr = false;
 					router.push({ name: 'Home' });
 					close();
+					swal(true, 'top', 1500, 'success', '로그인에 성공했습니다.', null);
 				})
 				.catch(err => {
-					console.log(err);
+					swal(true, 'top', 1500, 'error', '로그인에 실패했습니다.', null);
 					state.loginErr = true;
 				});
 		};

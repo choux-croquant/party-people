@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 미팅룸 리스트, 태그 모델 관련 디비 쿼리 생성을 위한 JPA Query Method 인터페이스 정의.
+ * 미팅룸 리스트 관련 디비 쿼리 생성을 위한 JPA Query Method 인터페이스 정의.
  */
 @Repository
 public interface ListRepository extends JpaRepository<Room, Long> {

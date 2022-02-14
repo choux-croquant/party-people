@@ -2,13 +2,13 @@
 
 <template>
 	<base-modal ref="baseModal">
-		<div class="w-full max-w-2xl bg-main-300 shadow-md rounded px-6 py-6">
+		<div class="w-full max-w-2xl bg-main-300 shadow-md rounded-xl px-6 py-6">
 			<!-- close button -->
 			<div class="flex justify-between items-start rounded-t bg-main-300">
 				<button
 					@click="close()"
 					type="button"
-					class="text-tc-500 bg-alert-200 hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+					class="text-tc-500 bg-alert-200 hover:bg-alert-100 hover:text-tc-500 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
 				>
 					<svg
 						class="w-5 h-5"
@@ -58,6 +58,9 @@
 									required
 								/>
 							</div>
+							<p class="text-xs text-red-600" v-if="state.capacityErr">
+								* 최대 8명까지만 입장할 수 있어요.
+							</p>
 							<!-- 비밀번호 -->
 							<div
 								class="bg-tc-500 p-0 rounded-sm flex flex-row items-center border-tc-300 border-1"
@@ -151,6 +154,7 @@
 					<!-- 태그 -->
 					<div class="w-full mt-5">
 						<input
+							v-model="state.hashtag"
 							type="text"
 							placeholder="태그입력"
 							class="text-tc-200 w-full p-2 rounded-sm"
@@ -183,18 +187,19 @@ textarea:focus {
 </style>
 
 <script>
-import { reactive, ref } from 'vue';
+import { reactive, ref, computed } from 'vue';
 import BaseModal from './base-modal.vue';
-// import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { swal } from '@/assets/js/common';
 
 export default {
-	name: 'Home',
+	name: 'ConferenceCreateModal',
 	components: {
 		BaseModal,
 	},
 	setup() {
-		// const router = useRouter()
+		const router = useRouter();
 		const store = useStore();
 		const baseModal = ref(null);
 
@@ -205,8 +210,10 @@ export default {
 			title: '',
 			thumbnailImg: null,
 			fileName: '',
+			hashtag: '',
+			capacityErr: computed(() => (state.capacity > 8 ? true : false)),
+			roomCreateErr: false,
 		});
-		// const thumbnailUrl = ref(null)
 
 		const open = () => {
 			console.log('rcopen');
@@ -222,42 +229,108 @@ export default {
 		};
 
 		const createRoom = () => {
-			// thumbnailImg = document.getElementById("thumbnail").files[0]
+			state.hashtag = state.hashtag.replace(/ /g, '');
+
+			checkCreateValidation();
+
+			if (state.roomCreateErr) {
+				return popUpfailToast();
+			}
+
 			const room = {
 				capacity: state.capacity,
 				description: state.description,
 				password: state.password,
 				title: state.title,
+				hashtag: state.hashtag,
 			};
-
+			console.log('room : ', room);
+			// 방 생성 시 필요한 데이터를 form 형태로 전달
 			const roomData = new FormData();
 			roomData.append('thumbnail', state.thumbnailImg);
 			roomData.append(
 				'room',
 				new Blob([JSON.stringify(room)], { type: 'application/json' }),
 			);
-
+			// createRoom을 비동기 호출한 뒤 바로 passwordConfirm도 호출하여 생성과 동시에 입장
 			store
 				.dispatch('root/createRoom', roomData)
 				.then(res => {
-					console.log('요청은 성공');
 					console.log(res);
-					// router.push({ name: 'ConferenceDetail' })
+
+					store
+						.dispatch('root/passwordConfirm', {
+							roomId: res.data.id,
+							password: state.password,
+						})
+						.then(() => {
+							console.log(res);
+							state.capacity = '';
+							state.description = '';
+							state.password = '';
+							state.title = '';
+							state.thumbnailImg = null;
+							state.fileName = '';
+							state.hashtag = '';
+							state.roomCreateErr = false;
+							router.push({
+								name: 'ConferenceDetail',
+								params: {
+									conferenceId: res.data.id,
+									userName: store.getters['auth/getUserName'],
+								},
+							});
+						})
+						.catch(err => {
+							console.log(err);
+						});
 					close();
-					state.capacity = '';
-					state.description = '';
-					state.password = '';
-					state.title = '';
-					state.thumbnailImg = null;
-					state.fileName = '';
 				})
 				.catch(err => {
 					console.log('실패');
 					console.log(err);
+					popUpfailToast();
 				});
 		};
 
-		return { state, open, close, onUploadImage, createRoom, baseModal };
+		const checkCreateValidation = () => {
+			state.roomCreateErr = false;
+
+			if (state.capacity <= 0) {
+				state.roomCreateErr = true;
+			}
+
+			if (state.capacity > 8) {
+				state.capacity = 8;
+				state.roomCreateErr = true;
+			}
+
+			if (state.title.length === 0 || state.title.length === null) {
+				state.roomCreateErr = true;
+			}
+		};
+
+		const popUpfailToast = () => {
+			swal(
+				true,
+				'top',
+				2000,
+				'error',
+				'파티룸 생성에 실패했습니다. 입력 값을 다시 확인해주세요.',
+				null,
+			);
+		};
+
+		return {
+			state,
+			open,
+			close,
+			onUploadImage,
+			createRoom,
+			checkCreateValidation,
+			popUpfailToast,
+			baseModal,
+		};
 	},
 };
 </script>

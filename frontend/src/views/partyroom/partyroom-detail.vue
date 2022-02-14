@@ -1,19 +1,11 @@
 <template>
 	<div class="h-screen w-screen flex bg-tc-500">
 		<div class="fixed inset-0 flex z-40">
-			<div class="mx-auto">
-				<!-- 룰렛 컴포넌트(실행시에만 show) -->
-				<roulette
-					v-show="isRouletteOpen"
-					ref="apiRequest"
-					@closeRoulette="closeRoulette"
-				></roulette>
-			</div>
 			<room-sidebar
 				@sendRouletteSignal="sendRouletteSignal"
 				@startVote="startVote"
 				@sendVoteResult="sendVoteResult"
-				@open-whiteboard="openWhiteboard"
+				@toggle-whiteboard="toggleWhiteboard"
 				@stickerOverlay="applyStickerFilter"
 				@visualFilter="applyVisualFilter"
 				@textOverlay="applyTextFilter"
@@ -21,81 +13,109 @@
 				@filterOff="filterOff"
 				ref="roomSidebar"
 			></room-sidebar>
-			<!-- 위치는 나중에 옮길 예정 -->
-			<div id="session" class="w-full" v-if="session">
+			<div id="session" class="w-full pl-32 pr-80" v-if="session">
+				<!-- 타이머 -->
 				<div id="session-header">
 					<div class="mx-auto">
 						<timer @startCountdown="startCountdown" ref="timer"></timer>
 					</div>
 				</div>
-				<div
-					v-if="currentUserCount == 0"
-					id="video-container-1"
-					class="flex flex-wrap mx-8 justify-center gap-4"
-				>
-					<user-video class="userVideo-1" :stream-manager="publisher" />
-					<user-video
-						class="userVideo-1"
-						v-for="sub in subscribers"
-						:key="sub.stream.connection.connectionId"
-						:stream-manager="sub"
-					/>
+				<!-- 컨텐츠가 없는 경우 -->
+				<div v-show="!isWhiteboardOpen && !isRouletteOpen">
+					<div
+						v-if="currentUserCount == 0"
+						id="video-container-1"
+						class="flex flex-wrap mx-8 justify-center gap-4"
+					>
+						<user-video class="userVideo-1" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-1"
+							v-for="sub in subscribers"
+							:key="sub.stream.connection.connectionId"
+							:stream-manager="sub"
+						/>
+					</div>
+					<div
+						v-else-if="currentUserCount < 4"
+						id="video-container-2"
+						class="flex flex-wrap mx-8 justify-center gap-4"
+					>
+						<user-video class="userVideo-2" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-2"
+							v-for="sub in subscribers"
+							:key="sub.stream.connection.connectionId"
+							:stream-manager="sub"
+						/>
+					</div>
+					<div
+						v-else-if="currentUserCount < 6"
+						id="video-container-3"
+						class="flex flex-wrap mx-8 justify-center gap-4"
+					>
+						<user-video class="userVideo-3" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-3"
+							v-for="sub in subscribers"
+							:key="sub.stream.connection.connectionId"
+							:stream-manager="sub"
+						/>
+					</div>
+					<div
+						v-else
+						id="video-container-4"
+						class="flex flex-wrap mx-8 justify-center gap-4"
+					>
+						<user-video class="userVideo-4" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-4"
+							v-for="sub in subscribers"
+							:key="sub.stream.connection.connectionId"
+							:stream-manager="sub"
+						/>
+					</div>
 				</div>
-				<div
-					v-else-if="currentUserCount < 4"
-					id="video-container-2"
-					class="flex flex-wrap mx-8 justify-center gap-4"
-				>
-					<user-video class="userVideo-2" :stream-manager="publisher" />
-					<user-video
-						class="userVideo-2"
-						v-for="sub in subscribers"
-						:key="sub.stream.connection.connectionId"
-						:stream-manager="sub"
-					/>
+				<!-- 컨텐츠(룰렛 / 화이트보드)를 실행중인 경우 -->
+				<div class="grid grid-rows-4">
+					<vue-agile
+						class="row-span-1 p-3"
+						:slides-to-show="3"
+						:infinite="false"
+						:nav-buttons="false"
+						v-show="isWhiteboardOpen || isRouletteOpen"
+					>
+						<user-video
+							class="h-full slide max-h-48 p-3"
+							:stream-manager="publisher"
+						/>
+						<user-video
+							class="h-full slide max-h-48 p-3"
+							v-for="sub in subscribers"
+							:key="sub.stream.connection.connectionId"
+							:stream-manager="sub"
+						/>
+					</vue-agile>
+					<!-- 화이트보드 컴포넌트 (실행시에만 show) -->
+					<whiteboard
+						ref="whiteboard"
+						v-show="isWhiteboardOpen"
+						class="row-span-3 justify-center items-center mb-16"
+						@send-whiteboard-signal="sendWhiteboardSignal"
+						@send-reset-signal="sendResetSignal"
+						@close-whiteboard="closeWhiteboard"
+					></whiteboard>
+					<!-- 룰렛 컴포넌트 (실행시에만 show) -->
+					<roulette
+						ref="roulette"
+						v-show="isRouletteOpen"
+						class="row-span-3 justify-center items-center mb-16"
+						@closeRoulette="closeRoulette"
+					></roulette>
 				</div>
-				<div
-					v-else-if="currentUserCount < 6"
-					id="video-container-3"
-					class="flex flex-wrap mx-8 justify-center gap-4"
-				>
-					<user-video class="userVideo-3" :stream-manager="publisher" />
-					<user-video
-						class="userVideo-3"
-						v-for="sub in subscribers"
-						:key="sub.stream.connection.connectionId"
-						:stream-manager="sub"
-					/>
-				</div>
-				<div
-					v-else
-					id="video-container-4"
-					class="flex flex-wrap mx-8 justify-center gap-4"
-				>
-					<user-video class="userVideo-4" :stream-manager="publisher" />
-					<user-video
-						class="userVideo-4"
-						v-for="sub in subscribers"
-						:key="sub.stream.connection.connectionId"
-						:stream-manager="sub"
-					/>
-				</div>
-
-				<!-- Kurento faceOverlayFilter 동작버튼 -->
-				<button @click="applyKurentoFilter">Kurento apply Btn |</button>
-				<!-- Kurento GStreamerFilter 동작버튼 -->
-				<button @click="applyGStreamerFilter">Kurento TextOverlay Btn |</button>
 			</div>
-			<whiteboard
-				v-show="isWhiteboardOpen"
-				@send-whiteboard-signal="sendWhiteboardSignal"
-				@send-painting-signal="sendPaintingSignal"
-				@close-whiteboard="closeWhiteboard"
-				ref="whiteboard"
-			></whiteboard>
 			<room-chat
-				@message="sendMessage"
 				ref="chat"
+				@message="sendMessage"
 				:subscribers="subscribers"
 			></room-chat>
 			<room-bottombar
@@ -125,6 +145,10 @@
 	width: 24%;
 	height: 100%;
 }
+/* .contents-container {
+  padding-left: 5%;
+  padding-right: 5%;
+} */
 </style>
 <script>
 import { ref } from 'vue';
@@ -139,6 +163,8 @@ import roomBottombar from './components/room-bottombar.vue';
 import timer from './components/timer.vue';
 import Roulette from './components/roulette.vue';
 import Whiteboard from './components/whiteboard.vue';
+import { swal } from '@/assets/js/common';
+import { VueAgile } from 'vue-agile';
 
 const OPENVIDU_SERVER_URL = 'https://pparttypeople.kro.kr:4443';
 const OPENVIDU_SERVER_SECRET = 'a106ssafy0183';
@@ -152,6 +178,7 @@ export default {
 		roomBottombar,
 		Roulette,
 		Whiteboard,
+		VueAgile,
 	},
 	name: 'conference-detail',
 	props: {
@@ -165,6 +192,7 @@ export default {
 	setup() {
 		const isRouletteOpen = ref(false);
 		const isWhiteboardOpen = ref(false);
+		// const isTimerOpen = ref(false);
 
 		return { isRouletteOpen, isWhiteboardOpen };
 	},
@@ -244,8 +272,10 @@ export default {
 				this.rouletteTopic = JSON.parse(event.data).rouletteTopic;
 				// 룰렛 컴포넌트 show
 				this.isRouletteOpen = true;
+				// 사이드바 모달 열려있는 상태 설정
+				this.$refs.roomSidebar.state.isAnyModalOpen = true;
 				// 룰렛 애니메이션 실행
-				this.$refs.apiRequest.playRoulette();
+				this.$refs.roulette.playRoulette();
 			});
 
 			// 투표 signal 받기
@@ -274,10 +304,9 @@ export default {
 				this.$refs.whiteboard.addWhiteboardSignal(event.data);
 			});
 
-			// painting state 정보 보내기 step 3
-			// painting state signal 받기
-			this.session.on('signal:painting-state', event => {
-				this.$refs.whiteboard.addPaintingSignal(event.data);
+			// 모든 참가자의 화이트보드 초기화 step 3
+			this.session.on('signal:reset-whiteboard', () => {
+				this.$refs.whiteboard.resetWhiteboard();
 			});
 
 			// --- Connect to the session with a valid user token ---
@@ -320,6 +349,15 @@ export default {
 					});
 			});
 
+			swal(
+				true,
+				'top-right',
+				1500,
+				'success',
+				'파티룸에 입장하셨습니다.',
+				null,
+			);
+
 			window.addEventListener('beforeunload', this.leaveSession);
 		},
 
@@ -337,6 +375,15 @@ export default {
 
 			window.removeEventListener('beforeUnmount', this.leaveSession);
 			this.router.push({ name: 'Home' });
+
+			swal(
+				true,
+				'top-right',
+				1500,
+				'success',
+				'파티룸에서 퇴장하셨습니다.',
+				null,
+			);
 		},
 
 		getToken(mySessionId) {
@@ -512,14 +559,47 @@ export default {
 				minute: '2-digit',
 				hour12: false, // true인 경우 오후 10:25와 같이 나타냄.
 			});
-			let voteMessage = `투표 결과입니다. ${JSON.stringify(voteResult)}`;
+
+			let voteInfo = this.$store.getters['root/getVoteInfo'];
+			let resultList = this.sortVoteResult(voteResult);
+			// let voteMessage = `투표 결과입니다. ${JSON.stringify(voteResult)}`;
+			let voteMessage = `[${voteInfo.voteTopic}] 투표 결과 `;
+			for (var i = 0; i < resultList.length; i++) {
+				voteMessage += `${resultList[i].item}(${resultList[i].count}표) `;
+			}
+
 			let messageData = {
 				content: voteMessage,
 				sender: 'System',
 				time: current,
 			};
+
+			// 투표 결과 토스트 알림
+			swal(
+				false,
+				'center',
+				5000,
+				'success',
+				'투표 결과...\n' + resultList[0].item + '당첨!',
+				resultList[0].count + '표를 얻었습니다.',
+			);
 			// 자신의 채팅창에 당첨자 로그 출력
 			this.$refs.chat.addMessage(JSON.stringify(messageData), false);
+		},
+
+		// 투표 결과 내림차순 정렬
+		sortVoteResult(voteResult) {
+			let resultList = [];
+			for (var key in voteResult) {
+				resultList.push({
+					item: key,
+					count: voteResult[key],
+				});
+			}
+			resultList.sort(function (a, b) {
+				return b.count - a.count;
+			});
+			return resultList;
 		},
 
 		audioOnOff({ audio }) {
@@ -585,6 +665,8 @@ export default {
 			this.$refs.chat.addMessage(JSON.stringify(messageData), false);
 			// 룰렛 컴포넌트 show 해제
 			this.isRouletteOpen = false;
+			// 사이드바 모달 열려있는 상태 해제
+			this.$refs.roomSidebar.state.isAnyModalOpen = false;
 		},
 
 		// Kurento faceOverlayFilter 적용한 스티커 필터
@@ -695,9 +777,9 @@ export default {
 		},
 
 		// 화이트보드 창 열기
-		openWhiteboard() {
-			console.log('open whiteboard');
-			this.isWhiteboardOpen = true;
+		toggleWhiteboard() {
+			console.log('toggle whiteboard');
+			this.isWhiteboardOpen = !this.isWhiteboardOpen;
 		},
 
 		// 화이트보드 창 닫기
@@ -709,8 +791,10 @@ export default {
 
 		// ctx 정보 보내기 step 2
 		// 현재 좌표, 색깔, 굵기 정보를 받아 파티룸 내의 전체 사용자에게 전송
-		sendWhiteboardSignal(x, y, color, width) {
+		sendWhiteboardSignal(lastX, lastY, x, y, color, width) {
 			let data = {
+				lastX: lastX,
+				lastY: lastY,
 				currentX: x,
 				currentY: y,
 				color: color,
@@ -728,14 +812,12 @@ export default {
 				});
 		},
 
-		// painting state 정보 보내기 step 2
-		// painting state를 받아 파티룸 내의 전체 사용자에게 전송
-		sendPaintingSignal(is_painting) {
+		// 모든 참가자의 화이트보드 초기화 step 2
+		sendResetSignal() {
 			this.session
 				.signal({
-					data: JSON.stringify(is_painting),
 					to: [],
-					type: 'painting-state',
+					type: 'reset-whiteboard',
 				})
 				.catch(error => {
 					console.log(error);

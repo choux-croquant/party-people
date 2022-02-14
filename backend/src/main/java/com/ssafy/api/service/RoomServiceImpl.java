@@ -2,9 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.RoomCreatePostReq;
 import com.ssafy.api.request.RoomHostUpdateReq;
-import com.ssafy.db.entity.Room;
-import com.ssafy.db.entity.Session;
-import com.ssafy.db.entity.User;
+import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,8 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service("roomService")
 public class RoomServiceImpl implements RoomService {
@@ -27,6 +25,10 @@ public class RoomServiceImpl implements RoomService {
     SessionRepositorySupport sessionRepositorySupport;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    TagRepository tagRepository;
+    @Autowired
+    RoomTagRepository roomTagRepository;
     @Autowired
     FileUploadService fileUploadService;
 
@@ -52,7 +54,35 @@ public class RoomServiceImpl implements RoomService {
         room = roomRepository.save(room);       // 썸네일 경로 없이 방 생성
         sessionRepository.flush();
 
+        // tag를 새롭게 저장하고 room 객체에 매핑
+        room.setRoomTags(saveAndGetRoomTags(room, req.getHashtag()));
+
         return this.updateThumbnail(room.getId(), multipartFile);   // 썸네일 경로 업데이트
+    }
+
+    // tag 테이블에 태그를 저장하고 room_tag 테이블에 반영한다
+    @Override
+    public List<RoomTag> saveAndGetRoomTags(Room room, String tagString) {
+        if (tagString.length() == 0 || tagString == null) return null;
+        String[] hashtags = tagString.substring(1).split("#");
+        List<RoomTag> roomTagList = updateTags(room, hashtags);
+        return roomTagRepository.saveAll(roomTagList);
+    }
+
+    @Override
+    public List<RoomTag> updateTags(Room room, String[] hashtags) {
+        List<RoomTag> roomTagList = new ArrayList<>();
+
+        for (String hashtag : hashtags) {
+            Tag tag = tagRepository.findByTagName(hashtag);
+            if (tag == null) {
+                Tag newTag = new Tag();
+                newTag.setTagName(hashtag);
+                roomTagList.add(new RoomTag(room, tagRepository.save(newTag)));
+            }
+            else roomTagList.add(new RoomTag(room, tag));
+        }
+        return roomTagList;
     }
 
     @Override

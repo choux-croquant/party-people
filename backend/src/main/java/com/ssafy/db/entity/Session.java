@@ -1,8 +1,6 @@
 package com.ssafy.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
@@ -19,6 +17,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @DynamicInsert
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Session extends BaseEntity{
     @JsonIgnore
     @ManyToOne

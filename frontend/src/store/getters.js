@@ -35,3 +35,7 @@ export function getVoteInfo(state) {
 export function getVoteResult(state) {
 	return state.voteResult;
 }
+
+export function getPage(state) {
+	return state.page
+}
