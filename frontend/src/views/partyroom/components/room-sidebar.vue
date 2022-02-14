@@ -414,6 +414,7 @@
 		@stickerOverlay="stickerOverlay"
 		@visualFilter="visualFilter"
 		@textOverlay="textOverlay"
+		@voiceFilter="voiceFilter"
 		@filterOff="filterOff"
 		@closeModal="closeModal"
 	/>
@@ -541,6 +542,10 @@ export default {
 			emit('textOverlay', filterInfo);
 		};
 
+		const voiceFilter = filterInfo => {
+			emit('voiceFilter', filterInfo);
+		};
+
 		const filterOff = () => {
 			emit('filterOff');
 		};
@@ -567,6 +572,7 @@ export default {
 			stickerOverlay,
 			visualFilter,
 			textOverlay,
+			voiceFilter,
 			filterOff,
 			closeModal,
 		};
