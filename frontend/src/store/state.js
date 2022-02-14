@@ -41,8 +41,9 @@ export default {
 		{ id: 3, title: '파티룸 3번' },
 	],
 	timerTime: {
-		min: null,
-		sec: null,
+		min: 0,
+		sec: 0,
+		count: false
 	},
 	roomUserList: [],
 	voteInfo: {
