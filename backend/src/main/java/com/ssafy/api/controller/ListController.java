@@ -1,6 +1,7 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.response.RoomListRes;
+import com.ssafy.api.response.SuggestedKeywardRes;
 import com.ssafy.api.service.ListService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Room;
@@ -10,6 +11,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 파티룸 리스트, 태그 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -44,5 +48,21 @@ public class ListController {
 
 		Page<Room> roomList = listService.getRoomListByWord(word, include, pageable);
 		return ResponseEntity.status(200).body(RoomListRes.of(200, "Success", roomList));
+	}
+
+	@GetMapping("/tags")
+	@ApiOperation(value = "태그 정보 반환", notes = "현재 입력 단어와 전방 일치하는 태그 반환.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공")
+	})
+	public ResponseEntity<? extends BaseResponseBody> getAppropriateTagList(
+			@RequestParam @ApiParam(value = "검색어", required = true) String word) {
+
+		List<String> temp = new ArrayList<>();
+		temp.add("1234");
+		temp.add("test");
+		temp.add("party");
+
+		return ResponseEntity.status(200).body(SuggestedKeywardRes.of(200, "Success", temp));
 	}
 }

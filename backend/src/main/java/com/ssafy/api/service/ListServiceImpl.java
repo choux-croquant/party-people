@@ -63,4 +63,9 @@ public class ListServiceImpl implements ListService {
 			}
 		}
 	}
+
+	@Override
+	public List<String> getRelativeKeyward(String word) {
+		return null;
+	}
 }
