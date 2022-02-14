@@ -56,13 +56,11 @@ public class ListController {
 			@ApiResponse(code = 200, message = "성공")
 	})
 	public ResponseEntity<? extends BaseResponseBody> getAppropriateTagList(
-			@RequestParam @ApiParam(value = "검색어", required = true) String word) {
+			@RequestParam @ApiParam(value = "검색어", required = true) String word,
+			@RequestParam @ApiParam(value = "검색 키워드(제목 : title, 내용 : des, 해시태그 : hashtag)", required = true)  String include) {
 
-		List<String> temp = new ArrayList<>();
-		temp.add("1234");
-		temp.add("test");
-		temp.add("party");
+		List<String> suggestion = listService.getRelativeKeyward(include, word);
 
-		return ResponseEntity.status(200).body(SuggestedKeywardRes.of(200, "Success", temp));
+		return ResponseEntity.status(200).body(SuggestedKeywardRes.of(200, "Success", suggestion));
 	}
 }
