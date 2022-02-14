@@ -41,7 +41,7 @@
 <style></style>
 
 <script>
-import { computed, onActivated, reactive } from 'vue';
+import { computed,  reactive } from 'vue';
 import { useStore } from 'vuex';
 
 export default {
