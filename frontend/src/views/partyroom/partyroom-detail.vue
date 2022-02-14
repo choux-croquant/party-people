@@ -585,6 +585,14 @@ export default {
 			);
 			// 자신의 채팅창에 당첨자 로그 출력
 			this.$refs.chat.addMessage(JSON.stringify(messageData), false);
+			// 투표 생성 모달 내용 초기화
+			this.$refs.roomSidebar.$refs.voteCreateModal.state.voteInfo.voteTopic =
+				'';
+			this.$refs.roomSidebar.$refs.voteCreateModal.state.voteInfo.voteList = [];
+			this.$refs.roomSidebar.$refs.voteCreateModal.state.itemNum = 2;
+			// 기표 모달 내용 초기화
+			this.$refs.roomSidebar.$refs.voteCreateModal.$refs.voteModal.state.checked =
+				null;
 		},
 
 		// 투표 결과 내림차순 정렬
