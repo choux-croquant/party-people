@@ -1,7 +1,5 @@
 <template>
-	<div
-		class="absolute flex top-0 h-screen z-20 right-0 flex-row"
-	>
+	<div class="absolute flex top-0 h-screen z-20 right-0 flex-row">
 		<!-- chat-bar toggle button -->
 		<!-- <button
 			@click.prevent="toggle()"
@@ -86,7 +84,7 @@
 				</li>
 			</ul>
 
-			<div class="flex flex-col items-start	w-full mt-8">
+			<div class="flex flex-col items-start w-full mt-8">
 				<!-- 메시지 보낼 유저 선택창 -->
 				<div
 					class="relative inline-flex border-3 rounded-lg border-main-100 w-1/2 mb-4 h-7 p-0"
@@ -146,7 +144,6 @@
 					</svg>
 				</div>
 			</div>
-
 		</div>
 	</div>
 </template>

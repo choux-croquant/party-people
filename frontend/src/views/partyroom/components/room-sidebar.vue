@@ -1,7 +1,5 @@
 <template>
-	<div
-		class="absolute flex top-0 h-screen z-20 left-0 flex-row-reverse"
-	>
+	<div class="absolute flex top-0 h-screen z-20 left-0 flex-row-reverse">
 		<!-- toggle button -->
 		<!-- <button
 			@click.prevent="toggle"
