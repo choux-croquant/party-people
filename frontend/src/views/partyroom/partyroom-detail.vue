@@ -2,7 +2,7 @@
 	<div class="h-screen w-screen flex bg-tc-500">
 		<div class="fixed inset-0 flex z-40">
 			<room-sidebar
-				@sendRouletteSignal="sendRouletteSignal"
+				@sendRoulletteMessage="sendRoulletteMessage"
 				@startVote="startVote"
 				@sendVoteResult="sendVoteResult"
 				@toggle-whiteboard="toggleWhiteboard"
@@ -579,7 +579,7 @@ export default {
 				false,
 				'center',
 				5000,
-				'success',
+				'info',
 				'투표 결과...\n' + resultList[0].item + '당첨!',
 				resultList[0].count + '표를 얻었습니다.',
 			);
@@ -637,11 +637,6 @@ export default {
 				});
 		},
 
-		// roulette-create-modal 에서 startSignal() 메서드를 호출하면 현재 컴포넌트에서 룰렛 실행을 위한 signal 보냄
-		sendRouletteSignal(rouletteTopic) {
-			this.sendRoulletteMessage(rouletteTopic);
-		},
-
 		// 룰렛 종료
 		closeRoulette() {
 			// 채팅창에 로그로 남길 데이터 정의
@@ -660,9 +655,19 @@ export default {
 				sender: 'System',
 				time: current,
 			};
-
+			// 룰렛 결과 토스트 알림
+			swal(
+				false,
+				'center',
+				5000,
+				'info',
+				'룰렛 결과...\n' + participants[winnerIdx].value + '님 당첨!',
+				'축하합니다~!',
+			);
 			// 자신의 채팅창에 당첨자 로그 출력
 			this.$refs.chat.addMessage(JSON.stringify(messageData), false);
+			// 룰렛 제목 초기화
+			this.$refs.roomSidebar.$refs.rouletteCreateModal.rouletteTopic = '';
 			// 룰렛 컴포넌트 show 해제
 			this.isRouletteOpen = false;
 			// 사이드바 모달 열려있는 상태 해제
