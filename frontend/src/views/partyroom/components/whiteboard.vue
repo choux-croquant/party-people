@@ -131,6 +131,8 @@ export default {
 			colors: null,
 			range: null,
 			painting: false,
+			lastX: undefined,
+			lastY: undefined,
 		});
 
 		onMounted(() => {
@@ -141,33 +143,54 @@ export default {
 			const eraser = document.querySelector('#eraser');
 
 			const INITIAL_COLOR = '#2c2c2c';
-			const CANVAS_SIZE = 500;
+			const CANVAS_WIDTH = 1000;
+			const CANVAS_HEIGHT = 500;
 
-			state.canvas.width = 1000;
-			state.canvas.height = CANVAS_SIZE;
+			state.canvas.width = CANVAS_WIDTH;
+			state.canvas.height = CANVAS_HEIGHT;
 
 			state.ctx.fillStyle = 'white';
-			state.ctx.fillRect(0, 0, 1000, CANVAS_SIZE);
+			state.ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 			state.ctx.strokeStyle = INITIAL_COLOR;
 			state.ctx.lineWidth = 2.5;
+			state.ctx.lineCap = 'round';
 			state.painting = false;
 
 			const stopPainting = () => {
-				// state.painting = false;
-				sendPaintingState(false);
+				state.painting = false;
+				state.lastX = undefined;
+				state.lastY = undefined;
 			};
 
 			const startPainting = () => {
-				// state.painting = true;
-				sendPaintingState(true);
+				state.painting = true;
 			};
 
-			// 캔버스 내에서 마우스를 움직일 때마다 호출 (현재 좌표, 붓 색상/두께 정보를 담아 sendSignal 함수 호출)
-			const onMouseMove = async event => {
+			// 캔버스 내에서 마우스를 움직일 때마다 호출
+			const onMouseMove = event => {
 				const x = event.offsetX;
 				const y = event.offsetY;
 
-				sendSignal(x, y, state.ctx.strokeStyle, state.ctx.lineWidth);
+				// 버튼을 클릭하지 않은 상태인 경우 => 좌표 정보만 저장하고 리턴
+				if (state.painting) {
+					if (!state.lastX) {
+						state.lastX = x;
+						state.lastY = y;
+						return;
+					}
+
+					// 버튼을 클릭한 상태인 경우 => 그림 관련 정보를 signal로 보낸 뒤, 좌표 저장
+					sendSignal(
+						state.lastX,
+						state.lastY,
+						x,
+						y,
+						state.ctx.strokeStyle,
+						state.ctx.lineWidth,
+					);
+					state.lastX = x;
+					state.lastY = y;
+				}
 			};
 
 			// 붓 색상 설정
@@ -224,35 +247,29 @@ export default {
 		});
 
 		// ctx 정보 보내기 step 1
-		const sendSignal = (x, y, color, width) => {
-			emit('send-whiteboard-signal', x, y, color, width);
+		const sendSignal = (lastX, lastY, x, y, color, width) => {
+			emit('send-whiteboard-signal', lastX, lastY, x, y, color, width);
 		};
 
 		// ctx 정보 보내기 step 4
-		const addWhiteboardSignal = data => {
-			let parsedData = JSON.parse(data);
+		const addWhiteboardSignal = canvasData => {
+			let data = JSON.parse(canvasData);
 
-			if (!state.painting) {
-				state.ctx.beginPath();
-				state.ctx.moveTo(parsedData.currentX, parsedData.currentY);
-			} else {
-				state.ctx.strokeStyle = parsedData.color;
-				state.ctx.lineWidth = parsedData.width;
-				state.ctx.lineTo(parsedData.currentX, parsedData.currentY);
-				state.ctx.stroke();
-			}
-		};
+			// 색깔, 두께 정보 임시로 저장
+			let tempColor = state.ctx.strokeStyle;
+			let tempWidth = state.ctx.lineWidth;
 
-		// painting state 정보 보내기 step 1
-		const sendPaintingState = is_painting => {
-			emit('send-painting-signal', is_painting);
-		};
+			state.ctx.beginPath();
+			state.ctx.strokeStyle = data.color;
+			state.ctx.lineWidth = data.width;
+			state.ctx.moveTo(data.lastX, data.lastY);
+			state.ctx.lineTo(data.currentX, data.currentY);
+			state.ctx.stroke();
+			state.ctx.closePath();
 
-		// painting state 정보 보내기 step 4
-		const addPaintingSignal = data => {
-			let is_painting = JSON.parse(data);
-
-			state.painting = is_painting;
+			// 기존의 색깔, 두께 정보 다시 저장
+			state.ctx.strokeStyle = tempColor;
+			state.ctx.lineWidth = tempWidth;
 		};
 
 		// 화이트보드 창 닫기
@@ -263,7 +280,6 @@ export default {
 		// 모든 참가자의 화이트보드 초기화 step 1
 		const onClickResetBtn = () => {
 			emit('send-reset-signal');
-			// state.ctx.fillRect(0, 0, 1000, 500);
 		};
 
 		// 모든 참가자의 화이트보드 초기화 step 4
@@ -275,8 +291,6 @@ export default {
 			state,
 			sendSignal,
 			addWhiteboardSignal,
-			sendPaintingState,
-			addPaintingSignal,
 			closeWhiteboard,
 			onClickResetBtn,
 			resetWhiteboard,

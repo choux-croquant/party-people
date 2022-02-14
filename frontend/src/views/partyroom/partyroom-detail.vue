@@ -100,7 +100,6 @@
 						v-show="isWhiteboardOpen"
 						class="row-span-3 justify-center items-center mb-16"
 						@send-whiteboard-signal="sendWhiteboardSignal"
-						@send-painting-signal="sendPaintingSignal"
 						@send-reset-signal="sendResetSignal"
 						@close-whiteboard="closeWhiteboard"
 					></whiteboard>
@@ -163,7 +162,7 @@ import roomBottombar from './components/room-bottombar.vue';
 import timer from './components/timer.vue';
 import Roulette from './components/roulette.vue';
 import Whiteboard from './components/whiteboard.vue';
-import Swal from 'sweetalert2';
+import { swal } from '@/assets/js/common';
 import { VueAgile } from 'vue-agile';
 
 const OPENVIDU_SERVER_URL = 'https://pparttypeople.kro.kr:4443';
@@ -304,12 +303,6 @@ export default {
 				this.$refs.whiteboard.addWhiteboardSignal(event.data);
 			});
 
-			// painting state 정보 보내기 step 3
-			// painting state signal 받기
-			this.session.on('signal:painting-state', event => {
-				this.$refs.whiteboard.addPaintingSignal(event.data);
-			});
-
 			// 모든 참가자의 화이트보드 초기화 step 3
 			this.session.on('signal:reset-whiteboard', () => {
 				this.$refs.whiteboard.resetWhiteboard();
@@ -355,18 +348,14 @@ export default {
 					});
 			});
 
-			const Toast = Swal.mixin({
-				toast: true,
-				position: 'top-right',
-				showConfirmButton: false,
-				timer: 1500,
-				timerProgressBar: true,
-			});
-
-			Toast.fire({
-				icon: 'success',
-				title: '파티룸에 입장하셨습니다.',
-			});
+			swal(
+				true,
+				'top-right',
+				1500,
+				'success',
+				'파티룸에 입장하셨습니다.',
+				null,
+			);
 
 			window.addEventListener('beforeunload', this.leaveSession);
 		},
@@ -386,18 +375,14 @@ export default {
 			window.removeEventListener('beforeUnmount', this.leaveSession);
 			this.router.push({ name: 'Home' });
 
-			const Toast = Swal.mixin({
-				toast: true,
-				position: 'top-right',
-				showConfirmButton: false,
-				timer: 1500,
-				timerProgressBar: true,
-			});
-
-			Toast.fire({
-				icon: 'success',
-				title: '파티룸에서 퇴장하셨습니다.',
-			});
+			swal(
+				true,
+				'top-right',
+				1500,
+				'success',
+				'파티룸에서 퇴장하셨습니다.',
+				null,
+			);
 		},
 
 		getToken(mySessionId) {
@@ -573,14 +558,47 @@ export default {
 				minute: '2-digit',
 				hour12: false, // true인 경우 오후 10:25와 같이 나타냄.
 			});
-			let voteMessage = `투표 결과입니다. ${JSON.stringify(voteResult)}`;
+
+			let voteInfo = this.$store.getters['root/getVoteInfo'];
+			let resultList = this.sortVoteResult(voteResult);
+			// let voteMessage = `투표 결과입니다. ${JSON.stringify(voteResult)}`;
+			let voteMessage = `[${voteInfo.voteTopic}] 투표 결과 `;
+			for (var i = 0; i < resultList.length; i++) {
+				voteMessage += `${resultList[i].item}(${resultList[i].count}표) `;
+			}
+
 			let messageData = {
 				content: voteMessage,
 				sender: 'System',
 				time: current,
 			};
+
+			// 투표 결과 토스트 알림
+			swal(
+				false,
+				'center',
+				5000,
+				'success',
+				'투표 결과...\n' + resultList[0].item + '당첨!',
+				resultList[0].count + '표를 얻었습니다.',
+			);
 			// 자신의 채팅창에 당첨자 로그 출력
 			this.$refs.chat.addMessage(JSON.stringify(messageData), false);
+		},
+
+		// 투표 결과 내림차순 정렬
+		sortVoteResult(voteResult) {
+			let resultList = [];
+			for (var key in voteResult) {
+				resultList.push({
+					item: key,
+					count: voteResult[key],
+				});
+			}
+			resultList.sort(function (a, b) {
+				return b.count - a.count;
+			});
+			return resultList;
 		},
 
 		audioOnOff({ audio }) {
@@ -755,8 +773,10 @@ export default {
 
 		// ctx 정보 보내기 step 2
 		// 현재 좌표, 색깔, 굵기 정보를 받아 파티룸 내의 전체 사용자에게 전송
-		sendWhiteboardSignal(x, y, color, width) {
+		sendWhiteboardSignal(lastX, lastY, x, y, color, width) {
 			let data = {
+				lastX: lastX,
+				lastY: lastY,
 				currentX: x,
 				currentY: y,
 				color: color,
@@ -768,20 +788,6 @@ export default {
 					data: JSON.stringify(data),
 					to: [],
 					type: 'whiteboard',
-				})
-				.catch(error => {
-					console.log(error);
-				});
-		},
-
-		// painting state 정보 보내기 step 2
-		// painting state를 받아 파티룸 내의 전체 사용자에게 전송
-		sendPaintingSignal(is_painting) {
-			this.session
-				.signal({
-					data: JSON.stringify(is_painting),
-					to: [],
-					type: 'painting-state',
 				})
 				.catch(error => {
 					console.log(error);
