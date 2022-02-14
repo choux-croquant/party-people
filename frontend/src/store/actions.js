@@ -20,7 +20,7 @@ export function requestRoomList({ state }) {
 		backAxios.get(url, {
 			params: {
 				page: state.page,
-				size: 6,
+				size: 8,
 				word: state.searchValue,
 				include: state.searchOption
 			}
