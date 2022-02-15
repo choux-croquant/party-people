@@ -145,6 +145,9 @@
 	width: 24%;
 	height: 100%;
 }
+.userSpeaking {
+	border: 2px solid red;
+}
 /* .contents-container {
   padding-left: 5%;
   padding-right: 5%;
@@ -229,7 +232,7 @@ export default {
 			this.session.on('streamCreated', ({ stream }) => {
 				const subscriber = this.session.subscribe(stream);
 
-				// subscriber.userId = this.myUserName;  // subscriber Object에 userName 추가
+				subscriber.userId = this.myUserName; // subscriber Object에 userName 추가
 				this.subscribers.push(subscriber);
 			});
 
@@ -311,18 +314,28 @@ export default {
 
 			// 발언자 감지
 			this.session.on('publisherStartSpeaking', event => {
-				console.log(
-					'@@publisher start@@',
-					JSON.parse(event.connection.data).clientData,
-				);
+				for (let i = 0; i < this.subscribers.length; i++) {
+					if (
+						this.subscribers[i].userId ===
+						JSON.parse(event.connection.data).clientData
+					) {
+						this.subscribers[i].videos[0].video.classList.add('userSpeaking');
+					}
+				}
 			});
 
-      // 발언자 감지
+			// 발언자 감지
 			this.session.on('publisherStopSpeaking', event => {
-				console.log(
-					'@@publisher stop@@',
-					JSON.parse(event.connection.data).clientData,
-				);
+				for (let i = 0; i < this.subscribers.length; i++) {
+					if (
+						this.subscribers[i].userId ===
+						JSON.parse(event.connection.data).clientData
+					) {
+						this.subscribers[i].videos[0].video.classList.remove(
+							'userSpeaking',
+						);
+					}
+				}
 			});
 
 			// --- Connect to the session with a valid user token ---
