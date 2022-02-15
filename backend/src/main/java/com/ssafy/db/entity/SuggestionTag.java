@@ -15,4 +15,12 @@ import javax.persistence.Table;
 @Setter
 public class SuggestionTag extends BaseEntity{
     private String tagName;
+
+    public SuggestionTag(Tag tag) {
+        this.tagName = tag.getTagName();
+    }
+
+    public SuggestionTag() {
+
+    }
 }

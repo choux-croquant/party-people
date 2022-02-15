@@ -1,6 +1,5 @@
 package com.ssafy.db.repository;
 
-import com.ssafy.db.entity.Room;
 import com.ssafy.db.entity.SuggestionRoom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
