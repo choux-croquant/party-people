@@ -146,6 +146,9 @@
 	width: 24%;
 	height: 100%;
 }
+.userSpeaking {
+	border: 2px solid red;
+}
 /* .contents-container {
   padding-left: 5%;
   padding-right: 5%;
@@ -224,13 +227,21 @@ export default {
 			// --- Init a session ---
 			this.session = this.OV.initSession();
 
+			// --- Optimize Audio Settings
+			this.OV.setAdvancedConfiguration({
+				publisherSpeakingEventsOptions: {
+					interval: 50,
+					threshold: -75,
+				},
+			});
+
 			// --- Specify the actions when events take place in the session ---
 
 			// On every new Stream received...
 			this.session.on('streamCreated', ({ stream }) => {
 				const subscriber = this.session.subscribe(stream);
 
-				// subscriber.userId = this.myUserName;  // subscriber Object에 userName 추가
+				subscriber.userId = this.myUserName; // subscriber Object에 userName 추가
 				this.subscribers.push(subscriber);
 			});
 
@@ -310,6 +321,32 @@ export default {
 				this.$refs.whiteboard.resetWhiteboard();
 			});
 
+			// 발언자 감지
+			this.session.on('publisherStartSpeaking', event => {
+				for (let i = 0; i < this.subscribers.length; i++) {
+					if (
+						this.subscribers[i].userId ===
+						JSON.parse(event.connection.data).clientData
+					) {
+						this.subscribers[i].videos[0].video.classList.add('userSpeaking');
+					}
+				}
+			});
+
+			// 발언자 감지
+			this.session.on('publisherStopSpeaking', event => {
+				for (let i = 0; i < this.subscribers.length; i++) {
+					if (
+						this.subscribers[i].userId ===
+						JSON.parse(event.connection.data).clientData
+					) {
+						this.subscribers[i].videos[0].video.classList.remove(
+							'userSpeaking',
+						);
+					}
+				}
+			});
+
 			// --- Connect to the session with a valid user token ---
 
 			// 'getToken' method is simulating what your server-side should do.
@@ -336,7 +373,6 @@ export default {
 
 						this.mainStreamManager = publisher;
 						this.publisher = publisher;
-						console.log(this.publisher);
 
 						// store의 publisher 업데이트
 						this.$store.commit('root/setPublisher', publisher);
