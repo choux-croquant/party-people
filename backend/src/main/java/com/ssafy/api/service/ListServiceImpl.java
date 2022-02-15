@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.db.entity.Room;
 import com.ssafy.db.entity.Session;
+import com.ssafy.db.entity.SuggestionRoom;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -21,6 +22,10 @@ public class ListServiceImpl implements ListService {
 	private ListRepository listRepository;
 	@Autowired
 	private RoomTagRepositorySupport roomTagRepositorySupport;
+	@Autowired
+	private SuggestionRoomRepositorySupport suggestionRoomRepositorySupport;
+	@Autowired
+	private SuggestionTagRepositorySupport suggestionTagRepositorySupport;
 
 	@Override
 	public Page<Room> getRoomList(Pageable pageable) {
@@ -65,7 +70,15 @@ public class ListServiceImpl implements ListService {
 	}
 
 	@Override
-	public List<String> getRelativeKeyward(String word) {
+	public List<String> getRelativeKeyward(String include, String word) {
+		switch (include) {
+			case "title" :
+				return suggestionRoomRepositorySupport.getAppropriateTitle(word);
+			case "des" :
+				return suggestionRoomRepositorySupport.getAppropriateDescription(word);
+			case "hashtag" :
+				return suggestionTagRepositorySupport.getAppropriateTag(word);
+		}
 		return null;
 	}
 }
