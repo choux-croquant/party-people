@@ -11,6 +11,7 @@
 				@textOverlay="applyTextFilter"
 				@voiceFilter="applyVoiceFilter"
 				@filterOff="filterOff"
+				@bottombarFilterBtn="bottombarFilterBtn"
 				ref="roomSidebar"
 			></room-sidebar>
 			<div id="session" class="w-full pl-32 pr-80" v-if="session">
@@ -336,6 +337,10 @@ export default {
 						this.mainStreamManager = publisher;
 						this.publisher = publisher;
 						console.log(this.publisher);
+
+						// store의 publisher 업데이트
+						this.$store.commit('root/setPublisher', publisher);
+						console.log(this.$store.getters['root/getPublisher']);
 
 						// --- Publish your stream ---
 						this.session.publish(this.publisher);
@@ -684,6 +689,8 @@ export default {
 
 		// Kurento faceOverlayFilter 적용한 스티커 필터
 		applyStickerFilter(filterInfo) {
+			// bottombar 필터 해제 버튼 활성화
+			this.$refs.bottombar.state.filter = true;
 			this.publisher.stream.applyFilter('FaceOverlayFilter').then(filter => {
 				var offsetX;
 				var offsetY;
@@ -787,6 +794,12 @@ export default {
 				.catch(error => {
 					console.error(error);
 				});
+		},
+
+		// bottombar filter 버튼 토글
+		bottombarFilterBtn(btnState) {
+			// bottombar 필터 해제 버튼 상태 변화
+			this.$refs.bottombar.state.filter = btnState;
 		},
 
 		// 화이트보드 창 열기
