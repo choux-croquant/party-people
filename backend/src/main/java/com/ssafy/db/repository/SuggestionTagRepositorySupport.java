@@ -18,7 +18,7 @@ public class SuggestionTagRepositorySupport {
 
     public List<String> getAppropriateTag(String word) {
         List<String> suggestionTag = jpaQueryFactory.select(qSuggestionTag.tagName).distinct().from(qSuggestionTag).
-                where(qSuggestionTag.tagName.like(word + "%")).fetch();
+                where(qSuggestionTag.tagName.like(word + "%")).limit(10).fetch();
 
         return suggestionTag;
     }
