@@ -226,6 +226,14 @@ export default {
 			// --- Init a session ---
 			this.session = this.OV.initSession();
 
+			// --- Optimize Audio Settings
+			this.OV.setAdvancedConfiguration({
+				publisherSpeakingEventsOptions: {
+					interval: 50,
+					threshold: -75,
+				},
+			});
+
 			// --- Specify the actions when events take place in the session ---
 
 			// On every new Stream received...
