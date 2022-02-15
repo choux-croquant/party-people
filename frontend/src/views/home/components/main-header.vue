@@ -2,7 +2,7 @@
 	<nav class="bg-white border-gray-200 px-4 py-5">
 		<div class="flex flex-wrap justify-between items-center w-full my-0">
 			<a href="#" class="flex-none ml-2 mr-6">
-				<img class="w-10 h-10" src="@/assets/logo.png" />
+				<img class="w-10 h-10" src="@/assets/images/logo.svg" />
 			</a>
 			<div class="flex-auto">
 				<div class="relative mr-3">
@@ -186,7 +186,7 @@ export default {
 		const addHash = () => {
 			if (state.searchOption !== 'hashtag') return;
 			state.searchValue += '#';
-		}
+		};
 
 		// 파티룸 검색 시 백엔드 요청(키워드 배열 형태로 요청)
 		const roomSearch = () => {
