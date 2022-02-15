@@ -171,6 +171,30 @@
 							class="overflow-x-auto w-full h-14 border-main-100 border-2 font-bold text-sm rounded-md text-gray-600 border-transparent focus:border-transparent focus:ring-0 appearance-none"
 						/>
 					</div>
+					<!-- 보이스 필터 선택 -->
+					<div
+						v-if="state.selectedCategory === '음성'"
+						id="scrolling-content"
+						class="flex overflow-x-auto h-full"
+					>
+						<div
+							v-for="custom in state.voiceFilterList"
+							:key="custom.id"
+							class="w-1/4 cursor-pointer h-full px-4 flex-shrink-0 text-center"
+							v-show="true"
+							@click="clickVoiceCustom(custom)"
+						>
+							<div
+								:class="[
+									custom.id === state.selectedCustom
+										? 'border-4 border-sub-200'
+										: 'mt-3 border-4 border-main-100 py-4 rounded-xl bg-main-200 text-tc-500',
+								]"
+							>
+								{{ custom.url }}
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 			<a
@@ -187,6 +211,7 @@ import { ref, reactive } from 'vue';
 import BaseModal from './base-modal.vue';
 import stickerListJson from '@/assets/json-assets/stickerList.json';
 import visualFilterJson from '@/assets/json-assets/visualFilterList.json';
+import voiceFilterJson from '@/assets/json-assets/voiceFilterList.json';
 
 export default {
 	name: 'VideoCustomizeModal',
@@ -207,6 +232,7 @@ export default {
 				{ id: 1, name: '스티커' },
 				{ id: 2, name: '필터' },
 				{ id: 3, name: '문구' },
+				{ id: 4, name: '음성' },
 			],
 
 			fonts: [
@@ -230,6 +256,8 @@ export default {
 			stickerList: stickerListJson,
 
 			visualFilterList: visualFilterJson,
+
+			voiceFilterList: voiceFilterJson,
 
 			textList: {
 				inputText: '',
@@ -264,6 +292,12 @@ export default {
 			state.isClicked = true;
 		};
 
+		const clickVoiceCustom = customObject => {
+			console.log('선택된 항목 : ' + customObject);
+			state.selectedCustom = customObject.command;
+			state.isClicked = true;
+		};
+
 		// 카테고리에 따라 파티룸 내부 함수 호출(emit)
 		const applyVideoCustom = () => {
 			var selected = state.selectedCategory;
@@ -290,6 +324,8 @@ export default {
 						font: state.textList.font,
 						fontSize: state.textList.fontSize,
 					});
+				} else if (selected === '음성') {
+					emit('voiceFilter', state.selectedCustom);
 				}
 			}
 			state.isClicked = false;
@@ -344,6 +380,7 @@ export default {
 			close,
 			showCategory,
 			clickVideoCustom,
+			clickVoiceCustom,
 			applyVideoCustom,
 			customizeValidationCheck,
 			cancelVideoCustom,

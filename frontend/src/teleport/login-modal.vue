@@ -117,6 +117,18 @@ export default {
 					state.loginErr = false;
 					router.push({ name: 'Home' });
 					close();
+
+					// 로그인시 페이지 초기화 후 파티룸 리스트 다시 불러오기
+					store.commit('root/setPage', 1);
+					store
+						.dispatch('root/requestRoomList')
+						.then(res => {
+							store.commit('root/setRoomList', res.data.contents.content);
+						})
+						.catch(err => {
+							console.log(err);
+						});
+
 					swal(true, 'top', 1500, 'success', '로그인에 성공했습니다.', null);
 				})
 				.catch(err => {
