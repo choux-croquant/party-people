@@ -309,6 +309,22 @@ export default {
 				this.$refs.whiteboard.resetWhiteboard();
 			});
 
+			// 발언자 감지
+			this.session.on('publisherStartSpeaking', event => {
+				console.log(
+					'@@publisher start@@',
+					JSON.parse(event.connection.data).clientData,
+				);
+			});
+
+      // 발언자 감지
+			this.session.on('publisherStopSpeaking', event => {
+				console.log(
+					'@@publisher stop@@',
+					JSON.parse(event.connection.data).clientData,
+				);
+			});
+
 			// --- Connect to the session with a valid user token ---
 
 			// 'getToken' method is simulating what your server-side should do.
@@ -335,7 +351,6 @@ export default {
 
 						this.mainStreamManager = publisher;
 						this.publisher = publisher;
-						console.log(this.publisher);
 
 						// --- Publish your stream ---
 						this.session.publish(this.publisher);
