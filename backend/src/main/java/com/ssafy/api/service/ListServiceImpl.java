@@ -2,13 +2,11 @@ package com.ssafy.api.service;
 
 import com.ssafy.db.entity.Room;
 import com.ssafy.db.entity.Session;
-import com.ssafy.db.entity.SuggestionRoom;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
