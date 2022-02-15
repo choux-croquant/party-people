@@ -1,10 +1,7 @@
 <template>
-	<div
-		class="absolute flex top-0 h-screen z-20"
-		:class="[right ? 'right-0 flex-row' : 'left-0 flex-row-reverse']"
-	>
+	<div class="absolute flex top-0 h-screen z-20 left-0 flex-row-reverse">
 		<!-- toggle button -->
-		<button
+		<!-- <button
 			@click.prevent="toggle"
 			class="w-6 h-48 p-0 my-auto rounded-r-full cursor-pointer text-white bg-main-200 text-center focus:outline-none hover:bg-gray-500 transition-color duration-300"
 		>
@@ -40,7 +37,7 @@
 					stroke-linejoin="round"
 				/>
 			</svg>
-		</button>
+		</button> -->
 
 		<!-- sidebar -->
 		<div
@@ -581,7 +578,7 @@ export default {
 	data() {
 		return {
 			isSidebarOpen: true,
-			right: false,
+			// right: false,
 
 			showContentBtn: true,
 			showVideoBtn: true,
