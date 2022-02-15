@@ -2,7 +2,7 @@
 	<div class="h-screen w-screen flex bg-tc-500">
 		<div class="fixed inset-0 flex z-40">
 			<room-sidebar
-				@sendRouletteSignal="sendRouletteSignal"
+				@sendRoulletteMessage="sendRoulletteMessage"
 				@startVote="startVote"
 				@sendVoteResult="sendVoteResult"
 				@toggle-whiteboard="toggleWhiteboard"
@@ -11,6 +11,7 @@
 				@textOverlay="applyTextFilter"
 				@voiceFilter="applyVoiceFilter"
 				@filterOff="filterOff"
+				@bottombarFilterBtn="bottombarFilterBtn"
 				ref="roomSidebar"
 			></room-sidebar>
 			<div id="session" class="w-full pl-32 pr-80" v-if="session">
@@ -337,6 +338,10 @@ export default {
 						this.publisher = publisher;
 						console.log(this.publisher);
 
+						// store의 publisher 업데이트
+						this.$store.commit('root/setPublisher', publisher);
+						console.log(this.$store.getters['root/getPublisher']);
+
 						// --- Publish your stream ---
 						this.session.publish(this.publisher);
 					})
@@ -579,12 +584,20 @@ export default {
 				false,
 				'center',
 				5000,
-				'success',
+				'info',
 				'투표 결과...\n' + resultList[0].item + '당첨!',
 				resultList[0].count + '표를 얻었습니다.',
 			);
 			// 자신의 채팅창에 당첨자 로그 출력
 			this.$refs.chat.addMessage(JSON.stringify(messageData), false);
+			// 투표 생성 모달 내용 초기화
+			this.$refs.roomSidebar.$refs.voteCreateModal.state.voteInfo.voteTopic =
+				'';
+			this.$refs.roomSidebar.$refs.voteCreateModal.state.voteInfo.voteList = [];
+			this.$refs.roomSidebar.$refs.voteCreateModal.state.itemNum = 2;
+			// 기표 모달 내용 초기화
+			this.$refs.roomSidebar.$refs.voteCreateModal.$refs.voteModal.state.checked =
+				null;
 		},
 
 		// 투표 결과 내림차순 정렬
@@ -637,11 +650,6 @@ export default {
 				});
 		},
 
-		// roulette-create-modal 에서 startSignal() 메서드를 호출하면 현재 컴포넌트에서 룰렛 실행을 위한 signal 보냄
-		sendRouletteSignal(rouletteTopic) {
-			this.sendRoulletteMessage(rouletteTopic);
-		},
-
 		// 룰렛 종료
 		closeRoulette() {
 			// 채팅창에 로그로 남길 데이터 정의
@@ -660,9 +668,19 @@ export default {
 				sender: 'System',
 				time: current,
 			};
-
+			// 룰렛 결과 토스트 알림
+			swal(
+				false,
+				'center',
+				5000,
+				'info',
+				'룰렛 결과...\n' + participants[winnerIdx].value + '님 당첨!',
+				'축하합니다~!',
+			);
 			// 자신의 채팅창에 당첨자 로그 출력
 			this.$refs.chat.addMessage(JSON.stringify(messageData), false);
+			// 룰렛 제목 초기화
+			this.$refs.roomSidebar.$refs.rouletteCreateModal.rouletteTopic = '';
 			// 룰렛 컴포넌트 show 해제
 			this.isRouletteOpen = false;
 			// 사이드바 모달 열려있는 상태 해제
@@ -671,6 +689,8 @@ export default {
 
 		// Kurento faceOverlayFilter 적용한 스티커 필터
 		applyStickerFilter(filterInfo) {
+			// bottombar 필터 해제 버튼 활성화
+			this.$refs.bottombar.state.filter = true;
 			this.publisher.stream.applyFilter('FaceOverlayFilter').then(filter => {
 				var offsetX;
 				var offsetY;
@@ -774,6 +794,12 @@ export default {
 				.catch(error => {
 					console.error(error);
 				});
+		},
+
+		// bottombar filter 버튼 토글
+		bottombarFilterBtn(btnState) {
+			// bottombar 필터 해제 버튼 상태 변화
+			this.$refs.bottombar.state.filter = btnState;
 		},
 
 		// 화이트보드 창 열기

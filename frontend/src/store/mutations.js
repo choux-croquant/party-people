@@ -2,6 +2,10 @@ export function setPlatform(state, isDesktop) {
 	state.isDesktopPlatform = isDesktop;
 }
 
+export function setPublisher(state, publisher) {
+	state.publisher = publisher;
+}
+
 export function setRoomList(state, roomList) {
 	console.log(roomList);
 	state.roomList = roomList;
@@ -9,9 +13,9 @@ export function setRoomList(state, roomList) {
 
 export function pushRoomList(state, roomList) {
 	console.log(roomList);
-	roomList.forEach((room) => {
+	roomList.forEach(room => {
 		state.roomList.push(room);
-	})
+	});
 }
 
 export function setTimer(state, timerTime) {
@@ -43,16 +47,16 @@ export function setVoteResult(state, voteResult) {
 }
 
 export function setPage(state, page) {
-	console.log(page)
-	state.page = page
+	console.log(page);
+	state.page = page;
 }
 
-export function setSearchValue (state, searchValue) {
-	console.log(searchValue)
-	state.searchValue = searchValue
+export function setSearchValue(state, searchValue) {
+	console.log(searchValue);
+	state.searchValue = searchValue;
 }
 
-export function setSearchOption (state, searchOption) {
-	console.log(searchOption)
-	state.searchOption = searchOption
+export function setSearchOption(state, searchOption) {
+	console.log(searchOption);
+	state.searchOption = searchOption;
 }

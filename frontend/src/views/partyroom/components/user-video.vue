@@ -66,6 +66,8 @@ export default {
 		},
 	},
 
-	mounted() {},
+	mounted() {
+		this.userNickname = this.store.getters['root/getRoomUserList'];
+	},
 };
 </script>

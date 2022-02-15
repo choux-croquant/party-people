@@ -35,6 +35,7 @@ const IsDesktop = getIsDesktop();
 
 export default {
 	isDesktopPlatform: IsDesktop,
+	publisher: null,
 	roomList: [
 		{ id: 1, title: '파티룸 1번' },
 		{ id: 2, title: '파티룸 2번' },
@@ -43,7 +44,7 @@ export default {
 	timerTime: {
 		min: 0,
 		sec: 0,
-		count: false
+		count: false,
 	},
 	roomUserList: [],
 	voteInfo: {
@@ -56,7 +57,7 @@ export default {
 		winner: null,
 	},
 	roomId: null,
-	searchValue: "",
-	searchOption: "title",
-	page: 1
+	searchValue: '',
+	searchOption: 'title',
+	page: 1,
 };

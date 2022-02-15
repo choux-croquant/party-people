@@ -195,7 +195,6 @@ export default {
 	components: {
 		BaseModal,
 	},
-	// Todo : props 추가하는 법, https://v3.ko.vuejs.org/ko-kr/guide/composition-api-setup.html
 	setup(props, { emit }) {
 		const store = useStore();
 		const baseModal = ref(null);
@@ -256,7 +255,7 @@ export default {
 			};
 
 			this.store.commit('root/setRouletteSignalData', signalData);
-			this.$emit('sendRouletteSignal', this.rouletteTopic);
+			this.$emit('sendRoulletteMessage', this.rouletteTopic);
 			this.close();
 		},
 	},
