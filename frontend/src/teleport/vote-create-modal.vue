@@ -2,7 +2,7 @@
 	<base-modal ref="baseModal">
 		<div class="flex justify-center">
 			<div class="w-full max-w-xs">
-				<form class="bg-main-200 shadow-md rounded-t-xl px-8 pt-6 pb-8">
+				<div class="bg-main-200 shadow-md rounded-t-xl px-8 pt-6 pb-8">
 					<div
 						class="flex justify-between items-start rounded-t bg-main-200 mb-4"
 					>
@@ -35,8 +35,8 @@
 							v-model="state.voteInfo.voteTopic"
 						/>
 					</div>
-				</form>
-				<form class="bg-main-300 shadow-md rounded-b-xl px-8 pt-4 pb-8 mb-4">
+				</div>
+				<div class="bg-main-300 shadow-md rounded-b-xl px-8 pt-4 pb-8 mb-4">
 					<!-- 투표 항목 -->
 					<ul>
 						<li class="mt-4" v-for="i in state.itemNum" :key="i">
@@ -94,7 +94,7 @@
 							START
 						</button>
 					</div>
-				</form>
+				</div>
 				<p class="text-center text-gray-500 text-xs">
 					&copy;2022 PartyPeople Corp. All rights reserved.
 				</p>
@@ -114,6 +114,7 @@
 import BaseModal from './base-modal.vue';
 import { reactive, ref } from 'vue';
 import { useStore } from 'vuex';
+import { swal } from '@/assets/js/common';
 import voteModal from '@/teleport/vote-modal.vue';
 
 export default {
@@ -154,6 +155,12 @@ export default {
 		};
 
 		const sendVote = async () => {
+			let retu = voteValidationCheck();
+			console.log(retu);
+			if (!retu) {
+				swal(true, 'top', 1500, 'error', '내용을 입력해주세요.', null);
+				return;
+			}
 			store.commit('root/setVote', state.voteInfo);
 			emit('startVote', state.voteInfo);
 			close();
@@ -174,6 +181,22 @@ export default {
 			emit('sendVoteResult');
 		};
 
+		const voteValidationCheck = () => {
+			let topic = state.voteInfo.voteTopic;
+			let list = state.voteInfo.voteList;
+			let isValid = true;
+
+			if (topic === null || topic === '' || topic.length === 0) return false;
+			if (list === null || list.length === 0) return false;
+			list.forEach(voteItem => {
+				if (voteItem === null || voteItem === '' || voteItem.length === 0) {
+					isValid = false;
+				}
+			});
+
+			return isValid;
+		};
+
 		const closeModal = () => {
 			emit('closeModal');
 		};
@@ -189,6 +212,7 @@ export default {
 			voteModal,
 			sendVote,
 			sendVoteResult,
+			voteValidationCheck,
 			closeModal,
 		};
 	},
