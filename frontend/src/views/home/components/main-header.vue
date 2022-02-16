@@ -2,7 +2,7 @@
 	<nav class="bg-white border-gray-200 px-4 py-5">
 		<div class="flex flex-wrap justify-between items-center w-full my-0">
 			<a href="#" class="flex-none ml-2 mr-6">
-				<img class="w-10 h-10" src="@/assets/logo.png" />
+				<img class="w-10 h-10" src="@/assets/images/logo.svg" />
 			</a>
 			<div class="flex-auto">
 				<div class="relative mr-3">
