@@ -50,7 +50,7 @@ public class ListController {
 		return ResponseEntity.status(200).body(RoomListRes.of(200, "Success", roomList));
 	}
 
-	@GetMapping("/tags")
+	@GetMapping("/suggestion")
 	@ApiOperation(value = "태그 정보 반환", notes = "현재 입력 단어와 전방 일치하는 태그 반환.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "성공")

@@ -25,6 +25,7 @@
 					<input
 						ref="searchInput"
 						v-model="state.searchValue"
+						@input="realtimeSuggestion"
 						@keyup.enter="roomSearch()"
 						@keyup.space="addHash()"
 						type="text"
@@ -135,6 +136,7 @@ export default {
 			loginState: computed(() => store.getters['auth/getLoginState']),
 			searchValue: '',
 			searchOption: 'title',
+			suggestion: [],
 		});
 
 		const clickLogin = () => {
@@ -186,7 +188,7 @@ export default {
 		const addHash = () => {
 			if (state.searchOption !== 'hashtag') return;
 			state.searchValue += '#';
-		}
+		};
 
 		// 파티룸 검색 시 백엔드 요청(키워드 배열 형태로 요청)
 		const roomSearch = () => {
@@ -212,6 +214,21 @@ export default {
 			}
 		};
 
+		const realtimeSuggestion = () => {
+			store
+				.dispatch('root/requestSuggestionList', {
+					include: 'hashtag',
+					word: state.searchValue,
+				})
+				.then(res => {
+					state.suggestion = res.data.suggestions;
+					console.log(state.suggestion);
+				})
+				.catch(err => {
+					console.log(err);
+				});
+		};
+
 		return {
 			state,
 			searchInput,
@@ -225,6 +242,7 @@ export default {
 			changeOption,
 			addHash,
 			roomSearch,
+			realtimeSuggestion,
 		};
 	},
 };

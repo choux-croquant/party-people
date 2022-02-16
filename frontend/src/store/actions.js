@@ -15,7 +15,7 @@ export function requestRoomList({ state }) {
 	console.log('requestRoomList', state);
 	if(state.searchValue == null) state.searchValue = ""
 	const url = `/list/roomsearch`;
-	
+
 	return new Promise((resolve, reject) => {
 		backAxios.get(url, {
 			params: {
@@ -27,7 +27,7 @@ export function requestRoomList({ state }) {
 		})
 		.then(res => resolve(res))
 		.catch(err => reject(err))
-	}) 
+	})
 }
 
 export async function requestRoomUserList({ state }, payload) {
@@ -103,5 +103,17 @@ export function leaveSession({ state }, roomId) {
 		headers: {
 			Authorization: 'Bearer ' + token,
 		},
+	});
+}
+
+export async function requestSuggestionList({ state }, payload) {
+	const url = `/list/suggestion`;
+	let token = localStorage.getItem('access_token');
+
+	return backAxios({
+		method: 'GET',
+		url: url,
+		headers: { Authorization: 'Bearer ' + token },
+		params: { include: payload.include, word: payload.word },
 	});
 }

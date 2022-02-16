@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -69,14 +70,25 @@ public class ListServiceImpl implements ListService {
 
 	@Override
 	public List<String> getRelativeKeyward(String include, String word) {
+		List<String> suggestion = null;
+
 		switch (include) {
 			case "title" :
-				return suggestionRoomRepositorySupport.getAppropriateTitle(word);
+				suggestion = suggestionRoomRepositorySupport.getAppropriateTitle(word);
+				break;
 			case "des" :
-				return suggestionRoomRepositorySupport.getAppropriateDescription(word);
+				suggestion = suggestionRoomRepositorySupport.getAppropriateDescription(word);
+				break;
 			case "hashtag" :
-				return suggestionTagRepositorySupport.getAppropriateTag(word);
+				suggestion = new ArrayList<>();
+				for(String token : word.split("#")){
+					if(token.isBlank())
+						continue;
+					suggestion.addAll(suggestionTagRepositorySupport.getAppropriateTag(token));
+				}
+				break;
 		}
-		return null;
+
+		return suggestion;
 	}
 }
