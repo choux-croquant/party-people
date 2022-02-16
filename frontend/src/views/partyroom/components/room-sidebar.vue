@@ -117,8 +117,33 @@
 					</a>
 				</div>
 			</transition>
-			<!-- room customizing button -->
+			<!-- audio customizing button -->
 			<transition name="slide-fade">
+				<div
+					:class="[
+						state.isAnyModalOpen
+							? ''
+							: 'hover:bg-sub-300 w-full cursor-pointer',
+					]"
+					v-show="showAudioBtn"
+					@click="clickAudioCustomizingBtn()"
+				>
+					<a class="h-24 px-6 flex flex-col justify-center items-center w-full">
+						<svg
+							class="sidebar-menu-icon h-8 w-8"
+							viewBox="0 0 1024 1024"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M842 454c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8 0 140.3-113.7 254-254 254S258 594.3 258 454c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8 0 168.7 126.6 307.9 290 327.6V884H326.7c-13.7 0-24.7 14.3-24.7 32v36c0 4.4 2.8 8 6.2 8h407.6c3.4 0 6.2-3.6 6.2-8v-36c0-17.7-11-32-24.7-32H548V782.1c165.3-18 294-158 294-328.1zM512 624c93.9 0 170-75.2 170-168V232c0-92.8-76.1-168-170-168s-170 75.2-170 168v224c0 92.8 76.1 168 170 168zm-94-392c0-50.6 41.9-92 94-92s94 41.4 94 92v224c0 50.6-41.9 92-94 92s-94-41.4-94-92V232z"
+							/>
+						</svg>
+						<span class="text-main-100">audio customizing</span>
+					</a>
+				</div>
+			</transition>
+			<!-- room customizing button -->
+			<!-- <transition name="slide-fade">
 				<div
 					:class="[
 						state.isAnyModalOpen
@@ -152,9 +177,9 @@
 						<span class="text-main-100">room customizing</span>
 					</a>
 				</div>
-			</transition>
+			</transition> -->
 			<!-- link button -->
-			<transition name="slide-fade">
+			<!-- <transition name="slide-fade">
 				<div
 					:class="[
 						state.isAnyModalOpen
@@ -192,7 +217,7 @@
 						<span class="text-main-100">link</span>
 					</a>
 				</div>
-			</transition>
+			</transition> -->
 			<!-- timer button -->
 			<transition name="slide-fade">
 				<div
@@ -411,12 +436,17 @@
 		@stickerOverlay="stickerOverlay"
 		@visualFilter="visualFilter"
 		@textOverlay="textOverlay"
+		@filterOff="filterOff"
+		@bottombarFilterBtn="bottombarFilterBtn"
+		@closeModal="closeModal"
+	/>
+	<audio-customize-modal
+		ref="audioCustomizeModal"
 		@voiceFilter="voiceFilter"
 		@filterOff="filterOff"
 		@bottombarFilterBtn="bottombarFilterBtn"
 		@closeModal="closeModal"
 	/>
-	<theme-customize-modal ref="themeCustomizeModal" @closeModal="closeModal" />
 	<timer-create-modal ref="timerCreateModal" @closeModal="closeModal" />
 </template>
 
@@ -448,7 +478,7 @@
 import { ref, reactive } from 'vue';
 import VoteCreateModal from '@/teleport/vote-create-modal.vue';
 import videoCustomizeModal from '@/teleport/video-customize-modal.vue';
-import themeCustomizeModal from '@/teleport/theme-customize-modal.vue';
+import audioCustomizeModal from '@/teleport/audio-customize-modal.vue';
 import timerCreateModal from '@/teleport/timer-create-modal.vue';
 import rouletteCreateModal from '@/teleport/roulette-create-modal';
 import { swal } from '@/assets/js/common';
@@ -460,14 +490,14 @@ export default {
 		VoteCreateModal,
 		rouletteCreateModal,
 		videoCustomizeModal,
-		themeCustomizeModal,
+		audioCustomizeModal,
 		timerCreateModal,
 	},
 	setup(props, { emit }) {
 		const voteCreateModal = ref(null);
 		const rouletteCreateModal = ref(null);
 		const videoCustomizeModal = ref(null);
-		const themeCustomizeModal = ref(null);
+		const audioCustomizeModal = ref(null);
 		const timerCreateModal = ref(null);
 
 		const state = reactive({
@@ -497,10 +527,10 @@ export default {
 			state.isAnyModalOpen = true;
 		};
 
-		const clickThemeBtn = () => {
+		const clickAudioCustomizingBtn = () => {
 			// 다른 모달 오픈 상태에서는 실행 금지
 			if (state.isAnyModalOpen) return;
-			themeCustomizeModal.value.open();
+			audioCustomizeModal.value.open();
 			state.isAnyModalOpen = true;
 		};
 
@@ -562,10 +592,10 @@ export default {
 			voteCreateModal,
 			rouletteCreateModal,
 			videoCustomizeModal,
-			themeCustomizeModal,
+			audioCustomizeModal,
 			clickVote,
 			clickVideoCustomizingBtn,
-			clickThemeBtn,
+			clickAudioCustomizingBtn,
 			clickRoulette,
 			clickWhiteboardBtn,
 			timerCreateModal,
@@ -588,7 +618,7 @@ export default {
 
 			showContentBtn: true,
 			showVideoBtn: true,
-			showRoomBtn: true,
+			showAudioBtn: true,
 			showLinkBtn: true,
 
 			showTimerBtn: false,
