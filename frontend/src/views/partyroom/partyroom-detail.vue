@@ -28,12 +28,17 @@
 						id="video-container-1"
 						class="flex flex-wrap mx-8 justify-center gap-4"
 					>
-						<user-video class="userVideo-1" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-1"
+							:stream-manager="publisher"
+							ref="pubVideoRef"
+						/>
 						<user-video
 							class="userVideo-1"
 							v-for="sub in subscribers"
 							:key="sub.stream.connection.connectionId"
 							:stream-manager="sub"
+							ref="userVideoRef"
 						/>
 					</div>
 					<div
@@ -41,12 +46,17 @@
 						id="video-container-2"
 						class="flex flex-wrap mx-8 justify-center gap-4"
 					>
-						<user-video class="userVideo-2" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-2"
+							:stream-manager="publisher"
+							ref="pubVideoRef"
+						/>
 						<user-video
 							class="userVideo-2"
 							v-for="sub in subscribers"
 							:key="sub.stream.connection.connectionId"
 							:stream-manager="sub"
+							ref="userVideoRef"
 						/>
 					</div>
 					<div
@@ -54,12 +64,17 @@
 						id="video-container-3"
 						class="flex flex-wrap mx-8 justify-center gap-4"
 					>
-						<user-video class="userVideo-3" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-3"
+							:stream-manager="publisher"
+							ref="pubVideoRef"
+						/>
 						<user-video
 							class="userVideo-3"
 							v-for="sub in subscribers"
 							:key="sub.stream.connection.connectionId"
 							:stream-manager="sub"
+							ref="userVideoRef"
 						/>
 					</div>
 					<div
@@ -67,12 +82,17 @@
 						id="video-container-4"
 						class="flex flex-wrap mx-8 justify-center gap-4"
 					>
-						<user-video class="userVideo-4" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-4"
+							:stream-manager="publisher"
+							ref="pubVideoRef"
+						/>
 						<user-video
 							class="userVideo-4"
 							v-for="sub in subscribers"
 							:key="sub.stream.connection.connectionId"
 							:stream-manager="sub"
+							ref="userVideoRef"
 						/>
 					</div>
 				</div>
@@ -145,9 +165,6 @@
 .userVideo-4 {
 	width: 24%;
 	height: 100%;
-}
-.userSpeaking {
-	border: 2px solid red;
 }
 /* .contents-container {
   padding-left: 5%;
@@ -323,28 +340,32 @@ export default {
 
 			// 발언자 감지
 			this.session.on('publisherStartSpeaking', event => {
-				for (let i = 0; i < this.subscribers.length; i++) {
-					if (
-						this.subscribers[i].userId ===
-						JSON.parse(event.connection.data).clientData
-					) {
-						this.subscribers[i].videos[0].video.classList.add('userSpeaking');
+				if (this.$refs.userVideoRef) {
+					for (let i = 0; i < this.$refs.userVideoRef.length; i++) {
+						this.$refs.userVideoRef[i].highlightOn(
+							JSON.parse(event.connection.data).clientData,
+						);
 					}
 				}
+
+				this.$refs.pubVideoRef.highlightOn(
+					JSON.parse(event.connection.data).clientData,
+				);
 			});
 
 			// 발언자 감지
 			this.session.on('publisherStopSpeaking', event => {
-				for (let i = 0; i < this.subscribers.length; i++) {
-					if (
-						this.subscribers[i].userId ===
-						JSON.parse(event.connection.data).clientData
-					) {
-						this.subscribers[i].videos[0].video.classList.remove(
-							'userSpeaking',
+				if (this.$refs.userVideoRef) {
+					for (let i = 0; i < this.$refs.userVideoRef.length; i++) {
+						this.$refs.userVideoRef[i].highlightOff(
+							JSON.parse(event.connection.data).clientData,
 						);
 					}
 				}
+
+				this.$refs.pubVideoRef.highlightOff(
+					JSON.parse(event.connection.data).clientData,
+				);
 			});
 
 			// --- Connect to the session with a valid user token ---
