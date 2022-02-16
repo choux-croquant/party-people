@@ -19,6 +19,9 @@ export default {
 		getUserName(state) {
 			return state.userName;
 		},
+		getUserNickname(state) {
+			return state.userNickname;
+		},
 	},
 
 	mutations: {
@@ -29,6 +32,9 @@ export default {
 		},
 		setUserName(state, userName) {
 			state.userName = userName;
+		},
+		setUserNickname(state, nickname) {
+			state.userNickname = nickname;
 		},
 	},
 

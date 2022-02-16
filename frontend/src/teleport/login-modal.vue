@@ -3,6 +3,7 @@
 	<base-modal ref="baseModal">
 		<div class="flex justify-center">
 			<div class="w-full max-w-xs">
+				<!-- 로그인 시 아이디, 비밀번호 데이터를 입력받는 form -->
 				<form class="bg-main-300 shadow-md rounded-xl px-8 pt-6 pb-8 mb-4">
 					<div
 						class="flex justify-between items-start rounded-t border-b bg-main-300"
@@ -94,24 +95,30 @@ export default {
 			loginErr: false,
 		});
 		const open = () => {
-			console.log('loginopen');
 			baseModal.value.openModal();
 		};
 		const close = () => {
 			baseModal.value.closeModal();
 		};
+		// 로그인 액션과 유저데이터를 연속적으로 호출하여 localstorage에 로그인 상태, 아이디, 닉네임을 저장
 		const login = function () {
-			console.log(state.form);
 			store
 				.dispatch('auth/requestLogin', {
 					accountId: state.form.accountId,
 					password: state.form.password,
 				})
 				.then(result => {
-					console.log(result.data.accessToken);
 					localStorage.setItem('access_token', result.data.accessToken);
 					store.commit('auth/setLoginState', true);
 					store.commit('auth/setUserName', state.form.accountId);
+					store
+						.dispatch('root/requestUserData')
+						.then(res => {
+							store.commit('auth/setUserNickname', res.data.nickname);
+						})
+						.catch(err => {
+							console.log(err);
+						});
 					state.form.accountId = '';
 					state.form.password = '';
 					state.loginErr = false;
