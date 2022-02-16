@@ -2,7 +2,7 @@
 	<base-modal ref="baseModal">
 		<div class="flex justify-center">
 			<div class="w-full max-w-xs">
-				<form class="bg-main-300 shadow-md rounded-xl px-8 pt-6 pb-8">
+				<div class="bg-main-300 shadow-md rounded-xl px-8 pt-6 pb-8">
 					<div
 						class="flex justify-between items-start rounded-t border-none bg-main-300"
 					>
@@ -177,7 +177,7 @@
 							START
 						</button>
 					</div>
-				</form>
+				</div>
 			</div>
 		</div>
 	</base-modal>
