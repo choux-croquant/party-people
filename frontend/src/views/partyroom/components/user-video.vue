@@ -1,6 +1,10 @@
 <template>
 	<div v-if="streamManager" class="userVideoContainer">
-		<ov-video class="rounded-xl" :stream-manager="streamManager" />
+		<ov-video
+			class="rounded-xl"
+			:stream-manager="streamManager"
+			:class="{ userSpeaking: isSpeaking }"
+		/>
 		<div class="userOverlay rounded-b-xl text-tc-500">
 			<p>{{ clientData }} / {{ userNickname }}</p>
 		</div>
@@ -20,6 +24,9 @@
 	position: absolute;
 	bottom: 0px;
 }
+.userSpeaking {
+	border: 2px solid red;
+}
 </style>
 <script>
 import OvVideo from './ov-video';
@@ -34,6 +41,7 @@ export default {
 	data() {
 		return {
 			store: useStore(),
+			isSpeaking: false,
 		};
 	},
 
@@ -63,6 +71,26 @@ export default {
 		getConnectionData() {
 			const { connection } = this.streamManager.stream;
 			return JSON.parse(connection.data);
+		},
+		highlightOn(name) {
+			const { clientData } = this.getConnectionData();
+
+			if (clientData === name) {
+				this.isSpeaking = true;
+				return true;
+			}
+
+			return false;
+		},
+		highlightOff(name) {
+			const { clientData } = this.getConnectionData();
+
+			if (clientData === name) {
+				this.isSpeaking = false;
+				return true;
+			}
+
+			return false;
 		},
 	},
 
