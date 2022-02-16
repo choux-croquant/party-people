@@ -217,7 +217,7 @@ export default {
 		const realtimeSuggestion = () => {
 			store
 				.dispatch('root/requestSuggestionList', {
-					include: 'hashtag',
+					include: state.searchOption,
 					word: state.searchValue,
 				})
 				.then(res => {
