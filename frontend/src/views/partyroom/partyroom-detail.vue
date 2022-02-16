@@ -1,5 +1,5 @@
 <template>
-	<div class="h-screen w-screen flex bg-tc-500">
+	<div class="h-screen w-screen flex bg-tc-200">
 		<div class="fixed inset-0 flex z-40">
 			<room-sidebar
 				@sendRoulletteMessage="sendRoulletteMessage"
@@ -26,19 +26,12 @@
 					<div
 						v-if="currentUserCount == 0"
 						id="video-container-1"
-						class="flex flex-wrap mx-8 justify-center gap-4"
+						class="flex flex-wrap mx-8 justify-center mt-16 gap-4"
 					>
 						<user-video
 							class="userVideo-1"
 							:stream-manager="publisher"
 							ref="pubVideoRef"
-						/>
-						<user-video
-							class="userVideo-1"
-							v-for="sub in subscribers"
-							:key="sub.stream.connection.connectionId"
-							:stream-manager="sub"
-							ref="userVideoRef"
 						/>
 					</div>
 					<div

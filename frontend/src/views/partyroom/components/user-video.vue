@@ -25,7 +25,7 @@
 	bottom: 0px;
 }
 .userSpeaking {
-	border: 2px solid red;
+	outline: 4px solid #6667ab;
 }
 </style>
 <script>
@@ -48,25 +48,18 @@ export default {
 	props: {
 		streamManager: Object,
 	},
-
+	// 유저 아이디 정보와 유저 닉네임 정보를 computed 속성으로 불러온 후 사용
 	computed: {
 		clientData() {
 			const { clientData } = this.getConnectionData();
 			return clientData;
 		},
 		userNickname() {
-			const userList = this.store.getters['root/getRoomUserList'].map(user => {
-				return user.value.split('/');
-			});
-			const nickname = userList.map(user => {
-				if (user[0] === this.clientData) {
-					return user[1];
-				}
-			});
-			return nickname[0];
+			const userNickname = this.store.getters['auth/getUserNickname'];
+			return userNickname;
 		},
 	},
-
+	// 함수를 통해 css속성을 추가/제거 하는 것으로 speech detection 시 하이라이트 효과 구현
 	methods: {
 		getConnectionData() {
 			const { connection } = this.streamManager.stream;
@@ -92,10 +85,6 @@ export default {
 
 			return false;
 		},
-	},
-
-	mounted() {
-		this.userNickname = this.store.getters['root/getRoomUserList'];
 	},
 };
 </script>
