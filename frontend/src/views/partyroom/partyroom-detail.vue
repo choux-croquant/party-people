@@ -22,7 +22,7 @@
 					</div>
 				</div>
 				<!-- 컨텐츠가 없는 경우 -->
-				<div v-show="!isWhiteboardOpen && !isRouletteOpen">
+				<div v-show="!isWhiteboardOpen && !isRouletteOpen" class="mt-2">
 					<div
 						v-if="currentUserCount == 0"
 						id="video-container-1"
@@ -99,11 +99,11 @@
 						v-show="isWhiteboardOpen || isRouletteOpen"
 					>
 						<user-video
-							class="h-full slide max-h-48 p-3"
+							class="h-full slide max-h-48 mx-2"
 							:stream-manager="publisher"
 						/>
 						<user-video
-							class="h-full slide max-h-48 p-3"
+							class="h-full slide max-h-48 mx-2"
 							v-for="sub in subscribers"
 							:key="sub.stream.connection.connectionId"
 							:stream-manager="sub"
@@ -113,7 +113,7 @@
 					<whiteboard
 						ref="whiteboard"
 						v-show="isWhiteboardOpen"
-						class="row-span-3 justify-center items-center mb-16"
+						class="row-span-3 justify-center items-center mb-28"
 						@send-whiteboard-signal="sendWhiteboardSignal"
 						@send-reset-signal="sendResetSignal"
 						@close-whiteboard="closeWhiteboard"
@@ -389,7 +389,7 @@ export default {
 						this.publisher = publisher;
 
 						// store의 publisher 업데이트
-						this.$store.commit('root/setPublisher', publisher);
+						this.$store.commit('root/setPublisher', this.publisher);
 						console.log(this.$store.getters['root/getPublisher']);
 
 						// --- Publish your stream ---
@@ -425,6 +425,9 @@ export default {
 			this.publisher = undefined;
 			this.subscribers = [];
 			this.OV = undefined;
+
+			// store의 publisher 업데이트
+			this.$store.commit('root/setPublisher', this.publisher);
 
 			this.store.dispatch('root/leaveSession', this.mySessionId);
 

@@ -3,9 +3,7 @@
 		<div class="flex justify-center">
 			<div class="w-full max-w-xs">
 				<form class="bg-main-300 shadow-md rounded-xl px-8 pt-6 pb-8 mb-4">
-					<div
-						class="flex justify-between items-start rounded-t border-b bg-main-300"
-					>
+					<div class="flex justify-between items-start rounded-t bg-main-300">
 						<button
 							@click="close()"
 							type="button"
