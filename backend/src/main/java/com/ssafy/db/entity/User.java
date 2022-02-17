@@ -33,7 +33,4 @@ public class User extends BaseEntity{
     @OneToMany(mappedBy = "user")
     private List<Session> sessions;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    private List<UserTag> userTags;
 }
