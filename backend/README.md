@@ -37,33 +37,33 @@ backend
 │        │          ├── api  /* REST API 요청관련 컨트롤러, 서비스, 요청/응답 모델 정의 */
 │        │          │   ├── controller
 │        │          │   │   ├── AuthController.java
-│        │					│		│		├── ListController.java
-│        │					│		│		├── RoomController.java
+│        │			│	│	├── ListController.java
+│        │			│	│	├── RoomController.java
 │        │          │   │   └── UserController.java
 │        │          │   ├── request
 │        │          │   │   ├── RoomCreatePostReq.java
-│        │					│		│		├── RoomEntryPostReq.java
-│        │					│		│		├── RoomHostUpdatePostReq.java
-│        │					│		│		├── UserLoginPostReq.java
+│        │			│	│	├── RoomEntryPostReq.java
+│        │			│	│	├── RoomHostUpdatePostReq.java
+│        │			│	│	├── UserLoginPostReq.java
 │        │          │   │   └── UserSignUpPostReq.java
 │        │          │   ├── response
 │        │          │   │   ├── CreateRoomRes.java
-│        │					│		│		├── RoomEntryLinkRes.java
-│        │					│		│		├── RoomListRes.java
-│        │					│		│		├── RoomUserListRes.java
-│        │					│		│		├── RoomUserRes.java
-│        │					│		│		├── SuggestedKeywardRes.java
-│        │					│		│		├── UserLoginPostRes.java
+│        │			│	│	├── RoomEntryLinkRes.java
+│        │			│	│	├── RoomListRes.java
+│        │			│	│	├── RoomUserListRes.java
+│        │			│	│	├── RoomUserRes.java
+│        │			│	│	├── SuggestedKeywardRes.java
+│        │			│	│	├── UserLoginPostRes.java
 │        │          │   │   └── UserRes.java
 │        │          │   └── service
-│        │					│				├── FileUploadService.java
-│        │					│				├── FileUploadServiceImpl.java
-│        │					│				├── ListService.java
-│        │					│				├── ListServiceImpl.java
-│        │					│				├── OpenviduService.java
-│        │					│				├── OpenviduServiceImpl.java
-│        │					│				├── RoomService.java
-│        │					│				├── RoomServiceInpl.java
+│        │			│		├── FileUploadService.java
+│        │			│		├── FileUploadServiceImpl.java
+│        │			│		├── ListService.java
+│        │			│		├── ListServiceImpl.java
+│        │			│		├── OpenviduService.java
+│        │			│		├── OpenviduServiceImpl.java
+│        │			│		├── RoomService.java
+│        │			│		├── RoomServiceInpl.java
 │        │          │       ├── UserService.java
 │        │          │       └── UserServiceImpl.java
 │        │          ├── common /* 공용 유틸, 응답 모델, 인증, 예외처리 관련 정의*/
@@ -88,27 +88,27 @@ backend
 │        │          └── db /* 디비에 저장될 모델 정의 및 쿼리 구현 */
 │        │              ├── entity
 │        │              │   ├── BaseEntity.java
-│        │							│		├── Room.java
-│        │							│		├── RoomTag.java
-│        │							│		├── Session.java
-│        │							│		├── SuggstionRoom.java
-│        │							│		├── SuggestionTag.java
-│        │							│		├── Tag.java
+│        │				│	├── Room.java
+│        │				│	├── RoomTag.java
+│        │				│	├── Session.java
+│        │				│	├── SuggstionRoom.java
+│        │				│	├── SuggestionTag.java
+│        │				│	├── Tag.java
 │        │              │   └── User.java
 │        │              └── repository
-│        │									├── ListRepository.java
-│        │									├── ListRepositorySupport.java
-│        │									├── RoomRepository.java
-│        │									├── RoomRepositorySupport.java
-│        │									├── RoomTagRepository.java
-│        │									├── RoomTagRepositorySupport.java
-│        │									├── SessionRepository.java
-│        │									├── SessionRepositorySupport.java
-│        │									├── SuggestionRoomRepository.java
-│        │									├── SuggestionRoomRepositorySupport.java
-│        │									├── SuggestionTagRepository.java
-│        │									├── SuggestionTagRepositorySupport.java
-│        │									├── TagRepository.java
+│        │					├── ListRepository.java
+│        │					├── ListRepositorySupport.java
+│        │					├── RoomRepository.java
+│        │					├── RoomRepositorySupport.java
+│        │					├── RoomTagRepository.java
+│        │					├── RoomTagRepositorySupport.java
+│        │					├── SessionRepository.java
+│        │					├── SessionRepositorySupport.java
+│        │					├── SuggestionRoomRepository.java
+│        │					├── SuggestionRoomRepositorySupport.java
+│        │					├── SuggestionTagRepository.java
+│        │					├── SuggestionTagRepositorySupport.java
+│        │					├── TagRepository.java
 │        │                  ├── UserRepository.java
 │        │                  └── UserRepositorySupport.java
 │        └── resources
