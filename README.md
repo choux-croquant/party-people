@@ -1,13 +1,40 @@
+![PartyPeople-Logo](./doc/Main-Image/PartyPeople-Logo.png)
+
 <h1 align="center">🎉🎉 빠뤼 피플 🎉🎉</h1>
+
+## 🎈 프로젝트 개요
 
 > 딱딱한 회의는 끝, 파티에 최적화된 빠뤼피플
 >
 > 빠뤼 피플은 기존의 딱딱한 화상 회의가 아닌, 참여자 다 같이 즐기는 컨텐츠가 준비된 비대면 파티 플랫폼입니다.
 
+
+
 ## 📌 주요 기능
-1. 화상 파티 기능(WebRTC 기반 비대면 화상 통화, 1대다 통화)
-2. 파티 컨텐츠 추가(룰렛, 뽑기, 타이머, 화이트보드를 통한 커뮤니케이션)
-3. 파티 시각, 음성 효과 추가(얼굴, 프레임, 배경 커스터마이징)
+
+### 스티커
+
+![Sticker](./doc/Main-Image/Sticker.gif)
+
+### 비디오/음성 필터
+
+![Video-Filter](./doc/Main-Image/Video-Filter.gif)
+
+### 타이머
+
+![Timer](./doc/Main-Image/Timer.gif)
+
+### 투표
+
+![Vote](./doc/Main-Image/Vote.gif)
+
+### 룰렛
+
+![Roulette](./doc/Main-Image/Roulette.gif)
+
+### 화이트보드
+
+![Whiteboard](./doc/Main-Image/Whiteboard.gif)
 
 
 
@@ -15,23 +42,34 @@
 
 ### Front-End
 
-* [최현규](https://lab.ssafy.com/choifrance) - 프론트엔드 리더
+* [최현규](https://lab.ssafy.com/choifrance) - Front-End 리더
   * 메인 페이지 컴포넌트 개발
-* [서민기](https://lab.ssafy.com/zcvn12345) - 프론트엔드 개발
+* [서민기](https://lab.ssafy.com/zcvn12345) - 발표 및 Jira 리더
   * 컨텐츠 컴포넌트 개발
-* [이정환](https://lab.ssafy.com/ready2start) - 프론트엔드 개발
+* [이정환](https://lab.ssafy.com/ready2start) - UCC 및 Git 리더
   * WebRTC 연결
 
 ### Back-End
 
-* [하윤주](https://lab.ssafy.com/hayj04) - 백엔드 리더
+* [하윤주](https://lab.ssafy.com/hayj04) - Back-End 리더
+  
   * 파티룸 수정/퇴장 API 개발
-* [박건우](https://lab.ssafy.com/hggygw77) - 서버 환경 구축/관리
+  
+* [박건우](https://lab.ssafy.com/hggygw77) - AWS 서버 리더
+  
   * 파티룸 조회/검색 API 개발
-* [선민기](https://lab.ssafy.com/suns1502) - QA
+  
+* [선민기](https://lab.ssafy.com/suns1502) - QA 리더
+  
   * 파티룸 입장/삭제 API 개발
   
   
+
+## 📆 개발 기간
+
+2022.01.10 ~ 2022.02.18 (6주)
+
+
 
 ## 🌱 개발 환경
 
@@ -63,17 +101,46 @@
 * MariaDB 10.2
 * NGINX 1.21.6
 * Kurento-media-server 6.16.0
-* openVidu-Server  2.20.0
+* OpenVidu-Server  2.20.0
 
 
 
 ## 📝 기획/설계 문서
 
-[빠뤼 피플 기획/설계 문서](./result/README.md)
+[빠뤼 피플 기획/설계 문서](./doc/README.md)
 
 
 
-## 변경 기록
+## 💻 서비스 배포 문서
+
+[서비스 배포 문서](./exec/README.md)
+
+
+
+## 🖋 변경 기록
+
+### 1.0 (2022-02-18)
+
+#### 변경 사항
+
+* 산출물, 문서 등 각종 서류 추가
+
+#### 구현 기능
+
+* 랜딩 페이지
+  * 메인 로고 모션
+  * 기능 설명 페이지
+  * Favicon
+
+* 파티룸 외부 기능
+  * 파티룸 태그 입력
+  * 파티룸 태그 검색
+  * 파티룸 검색 자동완성
+* 파티룸 내부 기능
+  * 비디오 필터
+  * 음성 필터
+
+
 
 ### 0.2.1 (2022-02-09)
 
