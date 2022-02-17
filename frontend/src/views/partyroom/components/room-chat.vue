@@ -1,5 +1,5 @@
 <template>
-	<div class="absolute flex top-0 h-screen z-20 right-0 flex-row">
+	<div class="absolute flex top-0 h-screen z-20 right-0 flex-row border-l border-main-100">
 		<!-- chat-bar toggle button -->
 		<!-- <button
 			@click.prevent="toggle()"

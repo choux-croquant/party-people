@@ -1,5 +1,5 @@
 <template>
-	<div class="h-screen w-screen flex bg-tc-200">
+	<div class="h-screen w-screen flex bg-gradient-to-t from-main-300 to-sub-300">
 		<div class="fixed inset-0 flex z-40">
 			<room-sidebar
 				@sendRoulletteMessage="sendRoulletteMessage"

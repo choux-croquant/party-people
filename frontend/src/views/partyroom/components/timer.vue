@@ -12,7 +12,10 @@
 					>
 						{{ minutes }} : {{ seconds }}
 					</vue-countdown>
-					<div v-else class="border-2 border-main-200 px-4 rounded-xl text-2xl font-semibold">
+					<div
+						v-else
+						class="border-2 border-main-200 px-4 rounded-xl text-2xl font-semibold"
+					>
 						{{ state.min }} : {{ state.sec }}
 					</div>
 				</div>
@@ -41,7 +44,7 @@
 <style></style>
 
 <script>
-import { computed,  reactive } from 'vue';
+import { computed, reactive } from 'vue';
 import { useStore } from 'vuex';
 import { swal } from '@/assets/js/common';
 
@@ -75,7 +78,9 @@ export default {
 			});
 		};
 		const onCountdownEnd = () => {
-			let alarm = new Audio('https://t1.daumcdn.net/cfile/tistory/991DD6475CF6C09E07?original');
+			let alarm = new Audio(
+				'https://t1.daumcdn.net/cfile/tistory/991DD6475CF6C09E07?original',
+			);
 			// https://t1.daumcdn.net/cfile/tistory/99412B355CF6B93806?original
 			alarm.play();
 			state.counting = false;

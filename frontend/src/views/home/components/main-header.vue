@@ -37,7 +37,7 @@
 						placeholder="Search for party room"
 					/>
 					<div v-show="state.showSuggestion" class="absolute text-left w-full">
-						<ul class="ml-8 mr-4 bg-teal-400 rounded-b-lg p-1">
+						<ul class="ml-8 mr-4 rounded-b-lg p-1 mt-1.5 bg-main-300">
 							<li
 								v-for="suggestion in state.suggestion"
 								v-bind:key="suggestion"
