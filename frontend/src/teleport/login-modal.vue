@@ -5,9 +5,7 @@
 			<div class="w-full max-w-xs">
 				<!-- 로그인 시 아이디, 비밀번호 데이터를 입력받는 form -->
 				<form class="bg-main-300 shadow-md rounded-xl px-8 pt-6 pb-8 mb-4">
-					<div
-						class="flex justify-between items-start rounded-t border-b bg-main-300"
-					>
+					<div class="flex justify-between items-start rounded-t bg-main-300">
 						<button
 							@click="close()"
 							type="button"
@@ -63,9 +61,9 @@
 						</button>
 					</div>
 				</form>
-				<p class="text-center text-gray-500 text-xs">
+				<!-- <p class="text-center text-gray-500 text-xs">
 					&copy;2022 PartyPeople Corp. All rights reserved.
-				</p>
+				</p> -->
 			</div>
 		</div>
 	</base-modal>

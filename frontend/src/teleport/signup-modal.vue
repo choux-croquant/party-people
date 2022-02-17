@@ -3,10 +3,8 @@
 	<base-modal ref="baseModal">
 		<div class="flex justify-center">
 			<div class="w-full max-w-xs">
-				<form class="bg-main-300 shadow-md rounded-xl px-8 pt-6 pb-8 mb-4">
-					<div
-						class="flex justify-between items-start rounded-t border-b bg-main-300"
-					>
+				<form class="bg-main-300 rounded-xl px-8 pt-6 pb-8 mb-4">
+					<div class="flex justify-between items-start rounded-t bg-main-300">
 						<button
 							type="button"
 							@click="close()"
@@ -27,7 +25,7 @@
 						</button>
 					</div>
 					<img
-						class="w-40 h-24 mb-4 rounded mx-auto"
+						class="w-40 h-24 mb-4 mx-auto"
 						alt="Vue logo"
 						src="@/assets/images/partyPeopleLanding.svg"
 					/>
@@ -95,9 +93,9 @@
 						</button>
 					</div>
 				</form>
-				<p class="text-center text-gray-500 text-xs">
+				<!-- <p class="text-center text-gray-500 text-xs">
 					&copy;2022 PartyPeople Corp. All rights reserved.
-				</p>
+				</p> -->
 			</div>
 		</div>
 	</base-modal>
