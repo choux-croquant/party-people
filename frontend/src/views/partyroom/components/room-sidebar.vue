@@ -1,10 +1,7 @@
 <template>
-	<div
-		class="absolute flex top-0 h-screen z-20"
-		:class="[right ? 'right-0 flex-row' : 'left-0 flex-row-reverse']"
-	>
+	<div class="absolute flex top-0 h-screen z-20 left-0 flex-row-reverse">
 		<!-- toggle button -->
-		<button
+		<!-- <button
 			@click.prevent="toggle"
 			class="w-6 h-48 p-0 my-auto rounded-r-full cursor-pointer text-white bg-main-200 text-center focus:outline-none hover:bg-gray-500 transition-color duration-300"
 		>
@@ -40,7 +37,7 @@
 					stroke-linejoin="round"
 				/>
 			</svg>
-		</button>
+		</button> -->
 
 		<!-- sidebar -->
 		<div
@@ -120,8 +117,33 @@
 					</a>
 				</div>
 			</transition>
-			<!-- room customizing button -->
+			<!-- audio customizing button -->
 			<transition name="slide-fade">
+				<div
+					:class="[
+						state.isAnyModalOpen
+							? ''
+							: 'hover:bg-sub-300 w-full cursor-pointer',
+					]"
+					v-show="showAudioBtn"
+					@click="clickAudioCustomizingBtn()"
+				>
+					<a class="h-24 px-6 flex flex-col justify-center items-center w-full">
+						<svg
+							class="sidebar-menu-icon h-8 w-8"
+							viewBox="0 0 1024 1024"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M842 454c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8 0 140.3-113.7 254-254 254S258 594.3 258 454c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8 0 168.7 126.6 307.9 290 327.6V884H326.7c-13.7 0-24.7 14.3-24.7 32v36c0 4.4 2.8 8 6.2 8h407.6c3.4 0 6.2-3.6 6.2-8v-36c0-17.7-11-32-24.7-32H548V782.1c165.3-18 294-158 294-328.1zM512 624c93.9 0 170-75.2 170-168V232c0-92.8-76.1-168-170-168s-170 75.2-170 168v224c0 92.8 76.1 168 170 168zm-94-392c0-50.6 41.9-92 94-92s94 41.4 94 92v224c0 50.6-41.9 92-94 92s-94-41.4-94-92V232z"
+							/>
+						</svg>
+						<span class="text-main-100">audio customizing</span>
+					</a>
+				</div>
+			</transition>
+			<!-- room customizing button -->
+			<!-- <transition name="slide-fade">
 				<div
 					:class="[
 						state.isAnyModalOpen
@@ -155,9 +177,9 @@
 						<span class="text-main-100">room customizing</span>
 					</a>
 				</div>
-			</transition>
+			</transition> -->
 			<!-- link button -->
-			<transition name="slide-fade">
+			<!-- <transition name="slide-fade">
 				<div
 					:class="[
 						state.isAnyModalOpen
@@ -195,7 +217,7 @@
 						<span class="text-main-100">link</span>
 					</a>
 				</div>
-			</transition>
+			</transition> -->
 			<!-- timer button -->
 			<transition name="slide-fade">
 				<div
@@ -406,7 +428,7 @@
 	/>
 	<roulette-create-modal
 		ref="rouletteCreateModal"
-		@sendRouletteSignal="sendRouletteSignal"
+		@sendRoulletteMessage="sendRoulletteMessage"
 		@closeModal="closeModal"
 	/>
 	<video-customize-modal
@@ -415,9 +437,16 @@
 		@visualFilter="visualFilter"
 		@textOverlay="textOverlay"
 		@filterOff="filterOff"
+		@bottombarFilterBtn="bottombarFilterBtn"
 		@closeModal="closeModal"
 	/>
-	<theme-customize-modal ref="themeCustomizeModal" @closeModal="closeModal" />
+	<audio-customize-modal
+		ref="audioCustomizeModal"
+		@voiceFilter="voiceFilter"
+		@filterOff="filterOff"
+		@bottombarFilterBtn="bottombarFilterBtn"
+		@closeModal="closeModal"
+	/>
 	<timer-create-modal ref="timerCreateModal" @closeModal="closeModal" />
 </template>
 
@@ -449,7 +478,7 @@
 import { ref, reactive } from 'vue';
 import VoteCreateModal from '@/teleport/vote-create-modal.vue';
 import videoCustomizeModal from '@/teleport/video-customize-modal.vue';
-import themeCustomizeModal from '@/teleport/theme-customize-modal.vue';
+import audioCustomizeModal from '@/teleport/audio-customize-modal.vue';
 import timerCreateModal from '@/teleport/timer-create-modal.vue';
 import rouletteCreateModal from '@/teleport/roulette-create-modal';
 import { swal } from '@/assets/js/common';
@@ -461,14 +490,14 @@ export default {
 		VoteCreateModal,
 		rouletteCreateModal,
 		videoCustomizeModal,
-		themeCustomizeModal,
+		audioCustomizeModal,
 		timerCreateModal,
 	},
 	setup(props, { emit }) {
 		const voteCreateModal = ref(null);
 		const rouletteCreateModal = ref(null);
 		const videoCustomizeModal = ref(null);
-		const themeCustomizeModal = ref(null);
+		const audioCustomizeModal = ref(null);
 		const timerCreateModal = ref(null);
 
 		const state = reactive({
@@ -498,10 +527,10 @@ export default {
 			state.isAnyModalOpen = true;
 		};
 
-		const clickThemeBtn = () => {
+		const clickAudioCustomizingBtn = () => {
 			// 다른 모달 오픈 상태에서는 실행 금지
 			if (state.isAnyModalOpen) return;
-			themeCustomizeModal.value.open();
+			audioCustomizeModal.value.open();
 			state.isAnyModalOpen = true;
 		};
 
@@ -541,8 +570,16 @@ export default {
 			emit('textOverlay', filterInfo);
 		};
 
+		const voiceFilter = filterInfo => {
+			emit('voiceFilter', filterInfo);
+		};
+
 		const filterOff = () => {
 			emit('filterOff');
+		};
+
+		const bottombarFilterBtn = btnState => {
+			emit('bottombarFilterBtn', btnState);
 		};
 
 		const closeModal = () => {
@@ -555,10 +592,10 @@ export default {
 			voteCreateModal,
 			rouletteCreateModal,
 			videoCustomizeModal,
-			themeCustomizeModal,
+			audioCustomizeModal,
 			clickVote,
 			clickVideoCustomizingBtn,
-			clickThemeBtn,
+			clickAudioCustomizingBtn,
 			clickRoulette,
 			clickWhiteboardBtn,
 			timerCreateModal,
@@ -567,7 +604,9 @@ export default {
 			stickerOverlay,
 			visualFilter,
 			textOverlay,
+			voiceFilter,
 			filterOff,
+			bottombarFilterBtn,
 			closeModal,
 		};
 	},
@@ -575,11 +614,11 @@ export default {
 	data() {
 		return {
 			isSidebarOpen: true,
-			right: false,
+			// right: false,
 
 			showContentBtn: true,
 			showVideoBtn: true,
-			showRoomBtn: true,
+			showAudioBtn: true,
 			showLinkBtn: true,
 
 			showTimerBtn: false,
@@ -645,8 +684,8 @@ export default {
 			this.$refs.voteCreateModal.startVote(voteInfo);
 		},
 		// 룰렛 생성 모달(하위)에서 받은 data를 파티룸 내부 컴포넌트(상위)로 전달(emit)
-		sendRouletteSignal(rouletteTopic) {
-			this.$emit('sendRouletteSignal', rouletteTopic);
+		sendRoulletteMessage(rouletteTopic) {
+			this.$emit('sendRoulletteMessage', rouletteTopic);
 		},
 	},
 };

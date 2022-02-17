@@ -18,7 +18,7 @@
 		</infinite-scroll>
 	</div>
 
-	<footer class="display: none">not showing</footer>
+	<footer class="text-tc-500">not showing</footer>
 
 	<!-- 로그인 모달 -->
 	<login-modal ref="loginModal" />

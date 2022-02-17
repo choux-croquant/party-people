@@ -28,13 +28,9 @@
 			<div class="flex flex-col justify-between items-center">
 				<!-- 커스터마이징 적용 미리보기 창 -->
 				<div
-					class="w-80 border-main-100 border-2 h-52 mt-2 mb-4 bg-main-100 shadow-lg"
+					class="w-80 border-main-100 border-2 h-52 mt-2 mb-6 bg-main-100 shadow-lg"
 				>
-					<img
-						class="w-full h-full"
-						src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-						alt="customizing display"
-					/>
+					<user-video class="w-full h-full" :stream-manager="state.publisher" />
 				</div>
 
 				<!-- 카테고리와 버튼 -->
@@ -61,14 +57,14 @@
 							class="rounded-full w-24 h-8 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100"
 							type="button"
 						>
-							Apply
+							적용
 						</button>
 						<button
 							@click="cancelVideoCustom()"
 							class="rounded-full w-24 h-8 font-bold shadow-lg bg-main-200 text-tc-500 hover:bg-main-100 ml-3"
 							type="button"
 						>
-							Cancel
+							해제
 						</button>
 					</div>
 				</div>
@@ -181,10 +177,17 @@
 		</div>
 	</base-modal>
 </template>
-<style></style>
+<style>
+.userVideo-4 {
+	width: 100%;
+	height: 100%;
+}
+</style>
 <script>
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed } from 'vue';
+import { useStore } from 'vuex';
 import BaseModal from './base-modal.vue';
+import UserVideo from '@/views/partyroom/components/user-video.vue';
 import stickerListJson from '@/assets/json-assets/stickerList.json';
 import visualFilterJson from '@/assets/json-assets/visualFilterList.json';
 
@@ -193,15 +196,20 @@ export default {
 
 	components: {
 		BaseModal,
+		UserVideo,
 	},
 
 	setup(props, { emit }) {
 		const baseModal = ref(null);
 
+		const store = useStore();
 		const state = reactive({
+			publisher: computed(() => store.getters['root/getPublisher']),
+
 			selectedCategory: '스티커',
 			selectedCustom: null,
 			isClicked: false,
+			isCancelled: true,
 
 			categories: [
 				{ id: 1, name: '스티커' },
@@ -262,15 +270,15 @@ export default {
 			console.log('선택된 항목 : ' + customObject);
 			state.selectedCustom = customObject;
 			state.isClicked = true;
+			previewVideoCustom();
 		};
 
-		// 카테고리에 따라 파티룸 내부 함수 호출(emit)
-		const applyVideoCustom = () => {
+		const previewVideoCustom = () => {
 			var selected = state.selectedCategory;
 
 			if (customizeValidationCheck()) {
 				// 이전에 적용된 필터 해제 후 새롭게 적용
-				emit('filterOff');
+				cancelVideoCustom();
 
 				console.log('apply 클릭 : ' + selected);
 
@@ -293,8 +301,20 @@ export default {
 				}
 			}
 			state.isClicked = false;
+		};
+
+		// 카테고리에 따라 파티룸 내부 함수 호출(emit)
+		const applyVideoCustom = () => {
+			// 미리보기 적용
+			previewVideoCustom();
+
+			if (!state.isCancelled) {
+				// bottombar 버튼 활성화
+				emit('bottombarFilterBtn', true);
+			}
+
 			// 모달 창 닫기
-			cancelVideoCustom();
+			close();
 		};
 
 		// 커스텀 적용 여부 체크
@@ -332,9 +352,12 @@ export default {
 			}
 		};
 
-		// TODO: 비디오 커스텀 적용 취소 - bottombar의 filterOff 버튼과 연동
+		// 비디오 커스텀 해제
 		const cancelVideoCustom = () => {
-			close();
+			emit('filterOff');
+			// bottombar 버튼 비활성화
+			emit('bottombarFilterBtn', false);
+			state.isCancelled = true;
 		};
 
 		return {
@@ -344,6 +367,7 @@ export default {
 			close,
 			showCategory,
 			clickVideoCustom,
+			previewVideoCustom,
 			applyVideoCustom,
 			customizeValidationCheck,
 			cancelVideoCustom,

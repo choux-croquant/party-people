@@ -28,7 +28,7 @@
 					<img
 						class="w-40 h-24 mb-4 rounded mx-auto"
 						alt="Vue logo"
-						src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+						src="@/assets/images/partyPeopleLanding.svg"
 					/>
 					<!-- <p class="text-center text-black text-xs my-3">
 						현재 파티룸은 녹화가 허용되어 있습니다.

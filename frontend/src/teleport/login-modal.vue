@@ -3,6 +3,7 @@
 	<base-modal ref="baseModal">
 		<div class="flex justify-center">
 			<div class="w-full max-w-xs">
+				<!-- 로그인 시 아이디, 비밀번호 데이터를 입력받는 form -->
 				<form class="bg-main-300 shadow-md rounded-xl px-8 pt-6 pb-8 mb-4">
 					<div
 						class="flex justify-between items-start rounded-t border-b bg-main-300"
@@ -29,7 +30,7 @@
 					<img
 						class="w-40 h-24 mb-4 rounded mx-auto"
 						alt="Vue logo"
-						src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+						src="@/assets/images/partyPeopleLanding.svg"
 					/>
 					<div class="mb-4">
 						<input
@@ -94,29 +95,47 @@ export default {
 			loginErr: false,
 		});
 		const open = () => {
-			console.log('loginopen');
 			baseModal.value.openModal();
 		};
 		const close = () => {
 			baseModal.value.closeModal();
 		};
+		// 로그인 액션과 유저데이터를 연속적으로 호출하여 localstorage에 로그인 상태, 아이디, 닉네임을 저장
 		const login = function () {
-			console.log(state.form);
 			store
 				.dispatch('auth/requestLogin', {
 					accountId: state.form.accountId,
 					password: state.form.password,
 				})
 				.then(result => {
-					console.log(result.data.accessToken);
 					localStorage.setItem('access_token', result.data.accessToken);
 					store.commit('auth/setLoginState', true);
 					store.commit('auth/setUserName', state.form.accountId);
+					store
+						.dispatch('root/requestUserData')
+						.then(res => {
+							store.commit('auth/setUserNickname', res.data.nickname);
+						})
+						.catch(err => {
+							console.log(err);
+						});
 					state.form.accountId = '';
 					state.form.password = '';
 					state.loginErr = false;
 					router.push({ name: 'Home' });
 					close();
+
+					// 로그인시 페이지 초기화 후 파티룸 리스트 다시 불러오기
+					store.commit('root/setPage', 1);
+					store
+						.dispatch('root/requestRoomList')
+						.then(res => {
+							store.commit('root/setRoomList', res.data.contents.content);
+						})
+						.catch(err => {
+							console.log(err);
+						});
+
 					swal(true, 'top', 1500, 'success', '로그인에 성공했습니다.', null);
 				})
 				.catch(err => {

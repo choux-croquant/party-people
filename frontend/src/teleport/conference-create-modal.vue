@@ -131,6 +131,11 @@
 									>
 										썸네일 등록
 									</p>
+									<p
+										class="pt-1 text-xs tracking-wider text-tc-300 group-hover:text-gray-600"
+									>
+										1Mb 이하 이미지만 업로드 가능합니다.
+									</p>
 									<p>{{ state.fileName }}</p>
 									<input
 										id="thumbnail"
@@ -155,6 +160,7 @@
 					<div class="w-full mt-5">
 						<input
 							v-model="state.hashtag"
+							@keyup.space="addHash()"
 							type="text"
 							placeholder="태그입력"
 							class="text-tc-200 w-full p-2 rounded-sm"
@@ -210,7 +216,7 @@ export default {
 			title: '',
 			thumbnailImg: null,
 			fileName: '',
-			hashtag: '',
+			hashtag: '#',
 			capacityErr: computed(() => (state.capacity > 8 ? true : false)),
 			roomCreateErr: false,
 		});
@@ -271,7 +277,7 @@ export default {
 							state.title = '';
 							state.thumbnailImg = null;
 							state.fileName = '';
-							state.hashtag = '';
+							state.hashtag = '#';
 							state.roomCreateErr = false;
 							router.push({
 								name: 'ConferenceDetail',
@@ -321,6 +327,10 @@ export default {
 			);
 		};
 
+		const addHash = () => {
+			state.hashtag += '#';
+		};
+
 		return {
 			state,
 			open,
@@ -330,6 +340,7 @@ export default {
 			checkCreateValidation,
 			popUpfailToast,
 			baseModal,
+			addHash,
 		};
 	},
 };

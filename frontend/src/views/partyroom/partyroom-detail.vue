@@ -1,15 +1,17 @@
 <template>
-	<div class="h-screen w-screen flex bg-tc-500">
+	<div class="h-screen w-screen flex bg-tc-200">
 		<div class="fixed inset-0 flex z-40">
 			<room-sidebar
-				@sendRouletteSignal="sendRouletteSignal"
+				@sendRoulletteMessage="sendRoulletteMessage"
 				@startVote="startVote"
 				@sendVoteResult="sendVoteResult"
 				@toggle-whiteboard="toggleWhiteboard"
 				@stickerOverlay="applyStickerFilter"
 				@visualFilter="applyVisualFilter"
 				@textOverlay="applyTextFilter"
+				@voiceFilter="applyVoiceFilter"
 				@filterOff="filterOff"
+				@bottombarFilterBtn="bottombarFilterBtn"
 				ref="roomSidebar"
 			></room-sidebar>
 			<div id="session" class="w-full pl-32 pr-80" v-if="session">
@@ -24,14 +26,12 @@
 					<div
 						v-if="currentUserCount == 0"
 						id="video-container-1"
-						class="flex flex-wrap mx-8 justify-center gap-4"
+						class="flex flex-wrap mx-8 justify-center mt-16 gap-4"
 					>
-						<user-video class="userVideo-1" :stream-manager="publisher" />
 						<user-video
 							class="userVideo-1"
-							v-for="sub in subscribers"
-							:key="sub.stream.connection.connectionId"
-							:stream-manager="sub"
+							:stream-manager="publisher"
+							ref="pubVideoRef"
 						/>
 					</div>
 					<div
@@ -39,12 +39,17 @@
 						id="video-container-2"
 						class="flex flex-wrap mx-8 justify-center gap-4"
 					>
-						<user-video class="userVideo-2" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-2"
+							:stream-manager="publisher"
+							ref="pubVideoRef"
+						/>
 						<user-video
 							class="userVideo-2"
 							v-for="sub in subscribers"
 							:key="sub.stream.connection.connectionId"
 							:stream-manager="sub"
+							ref="userVideoRef"
 						/>
 					</div>
 					<div
@@ -52,12 +57,17 @@
 						id="video-container-3"
 						class="flex flex-wrap mx-8 justify-center gap-4"
 					>
-						<user-video class="userVideo-3" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-3"
+							:stream-manager="publisher"
+							ref="pubVideoRef"
+						/>
 						<user-video
 							class="userVideo-3"
 							v-for="sub in subscribers"
 							:key="sub.stream.connection.connectionId"
 							:stream-manager="sub"
+							ref="userVideoRef"
 						/>
 					</div>
 					<div
@@ -65,12 +75,17 @@
 						id="video-container-4"
 						class="flex flex-wrap mx-8 justify-center gap-4"
 					>
-						<user-video class="userVideo-4" :stream-manager="publisher" />
+						<user-video
+							class="userVideo-4"
+							:stream-manager="publisher"
+							ref="pubVideoRef"
+						/>
 						<user-video
 							class="userVideo-4"
 							v-for="sub in subscribers"
 							:key="sub.stream.connection.connectionId"
 							:stream-manager="sub"
+							ref="userVideoRef"
 						/>
 					</div>
 				</div>
@@ -222,13 +237,21 @@ export default {
 			// --- Init a session ---
 			this.session = this.OV.initSession();
 
+			// --- Optimize Audio Settings
+			this.OV.setAdvancedConfiguration({
+				publisherSpeakingEventsOptions: {
+					interval: 50,
+					threshold: -75,
+				},
+			});
+
 			// --- Specify the actions when events take place in the session ---
 
 			// On every new Stream received...
 			this.session.on('streamCreated', ({ stream }) => {
 				const subscriber = this.session.subscribe(stream);
 
-				// subscriber.userId = this.myUserName;  // subscriber Object에 userName 추가
+				subscriber.userId = this.myUserName; // subscriber Object에 userName 추가
 				this.subscribers.push(subscriber);
 			});
 
@@ -308,6 +331,36 @@ export default {
 				this.$refs.whiteboard.resetWhiteboard();
 			});
 
+			// 발언자 감지
+			this.session.on('publisherStartSpeaking', event => {
+				if (this.$refs.userVideoRef) {
+					for (let i = 0; i < this.$refs.userVideoRef.length; i++) {
+						this.$refs.userVideoRef[i].highlightOn(
+							JSON.parse(event.connection.data).clientData,
+						);
+					}
+				}
+
+				this.$refs.pubVideoRef.highlightOn(
+					JSON.parse(event.connection.data).clientData,
+				);
+			});
+
+			// 발언자 감지
+			this.session.on('publisherStopSpeaking', event => {
+				if (this.$refs.userVideoRef) {
+					for (let i = 0; i < this.$refs.userVideoRef.length; i++) {
+						this.$refs.userVideoRef[i].highlightOff(
+							JSON.parse(event.connection.data).clientData,
+						);
+					}
+				}
+
+				this.$refs.pubVideoRef.highlightOff(
+					JSON.parse(event.connection.data).clientData,
+				);
+			});
+
 			// --- Connect to the session with a valid user token ---
 
 			// 'getToken' method is simulating what your server-side should do.
@@ -334,7 +387,10 @@ export default {
 
 						this.mainStreamManager = publisher;
 						this.publisher = publisher;
-						console.log(this.publisher);
+
+						// store의 publisher 업데이트
+						this.$store.commit('root/setPublisher', publisher);
+						console.log(this.$store.getters['root/getPublisher']);
 
 						// --- Publish your stream ---
 						this.session.publish(this.publisher);
@@ -578,12 +634,20 @@ export default {
 				false,
 				'center',
 				5000,
-				'success',
+				'info',
 				'투표 결과...\n' + resultList[0].item + '당첨!',
 				resultList[0].count + '표를 얻었습니다.',
 			);
 			// 자신의 채팅창에 당첨자 로그 출력
 			this.$refs.chat.addMessage(JSON.stringify(messageData), false);
+			// 투표 생성 모달 내용 초기화
+			this.$refs.roomSidebar.$refs.voteCreateModal.state.voteInfo.voteTopic =
+				'';
+			this.$refs.roomSidebar.$refs.voteCreateModal.state.voteInfo.voteList = [];
+			this.$refs.roomSidebar.$refs.voteCreateModal.state.itemNum = 2;
+			// 기표 모달 내용 초기화
+			this.$refs.roomSidebar.$refs.voteCreateModal.$refs.voteModal.state.checked =
+				null;
 		},
 
 		// 투표 결과 내림차순 정렬
@@ -636,11 +700,6 @@ export default {
 				});
 		},
 
-		// roulette-create-modal 에서 startSignal() 메서드를 호출하면 현재 컴포넌트에서 룰렛 실행을 위한 signal 보냄
-		sendRouletteSignal(rouletteTopic) {
-			this.sendRoulletteMessage(rouletteTopic);
-		},
-
 		// 룰렛 종료
 		closeRoulette() {
 			// 채팅창에 로그로 남길 데이터 정의
@@ -659,9 +718,19 @@ export default {
 				sender: 'System',
 				time: current,
 			};
-
+			// 룰렛 결과 토스트 알림
+			swal(
+				false,
+				'center',
+				5000,
+				'info',
+				'룰렛 결과...\n' + participants[winnerIdx].value + '님 당첨!',
+				'축하합니다~!',
+			);
 			// 자신의 채팅창에 당첨자 로그 출력
 			this.$refs.chat.addMessage(JSON.stringify(messageData), false);
+			// 룰렛 제목 초기화
+			this.$refs.roomSidebar.$refs.rouletteCreateModal.rouletteTopic = '';
 			// 룰렛 컴포넌트 show 해제
 			this.isRouletteOpen = false;
 			// 사이드바 모달 열려있는 상태 해제
@@ -670,6 +739,8 @@ export default {
 
 		// Kurento faceOverlayFilter 적용한 스티커 필터
 		applyStickerFilter(filterInfo) {
+			// bottombar 필터 해제 버튼 활성화
+			this.$refs.bottombar.state.filter = true;
 			this.publisher.stream.applyFilter('FaceOverlayFilter').then(filter => {
 				var offsetX;
 				var offsetY;
@@ -745,6 +816,23 @@ export default {
 				});
 		},
 
+		// Kurento GStreamerFilter 적용한 음성 필터
+		applyVoiceFilter(filterInfo) {
+			let command = filterInfo;
+			this.publisher.stream
+				.applyFilter('GStreamerFilter', {
+					command: command,
+				})
+				.then(() => {
+					console.log('Voice transformed!!!!');
+					// bottombar 필터 해제 버튼 활성화
+					this.$refs.bottombar.state.filter = true;
+				})
+				.catch(e => {
+					console.log('err ::::: ', e);
+				});
+		},
+
 		// 필터 해제
 		filterOff() {
 			console.log('filter Off called');
@@ -756,6 +844,12 @@ export default {
 				.catch(error => {
 					console.error(error);
 				});
+		},
+
+		// bottombar filter 버튼 토글
+		bottombarFilterBtn(btnState) {
+			// bottombar 필터 해제 버튼 상태 변화
+			this.$refs.bottombar.state.filter = btnState;
 		},
 
 		// 화이트보드 창 열기
