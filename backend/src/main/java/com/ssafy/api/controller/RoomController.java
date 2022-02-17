@@ -223,7 +223,6 @@ public class RoomController {
 		if (roomService.isUserAccessOtherSession(user.getId()))
 			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "세션 생성 금지"));
 
-
 		Room room = roomService.findByRoomId(roomId);
 		return ResponseEntity.status(200).body(RoomEntryLinkRes.of(200, "Success", room));
 	}
