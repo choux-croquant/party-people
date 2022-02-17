@@ -21,6 +21,10 @@ public class ListServiceImpl implements ListService {
 	private ListRepository listRepository;
 	@Autowired
 	private RoomTagRepositorySupport roomTagRepositorySupport;
+	@Autowired
+	private SuggestionRoomRepositorySupport suggestionRoomRepositorySupport;
+	@Autowired
+	private SuggestionTagRepositorySupport suggestionTagRepositorySupport;
 
 	@Override
 	public Page<Room> getRoomList(Pageable pageable) {
@@ -62,5 +66,29 @@ public class ListServiceImpl implements ListService {
 				if(session.getEndTime() != null) iter.remove();
 			}
 		}
+	}
+
+	@Override
+	public List<String> getRelativeKeyward(String include, String word) {
+		List<String> suggestion = null;
+
+		switch (include) {
+			case "title" :
+				suggestion = suggestionRoomRepositorySupport.getAppropriateTitle(word);
+				break;
+			case "des" :
+				suggestion = suggestionRoomRepositorySupport.getAppropriateDescription(word);
+				break;
+			case "hashtag" :
+				suggestion = new ArrayList<>();
+				for(String token : word.split("#")){
+					if(token.isBlank())
+						continue;
+					suggestion.addAll(suggestionTagRepositorySupport.getAppropriateTag(token));
+				}
+				break;
+		}
+
+		return suggestion;
 	}
 }

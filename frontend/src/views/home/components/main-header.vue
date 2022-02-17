@@ -25,13 +25,27 @@
 					<input
 						ref="searchInput"
 						v-model="state.searchValue"
+						@input="realtimeSuggestion"
 						@keyup.enter="roomSearch()"
 						@keyup.space="addHash()"
+						@focusin="displaySuggestion"
+						@focusout="hideSuggestion"
+						autocomplete="off"
 						type="text"
 						id="party-room-search"
 						class="block border-0 appearance-none rounded-full shadow-md h-10 p-2 pl-10 w-full text-tc-200 bg-main-300 sm:text-sm focus:outline-none focus:border-main-100 focus:ring-2 focus:ring-main-100"
 						placeholder="Search for party room"
 					/>
+					<div v-show="state.showSuggestion" class="absolute text-left w-full">
+						<ul class="ml-8 mr-4 bg-teal-400 rounded-b-lg p-1">
+							<li
+								v-for="suggestion in state.suggestion"
+								v-bind:key="suggestion"
+							>
+								{{ suggestion }}
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 
@@ -135,6 +149,8 @@ export default {
 			loginState: computed(() => store.getters['auth/getLoginState']),
 			searchValue: '',
 			searchOption: 'title',
+			suggestion: [],
+			showSuggestion: false,
 		});
 
 		const clickLogin = () => {
@@ -223,6 +239,29 @@ export default {
 			}
 		};
 
+		const realtimeSuggestion = () => {
+			store
+				.dispatch('root/requestSuggestionList', {
+					include: state.searchOption,
+					word: state.searchValue,
+				})
+				.then(res => {
+					state.suggestion = res.data.suggestions;
+					console.log(state.suggestion);
+				})
+				.catch(err => {
+					console.log(err);
+				});
+		};
+
+		const displaySuggestion = () => {
+			state.showSuggestion = true;
+		};
+
+		const hideSuggestion = () => {
+			state.showSuggestion = false;
+		};
+
 		return {
 			state,
 			searchInput,
@@ -236,6 +275,9 @@ export default {
 			changeOption,
 			addHash,
 			roomSearch,
+			realtimeSuggestion,
+			hideSuggestion,
+			displaySuggestion,
 		};
 	},
 };

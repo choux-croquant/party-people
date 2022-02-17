@@ -107,6 +107,19 @@ export function leaveSession({ state }, roomId) {
 	});
 }
 
+
+export async function requestSuggestionList({ state }, payload) {
+	const url = `/list/suggestion`;
+	let token = localStorage.getItem('access_token');
+
+	return backAxios({
+		method: 'GET',
+		url: url,
+		headers: { Authorization: 'Bearer ' + token },
+		params: { include: payload.include, word: payload.word },
+	});
+}
+
 export function requestUserData({ state }) {
 	console.log('requestMyData');
 	const url = 'users/me';

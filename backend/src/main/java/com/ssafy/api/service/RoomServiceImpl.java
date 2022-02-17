@@ -31,6 +31,10 @@ public class RoomServiceImpl implements RoomService {
     RoomTagRepository roomTagRepository;
     @Autowired
     FileUploadService fileUploadService;
+    @Autowired
+    SuggestionRoomRepository suggestionRoomRepository;
+    @Autowired
+    SuggestionTagRepository suggestionTagRepository;
 
     @Override
     public Room createRoom(RoomCreatePostReq req, MultipartFile multipartFile) {
@@ -57,6 +61,8 @@ public class RoomServiceImpl implements RoomService {
         // tag를 새롭게 저장하고 room 객체에 매핑
         room.setRoomTags(saveAndGetRoomTags(room, req.getHashtag()));
 
+        suggestionRoomRepository.save(new SuggestionRoom(room));    // 캐시테이블에 저장
+
         return this.updateThumbnail(room.getId(), multipartFile);   // 썸네일 경로 업데이트
     }
 
@@ -79,6 +85,7 @@ public class RoomServiceImpl implements RoomService {
                 Tag newTag = new Tag();
                 newTag.setTagName(hashtag);
                 roomTagList.add(new RoomTag(room, tagRepository.save(newTag)));
+                suggestionTagRepository.save(new SuggestionTag(newTag));   // 캐시테이블에 저장
             }
             else roomTagList.add(new RoomTag(room, tag));
         }
