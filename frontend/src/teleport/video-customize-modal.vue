@@ -323,20 +323,20 @@ export default {
 				// 문구 필터 선택 시
 				if (
 					// 문구가 입력된 경우만 필터 적용
-					state.textList.inputText.length > 0 &&
-					state.textList.inputText != null
+					state.textList.inputText != null &&
+					state.textList.inputText.length > 0
 				) {
 					if (
 						// 문구 위치를 선택하지 않았다면 기본값('Top|Center')으로 설정
-						state.textList.location.length === 0 ||
-						state.textList.location === null
+						state.textList.location === null ||
+						state.textList.location.length === 0
 					) {
 						state.textList.location = 'Top|Center';
 					}
 					if (
 						// 문구 폰트를 선택하지 않았다면 기본값('Cantarell')으로 설정
-						state.textList.font.length === 0 ||
-						state.textList.font === null
+						state.textList.font === null ||
+						state.textList.font.length === 0
 					) {
 						state.textList.font = 'Cantarell';
 					}

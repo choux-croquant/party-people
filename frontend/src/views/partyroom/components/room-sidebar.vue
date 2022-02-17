@@ -142,82 +142,6 @@
 					</a>
 				</div>
 			</transition>
-			<!-- room customizing button -->
-			<!-- <transition name="slide-fade">
-				<div
-					:class="[
-						state.isAnyModalOpen
-							? ''
-							: 'hover:bg-sub-300 w-full cursor-pointer',
-					]"
-					v-show="showRoomBtn"
-					@click="clickThemeBtn()"
-				>
-					<a class="h-24 px-6 flex flex-col justify-center items-center w-full">
-						<svg
-							class="sidebar-menu-icon h-8 w-8"
-							version="1.1"
-							xmlns="http://www.w3.org/2000/svg"
-							xmlns:xlink="http://www.w3.org/1999/xlink"
-							x="0px"
-							y="0px"
-							viewBox="0 0 32 32"
-							style="enable-background: new 0 0 32 32"
-							xml:space="preserve"
-						>
-							<path
-								d="M32,17.969v-4l-4.781-1.992c-0.133-0.375-0.273-0.738-0.445-1.094l1.93-4.805L25.875,3.25
-              l-4.762,1.961c-0.363-0.176-0.734-0.324-1.117-0.461L17.969,0h-4l-1.977,4.734c-0.398,0.141-0.781,0.289-1.16,0.469l-4.754-1.91
-              L3.25,6.121l1.938,4.711C5,11.219,4.848,11.613,4.703,12.02L0,14.031v4l4.707,1.961c0.145,0.406,0.301,0.801,0.488,1.188
-              l-1.902,4.742l2.828,2.828l4.723-1.945c0.379,0.18,0.766,0.324,1.164,0.461L14.031,32h4l1.98-4.758
-              c0.379-0.141,0.754-0.289,1.113-0.461l4.797,1.922l2.828-2.828l-1.969-4.773c0.168-0.359,0.305-0.723,0.438-1.094L32,17.969z
-              M15.969,22c-3.312,0-6-2.688-6-6s2.688-6,6-6s6,2.688,6,6S19.281,22,15.969,22z"
-							/>
-						</svg>
-						<span class="text-main-100">room customizing</span>
-					</a>
-				</div>
-			</transition> -->
-			<!-- link button -->
-			<!-- <transition name="slide-fade">
-				<div
-					:class="[
-						state.isAnyModalOpen
-							? ''
-							: 'hover:bg-sub-300 w-full cursor-pointer',
-					]"
-					v-show="showLinkBtn"
-					@click="clickLinkBtn"
-				>
-					<a class="h-24 px-6 flex flex-col justify-center items-center w-full">
-						<svg
-							class="sidebar-menu-icon h-8 w-8"
-							version="1.1"
-							xmlns="http://www.w3.org/2000/svg"
-							xmlns:xlink="http://www.w3.org/1999/xlink"
-							x="0px"
-							y="0px"
-							viewBox="0 0 458.624 458.624"
-							style="enable-background: new 0 0 458.624 458.624"
-							xml:space="preserve"
-						>
-							<g>
-								<g>
-									<path
-										d="M339.588,314.529c-14.215,0-27.456,4.133-38.621,11.239l-112.682-78.67c1.809-6.315,2.798-12.976,2.798-19.871
-                  c0-6.896-0.989-13.557-2.798-19.871l109.64-76.547c11.764,8.356,26.133,13.286,41.662,13.286c39.79,0,72.047-32.257,72.047-72.047
-                  C411.634,32.258,379.378,0,339.588,0c-39.79,0-72.047,32.257-72.047,72.047c0,5.255,0.578,10.373,1.646,15.308l-112.424,78.491
-                  c-10.974-6.759-23.892-10.666-37.727-10.666c-39.79,0-72.047,32.257-72.047,72.047s32.256,72.047,72.047,72.047
-                  c13.834,0,26.753-3.907,37.727-10.666l113.292,79.097c-1.629,6.017-2.514,12.34-2.514,18.872c0,39.79,32.257,72.047,72.047,72.047
-                  c39.79,0,72.047-32.257,72.047-72.047C411.635,346.787,379.378,314.529,339.588,314.529z"
-									/>
-								</g>
-							</g>
-						</svg>
-						<span class="text-main-100">link</span>
-					</a>
-				</div>
-			</transition> -->
 			<!-- timer button -->
 			<transition name="slide-fade">
 				<div
@@ -481,7 +405,6 @@ import videoCustomizeModal from '@/teleport/video-customize-modal.vue';
 import audioCustomizeModal from '@/teleport/audio-customize-modal.vue';
 import timerCreateModal from '@/teleport/timer-create-modal.vue';
 import rouletteCreateModal from '@/teleport/roulette-create-modal';
-import { swal } from '@/assets/js/common';
 
 export default {
 	name: 'room-sidebar',
@@ -619,7 +542,6 @@ export default {
 			showContentBtn: true,
 			showVideoBtn: true,
 			showAudioBtn: true,
-			showLinkBtn: true,
 
 			showTimerBtn: false,
 			showRouletteBtn: false,
@@ -640,8 +562,7 @@ export default {
 		resetBtns() {
 			this.showContentBtn = false;
 			this.showVideoBtn = false;
-			this.showRoomBtn = false;
-			this.showLinkBtn = false;
+			this.showAudioBtn = false;
 
 			this.showTimerBtn = false;
 			this.showRouletteBtn = false;
@@ -665,20 +586,9 @@ export default {
 
 			this.showContentBtn = true;
 			this.showVideoBtn = true;
-			this.showRoomBtn = true;
-			this.showLinkBtn = true;
+			this.showAudioBtn = true;
 		},
 
-		clickLinkBtn() {
-			let t = document.createElement('textarea');
-			document.body.appendChild(t);
-			t.value = window.document.location.href; // 현재 접속 중인 url
-			t.select();
-			document.execCommand('copy'); // url 복사
-			document.body.removeChild(t);
-
-			swal(true, 'top-start', 1500, 'success', '링크가 복사되었습니다.', null);
-		},
 		startVote(voteInfo) {
 			this.state.isAnyModalOpen = true;
 			this.$refs.voteCreateModal.startVote(voteInfo);

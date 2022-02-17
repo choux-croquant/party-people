@@ -149,6 +149,17 @@ export default {
 			router.push({ name: 'Home' });
 
 			swal(true, 'top', 1500, 'success', '로그아웃되었습니다.', null);
+
+			// 로그아웃 시 페이지 초기화 후 파티룸 리스트 다시 불러오기
+			store.commit('root/setPage', 1);
+			store
+				.dispatch('root/requestRoomList')
+				.then(res => {
+					store.commit('root/setRoomList', res.data.contents.content);
+				})
+				.catch(err => {
+					console.log(err);
+				});
 		};
 
 		const clickSignup = () => {

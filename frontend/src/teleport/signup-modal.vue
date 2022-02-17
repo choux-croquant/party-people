@@ -108,6 +108,7 @@ import { reactive, ref } from '@vue/reactivity';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import BaseModal from './base-modal.vue';
+import { swal } from '@/assets/js/common';
 
 export default {
 	name: 'SingupModal',
@@ -155,6 +156,26 @@ export default {
 					state.form.email = '';
 					state.form.tel = '';
 					close();
+
+					swal(
+						true,
+						'top',
+						1500,
+						'success',
+						'회원가입되었습니다. 로그인 후 빠뤼피플을 즐겨보세요!',
+						null,
+					);
+
+					// 회원가입 시 페이지 초기화 후 파티룸 리스트 다시 불러오기
+					store.commit('root/setPage', 1);
+					store
+						.dispatch('root/requestRoomList')
+						.then(res => {
+							store.commit('root/setRoomList', res.data.contents.content);
+						})
+						.catch(err => {
+							console.log(err);
+						});
 					// router.push({ name: 'Home' });
 				})
 				.catch(err => {
