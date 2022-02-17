@@ -54,7 +54,7 @@
 * QueryDSL 4.4.0
 * Java-JWT 3.10.3
 * Kurento-Client 6.16.0
-* openVidu-Java-Client 2.20.0
+* OpenVidu-Java-Client 2.20.0
 
 ### Server
 
