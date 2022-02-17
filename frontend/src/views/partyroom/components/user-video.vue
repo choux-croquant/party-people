@@ -5,7 +5,11 @@
 			:stream-manager="streamManager"
 			:class="{ userSpeaking: isSpeaking }"
 		/>
-		<div class="userOverlay rounded-b-xl text-tc-500">
+		<div
+			:isPreview="isPreview"
+			v-show="!isPreview"
+			class="userOverlay rounded-b-xl text-tc-500"
+		>
 			<p>{{ clientData }} / {{ userNickname }}</p>
 		</div>
 	</div>
@@ -54,6 +58,7 @@ export default {
 
 	props: {
 		streamManager: Object,
+		isPreview: Boolean,
 	},
 	methods: {
 		getConnectionData() {
