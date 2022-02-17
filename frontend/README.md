@@ -1,4 +1,4 @@
-# 웹 기술 Frontend
+# 공통 프로젝트 A106 빠뤼피플 Frontend
 
 ## 소개
 
@@ -103,7 +103,6 @@ UI 라이브러리
     ├── postcss.config.js
     ├── README.md
     ├── tailwind.config.js  /* tailwindCSS프레임워크의 커스텀 변수 및 플러그인을 정의하는 설정파일*/
-    ├── vue.config.js
-
+    └── vue.config.js
 ```
 .
