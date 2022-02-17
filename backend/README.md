@@ -19,14 +19,14 @@
 ```
 backend
 ├── docker /* docker 관련 설정 파일 */
-│		├── docker-compose.yml /* springboot, nginx, certbot docker-compose 파일 */
-│		├── Dockerfile /* springboot 컨테이너 관련 dockerfile */
-│		├── init-letsencrypt.sh /* SSL 발급 자동화 파일 */
-│		└── partypeople-web-project-1.0.jar /* 빌드된 프로젝트 파일 */
+│	├── docker-compose.yml /* springboot, nginx, certbot docker-compose 파일 */
+│	├── Dockerfile /* springboot 컨테이너 관련 dockerfile */
+│	├── init-letsencrypt.sh /* SSL 발급 자동화 파일 */
+│	└── partypeople-web-project-1.0.jar /* 빌드된 프로젝트 파일 */
 ├── gradle
-│		└── wrapper
-│				├── gradle-wrapper.jar
-│				└── gradle-wrapper.properties
+│	└── wrapper
+│		├── gradle-wrapper.jar
+│		└── gradle-wrapper.properties
 ├── src
 │    └── main
 │        ├── generated
