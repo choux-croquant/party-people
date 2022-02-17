@@ -30,7 +30,11 @@
 				<div
 					class="w-80 border-main-100 border-2 h-52 mt-2 mb-6 bg-main-100 shadow-lg"
 				>
-					<user-video class="w-full h-full" :stream-manager="state.publisher" />
+					<user-video
+						class="w-full h-full"
+						:stream-manager="state.publisher"
+						:isPreview="true"
+					/>
 				</div>
 
 				<!-- 카테고리와 버튼 -->

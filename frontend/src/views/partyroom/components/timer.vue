@@ -79,9 +79,9 @@ export default {
 		};
 		const onCountdownEnd = () => {
 			let alarm = new Audio(
-				'https://t1.daumcdn.net/cfile/tistory/991DD6475CF6C09E07?original',
+				'https://t1.daumcdn.net/cfile/tistory/99412B355CF6B93806?original',
 			);
-			// https://t1.daumcdn.net/cfile/tistory/99412B355CF6B93806?original
+			// https://t1.daumcdn.net/cfile/tistory/991DD6475CF6C09E07?original
 			alarm.play();
 			state.counting = false;
 			store.commit('root/setTimer', {

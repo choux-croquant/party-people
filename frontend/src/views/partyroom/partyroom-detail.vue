@@ -22,7 +22,7 @@
 					</div>
 				</div>
 				<!-- 컨텐츠가 없는 경우 -->
-				<div v-show="!isWhiteboardOpen && !isRouletteOpen">
+				<div v-show="!isWhiteboardOpen && !isRouletteOpen" class="mt-2">
 					<div
 						v-if="currentUserCount == 0"
 						id="video-container-1"
@@ -389,7 +389,7 @@ export default {
 						this.publisher = publisher;
 
 						// store의 publisher 업데이트
-						this.$store.commit('root/setPublisher', publisher);
+						this.$store.commit('root/setPublisher', this.publisher);
 						console.log(this.$store.getters['root/getPublisher']);
 
 						// --- Publish your stream ---
@@ -425,6 +425,9 @@ export default {
 			this.publisher = undefined;
 			this.subscribers = [];
 			this.OV = undefined;
+
+			// store의 publisher 업데이트
+			this.$store.commit('root/setPublisher', this.publisher);
 
 			this.store.dispatch('root/leaveSession', this.mySessionId);
 
