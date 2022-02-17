@@ -107,7 +107,6 @@ export function leaveSession({ state }, roomId) {
 	});
 }
 
-
 export async function requestSuggestionList({ state }, payload) {
 	const url = `/list/suggestion`;
 	let token = localStorage.getItem('access_token');
@@ -123,6 +122,19 @@ export async function requestSuggestionList({ state }, payload) {
 export function requestUserData({ state }) {
 	console.log('requestMyData');
 	const url = 'users/me';
+	let token = localStorage.getItem('access_token');
+	return backAxios({
+		method: 'GET',
+		url: url,
+		headers: {
+			Authorization: 'Bearer ' + token,
+		},
+	});
+}
+
+export function requestNickname({ state }, accountId) {
+	console.log('request users nickname Data');
+	const url = `users/${accountId}`;
 	let token = localStorage.getItem('access_token');
 	return backAxios({
 		method: 'GET',
