@@ -18,9 +18,6 @@ public class Tag extends BaseEntity{
     private String tagName;
 
     @OneToMany(mappedBy = "tag")
-    private List<UserTag> userTags;
-
-    @OneToMany(mappedBy = "tag")
     @JsonBackReference
     private List<RoomTag> roomTags;
 
