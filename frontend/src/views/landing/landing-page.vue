@@ -20,12 +20,111 @@
 					class="bg-gradient-to-r from-main-200 to-sub-200 keen-slider__slide number-slide2"
 				>
 					<img
-						class="party-people-logo w-1/2 mb-16 rounded-xl mx-auto"
-						src="@/assets/images/main-page.png"
+						class="party-people-logo w-1/2 mb-20 rounded-xl mx-auto"
+						src="@/assets/images/landing-list.gif"
 					/>
-					<div class="absolute landing-desc-large bottom-40 text-tc-500">
-						메인 페이지에 대한 설명이 들어갈 공간
+					<div class="absolute landing-desc-large bottom-20 text-tc-500">
+						실시간으로 열리는 다채로운 파티에 참석해보세요!
 					</div>
+					<!-- <button
+						class="absolute border-4 border-sub-300 bottom-20 w-60 h-16 text-3xl shadow-lg bg-main-100 text-white font-bold py-1 px-5 rounded-full focus:outline-none focus:shadow-outline hover:bg-main-200"
+						@click="start"
+					>
+						START
+					</button> -->
+				</div>
+				<div
+					class="bg-gradient-to-r from-main-200 to-sub-200 keen-slider__slide number-slide3"
+				>
+					<img
+						class="party-people-logo w-1/2 mb-16 rounded-xl mx-auto"
+						src="@/assets/images/landing-sticker.gif"
+					/>
+					<div class="absolute landing-desc-large bottom-20 text-tc-500">
+						단순한 스티커가 아니에요. 무려 눈, 코, 입을 알아서 찾아줘요!
+					</div>
+					<!-- <button
+						class="absolute border-4 border-sub-300 bottom-20 w-60 h-16 text-3xl shadow-lg bg-main-100 text-white font-bold py-1 px-5 rounded-full focus:outline-none focus:shadow-outline hover:bg-main-200"
+						@click="start"
+					>
+						START
+					</button> -->
+				</div>
+				<div
+					class="bg-gradient-to-r from-main-200 to-sub-200 keen-slider__slide number-slide4"
+				>
+					<img
+						class="party-people-logo w-1/2 mb-16 rounded-xl mx-auto"
+						src="@/assets/images/landing-filter.gif"
+					/>
+					<div class="absolute landing-desc-large bottom-20 text-tc-500">
+						가장 빠르고 안전한 우주 여행 방법!
+					</div>
+					<!-- <button
+						class="absolute border-4 border-sub-300 bottom-20 w-60 h-16 text-3xl shadow-lg bg-main-100 text-white font-bold py-1 px-5 rounded-full focus:outline-none focus:shadow-outline hover:bg-main-200"
+						@click="start"
+					>
+						START
+					</button> -->
+				</div>
+				<div
+					class="bg-gradient-to-r from-main-200 to-sub-200 keen-slider__slide number-slide5"
+				>
+					<img
+						class="party-people-logo w-1/2 mb-16 rounded-xl mx-auto"
+						src="@/assets/images/landing-whiteboard.gif"
+					/>
+					<div class="absolute landing-desc-large bottom-20 text-tc-500">
+						올해는 더 특별한 생일 파티를 열어보세요!
+					</div>
+					<!-- <button
+						class="absolute border-4 border-sub-300 bottom-20 w-60 h-16 text-3xl shadow-lg bg-main-100 text-white font-bold py-1 px-5 rounded-full focus:outline-none focus:shadow-outline hover:bg-main-200"
+						@click="start"
+					>
+						START
+					</button> -->
+				</div>
+				<div
+					class="bg-gradient-to-r from-main-200 to-sub-200 keen-slider__slide number-slide6"
+				>
+					<img
+						class="party-people-logo w-1/2 mb-16 rounded-xl mx-auto"
+						src="@/assets/images/landing-roulette.gif"
+					/>
+					<div class="absolute landing-desc-large bottom-20 text-tc-500">
+						바쁘다 바빠! 흥이 깨지기 전 빠르게 당첨자를 뽑아보세요!
+					</div>
+					<!-- <button
+						class="absolute border-4 border-sub-300 bottom-20 w-60 h-16 text-3xl shadow-lg bg-main-100 text-white font-bold py-1 px-5 rounded-full focus:outline-none focus:shadow-outline hover:bg-main-200"
+						@click="start"
+					>
+						START
+					</button> -->
+				</div>
+				<div
+					class="bg-gradient-to-r from-main-200 to-sub-200 keen-slider__slide number-slide7"
+				>
+					<img
+						class="party-people-logo w-1/2 mb-16 rounded-xl mx-auto"
+						src="@/assets/images/landing-search.gif"
+					/>
+					<div class="absolute landing-desc-large bottom-20 text-tc-500">
+						오직 내 관심사에만 맞는 파티를 골라 골라 입장해봐요!
+					</div>
+					<!-- <button
+						class="absolute border-4 border-sub-300 bottom-20 w-60 h-16 text-3xl shadow-lg bg-main-100 text-white font-bold py-1 px-5 rounded-full focus:outline-none focus:shadow-outline hover:bg-main-200"
+						@click="start"
+					>
+						START
+					</button> -->
+				</div>
+				<div
+					class="bg-gradient-to-r from-main-200 to-sub-200 keen-slider__slide number-slide1"
+				>
+					<img
+						class="party-people-logo w-3/5 mx-auto"
+						src="@/assets/images/partyPeopleLanding.svg"
+					/>
 					<button
 						class="absolute border-4 border-sub-300 bottom-20 w-60 h-16 text-3xl shadow-lg bg-main-100 text-white font-bold py-1 px-5 rounded-full focus:outline-none focus:shadow-outline hover:bg-main-200"
 						@click="start"
