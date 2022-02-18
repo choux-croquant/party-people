@@ -199,7 +199,7 @@
 
 * 개인 채팅
 
-![Chat-Private](Chat-Private./Flow-Chart/.jpg)
+![Chat-Private](./Flow-Chart/Chat-Private.jpg)
 
 * 카메라 온오프
 
