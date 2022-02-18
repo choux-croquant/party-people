@@ -85,7 +85,7 @@ HTTPS_PORT=443
 docker ps
 ```
 
-![docker-openvidu](images/docker-openvidu.png)
+![docker-openvidu](images/Docker-OpenVidu.png)
 
 5. 포트 변경을 위한 서버 종료
 
