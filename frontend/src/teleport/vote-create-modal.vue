@@ -2,14 +2,14 @@
 	<base-modal ref="baseModal">
 		<div class="flex justify-center">
 			<div class="w-full max-w-xs">
-				<form class="bg-main-200 shadow-md rounded px-8 pt-6 pb-8">
+				<div class="bg-main-200 shadow-md rounded-t-xl px-8 pt-6 pb-8">
 					<div
 						class="flex justify-between items-start rounded-t bg-main-200 mb-4"
 					>
 						<button
 							type="button"
 							@click="close()"
-							class="text-tc-500 bg-alert-200 hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+							class="text-tc-500 bg-alert-200 hover:bg-alert-100 hover:text-tc-500 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
 						>
 							<svg
 								class="w-5 h-5"
@@ -35,8 +35,8 @@
 							v-model="state.voteInfo.voteTopic"
 						/>
 					</div>
-				</form>
-				<form class="bg-main-300 shadow-md rounded px-8 pt-4 pb-8 mb-4">
+				</div>
+				<div class="bg-main-300 shadow-md rounded-b-xl px-8 pt-4 pb-8 mb-4">
 					<!-- 투표 항목 -->
 					<ul>
 						<li class="mt-4" v-for="i in state.itemNum" :key="i">
@@ -91,16 +91,20 @@
 							type="button"
 							@click="sendVote"
 						>
-							투표시작
+							START
 						</button>
 					</div>
-				</form>
-				<p class="text-center text-gray-500 text-xs">
+				</div>
+				<!-- <p class="text-center text-gray-500 text-xs">
 					&copy;2022 PartyPeople Corp. All rights reserved.
-				</p>
+				</p> -->
 			</div>
 		</div>
-		<vote-modal @sendVoteResult="sendVoteResult" ref="voteModal" />
+		<vote-modal
+			ref="voteModal"
+			@sendVoteResult="sendVoteResult"
+			@closeModal="closeModal"
+		/>
 	</base-modal>
 </template>
 
@@ -110,6 +114,7 @@
 import BaseModal from './base-modal.vue';
 import { reactive, ref } from 'vue';
 import { useStore } from 'vuex';
+import { swal } from '@/assets/js/common';
 import voteModal from '@/teleport/vote-modal.vue';
 
 export default {
@@ -129,22 +134,33 @@ export default {
 			},
 			itemNum: 2,
 		});
+
 		const open = () => {
 			console.log('voteopen');
 			baseModal.value.openModal();
 		};
+
 		const close = () => {
 			baseModal.value.closeModal();
+			closeModal();
 		};
+
 		const plusItem = () => {
 			state.itemNum++;
 			console.log(state.itemNum);
 		};
+
 		const minusItem = () => {
 			state.itemNum--;
 		};
 
 		const sendVote = async () => {
+			let retu = voteValidationCheck();
+			console.log(retu);
+			if (!retu) {
+				swal(true, 'top', 1500, 'error', '내용을 입력해주세요.', null);
+				return;
+			}
 			store.commit('root/setVote', state.voteInfo);
 			emit('startVote', state.voteInfo);
 			close();
@@ -164,6 +180,27 @@ export default {
 			console.log('2.sendVote');
 			emit('sendVoteResult');
 		};
+
+		const voteValidationCheck = () => {
+			let topic = state.voteInfo.voteTopic;
+			let list = state.voteInfo.voteList;
+			let isValid = true;
+
+			if (topic === null || topic === '' || topic.length === 0) return false;
+			if (list === null || list.length === 0) return false;
+			list.forEach(voteItem => {
+				if (voteItem === null || voteItem === '' || voteItem.length === 0) {
+					isValid = false;
+				}
+			});
+
+			return isValid;
+		};
+
+		const closeModal = () => {
+			emit('closeModal');
+		};
+
 		return {
 			baseModal,
 			open,
@@ -175,6 +212,8 @@ export default {
 			voteModal,
 			sendVote,
 			sendVoteResult,
+			voteValidationCheck,
+			closeModal,
 		};
 	},
 };

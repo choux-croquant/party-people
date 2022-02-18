@@ -1,6 +1,8 @@
 <template>
 	<div class="flex flex-row justify-start">
-		<div class="flex flex-col items-center p-2 shadow-lg rounded-2xl h-700">
+		<div
+			class="flex flex-col items-center p-2 shadow-lg rounded-l-2xl w-44 h-500"
+		>
 			<!-- 두께 설정 -->
 			<div class="p-4 flex flex-col items-center">
 				<span class="mb-2 font-bold text-lg">Width</span>
@@ -16,43 +18,43 @@
 			<div class="flex flex-col items-center justify-evenly py-3">
 				<span class="mb-2 font-bold text-lg">Color</span>
 				<!-- 색깔 설정 -->
-				<div class="flex flex-col items-center" id="jsColors">
+				<div class="flex flex-row flex-wrap justify-center" id="jsColors">
 					<div
-						class="flex w-10 h-10 cursor-pointer rounded-full shadow-lg mb-3 color-set selected"
+						class="flex w-10 h-10 cursor-pointer rounded-full shadow-lg m-2 color-set selected"
 						style="background-color: #2c2c2c"
 					></div>
 					<div
-						class="flex w-10 h-10 cursor-pointer rounded-full shadow-lg mb-3 color-set"
+						class="flex w-10 h-10 cursor-pointer rounded-full shadow-lg m-2 color-set"
 						style="background-color: #ff3b30"
 					></div>
 					<div
-						class="flex w-10 h-10 cursor-pointer rounded-full shadow-lg mb-3 color-set"
+						class="flex w-10 h-10 cursor-pointer rounded-full shadow-lg m-2 color-set"
 						style="background-color: #ff9500"
 					></div>
 					<div
-						class="flex w-10 h-10 cursor-pointer rounded-full shadow-lg mb-3 color-set"
+						class="flex w-10 h-10 cursor-pointer rounded-full shadow-lg m-2 color-set"
 						style="background-color: #ffcc00"
 					></div>
 					<div
-						class="flex w-10 h-10 cursor-pointer rounded-full shadow-lg mb-3 color-set"
+						class="flex w-10 h-10 cursor-pointer rounded-full shadow-lg m-2 color-set"
 						style="background-color: #4cd963"
 					></div>
 					<div
-						class="flex w-10 h-10 cursor-pointer rounded-full shadow-lg mb-3 color-set"
+						class="flex w-10 h-10 cursor-pointer rounded-full shadow-lg m-2 color-set"
 						style="background-color: #5ac8fa"
 					></div>
 					<div
-						class="flex w-10 h-10 cursor-pointer rounded-full shadow-lg mb-3 color-set"
+						class="flex w-10 h-10 cursor-pointer rounded-full shadow-lg m-2 color-set"
 						style="background-color: #0579ff"
 					></div>
 					<div
-						class="flex w-10 h-10 cursor-pointer rounded-full shadow-lg mb-3 color-set"
+						class="flex w-10 h-10 cursor-pointer rounded-full shadow-lg m-2 color-set"
 						style="background-color: #5856d6"
 					></div>
 				</div>
 				<!-- 지우개 -->
 				<div
-					class="w-10 h-10 p-0 cursor-pointer rounded-full bg-tc-500 flex items-center justify-center"
+					class="w-10 h-10 p-0 mt-2 cursor-pointer rounded-full bg-tc-500 flex items-center justify-center"
 					id="eraser"
 				>
 					<svg
@@ -70,18 +72,18 @@
 						/>
 					</svg>
 				</div>
-				<div class="mt-10">
+				<div class="mt-8">
 					<!-- 화이트보드 닫기 버튼 -->
 					<button
-						class="mr-1 bg-transparent hover:bg-main-200 text-main-200 text-md font-semibold hover:text-tc-500 py-2 px-4 border border-main-200 hover:border-transparent rounded"
+						class="mr-2 bg-transparent hover:bg-main-200 text-main-200 text-sm font-semibold hover:text-tc-500 py-2 px-4 border border-main-200 hover:border-transparent rounded"
 						@click="closeWhiteboard"
 					>
 						Close
 					</button>
 					<!-- 초기화 버튼 -->
 					<button
-						class="bg-transparent hover:bg-sub-100 text-sub-100 text-md font-semibold hover:text-tc-500 py-2 px-4 border border-sub-100 hover:border-transparent rounded"
-						@click="resetWhiteboard"
+						class="bg-transparent hover:bg-sub-100 text-sub-100 text-sm font-semibold hover:text-tc-500 py-2 px-4 border border-sub-100 hover:border-transparent rounded"
+						@click="onClickResetBtn"
 					>
 						Reset
 					</button>
@@ -90,18 +92,20 @@
 		</div>
 
 		<!-- 캔버스 (그림이 그려지는 곳) -->
-		<canvas id="partypeopleCanvas" class="bg-tc-500 canvas h-700"></canvas>
+		<canvas
+			id="partypeopleCanvas"
+			class="bg-tc-500 canvas h-500 rounded-r-2xl"
+		></canvas>
 	</div>
 </template>
 
 <style>
-.h-700 {
-	height: 700px;
+.h-500 {
+	height: 500px;
 }
 
 .canvas {
-	width: 700px;
-	border-radius: 15px;
+	width: 1000px;
 	box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
@@ -127,6 +131,8 @@ export default {
 			colors: null,
 			range: null,
 			painting: false,
+			lastX: undefined,
+			lastY: undefined,
 		});
 
 		onMounted(() => {
@@ -137,33 +143,54 @@ export default {
 			const eraser = document.querySelector('#eraser');
 
 			const INITIAL_COLOR = '#2c2c2c';
-			const CANVAS_SIZE = 700;
+			const CANVAS_WIDTH = 1000;
+			const CANVAS_HEIGHT = 500;
 
-			state.canvas.width = CANVAS_SIZE;
-			state.canvas.height = CANVAS_SIZE;
+			state.canvas.width = CANVAS_WIDTH;
+			state.canvas.height = CANVAS_HEIGHT;
 
 			state.ctx.fillStyle = 'white';
-			state.ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+			state.ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 			state.ctx.strokeStyle = INITIAL_COLOR;
 			state.ctx.lineWidth = 2.5;
+			state.ctx.lineCap = 'round';
 			state.painting = false;
 
 			const stopPainting = () => {
-				// state.painting = false;
-				sendPaintingState(false);
+				state.painting = false;
+				state.lastX = undefined;
+				state.lastY = undefined;
 			};
 
 			const startPainting = () => {
-				// state.painting = true;
-				sendPaintingState(true);
+				state.painting = true;
 			};
 
-			// 캔버스 내에서 마우스를 움직일 때마다 호출 (현재 좌표, 붓 색상/두께 정보를 담아 sendSignal 함수 호출)
-			const onMouseMove = async event => {
+			// 캔버스 내에서 마우스를 움직일 때마다 호출
+			const onMouseMove = event => {
 				const x = event.offsetX;
 				const y = event.offsetY;
 
-				sendSignal(x, y, state.ctx.strokeStyle, state.ctx.lineWidth);
+				// 버튼을 클릭하지 않은 상태인 경우 => 좌표 정보만 저장하고 리턴
+				if (state.painting) {
+					if (!state.lastX) {
+						state.lastX = x;
+						state.lastY = y;
+						return;
+					}
+
+					// 버튼을 클릭한 상태인 경우 => 그림 관련 정보를 signal로 보낸 뒤, 좌표 저장
+					sendSignal(
+						state.lastX,
+						state.lastY,
+						x,
+						y,
+						state.ctx.strokeStyle,
+						state.ctx.lineWidth,
+					);
+					state.lastX = x;
+					state.lastY = y;
+				}
 			};
 
 			// 붓 색상 설정
@@ -220,35 +247,29 @@ export default {
 		});
 
 		// ctx 정보 보내기 step 1
-		const sendSignal = (x, y, color, width) => {
-			emit('send-whiteboard-signal', x, y, color, width);
+		const sendSignal = (lastX, lastY, x, y, color, width) => {
+			emit('send-whiteboard-signal', lastX, lastY, x, y, color, width);
 		};
 
 		// ctx 정보 보내기 step 4
-		const addWhiteboardSignal = data => {
-			let parsedData = JSON.parse(data);
+		const addWhiteboardSignal = canvasData => {
+			let data = JSON.parse(canvasData);
 
-			if (!state.painting) {
-				state.ctx.beginPath();
-				state.ctx.moveTo(parsedData.currentX, parsedData.currentY);
-			} else {
-				state.ctx.strokeStyle = parsedData.color;
-				state.ctx.lineWidth = parsedData.width;
-				state.ctx.lineTo(parsedData.currentX, parsedData.currentY);
-				state.ctx.stroke();
-			}
-		};
+			// 색깔, 두께 정보 임시로 저장
+			let tempColor = state.ctx.strokeStyle;
+			let tempWidth = state.ctx.lineWidth;
 
-		// painting state 정보 보내기 step 1
-		const sendPaintingState = is_painting => {
-			emit('send-painting-signal', is_painting);
-		};
+			state.ctx.beginPath();
+			state.ctx.strokeStyle = data.color;
+			state.ctx.lineWidth = data.width;
+			state.ctx.moveTo(data.lastX, data.lastY);
+			state.ctx.lineTo(data.currentX, data.currentY);
+			state.ctx.stroke();
+			state.ctx.closePath();
 
-		// painting state 정보 보내기 step 4
-		const addPaintingSignal = data => {
-			let is_painting = JSON.parse(data);
-
-			state.painting = is_painting;
+			// 기존의 색깔, 두께 정보 다시 저장
+			state.ctx.strokeStyle = tempColor;
+			state.ctx.lineWidth = tempWidth;
 		};
 
 		// 화이트보드 창 닫기
@@ -256,19 +277,22 @@ export default {
 			emit('close-whiteboard');
 		};
 
-		// 화이트보드 초기화 (자기 화면에만 적용)
+		// 모든 참가자의 화이트보드 초기화 step 1
+		const onClickResetBtn = () => {
+			emit('send-reset-signal');
+		};
+
+		// 모든 참가자의 화이트보드 초기화 step 4
 		const resetWhiteboard = () => {
-			console.log('asdf');
-			state.ctx.fillRect(0, 0, 700, 700);
+			state.ctx.fillRect(0, 0, 1000, 500);
 		};
 
 		return {
 			state,
 			sendSignal,
 			addWhiteboardSignal,
-			sendPaintingState,
-			addPaintingSignal,
 			closeWhiteboard,
+			onClickResetBtn,
 			resetWhiteboard,
 		};
 	},

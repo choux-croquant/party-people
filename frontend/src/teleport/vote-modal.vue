@@ -2,29 +2,7 @@
 	<base-modal ref="baseModal">
 		<div class="flex justify-center">
 			<div class="w-full max-w-xs">
-				<form class="bg-main-200 shadow-md rounded px-8 pt-6 pb-8">
-					<div
-						class="flex justify-between items-start rounded-t bg-main-200 mb-4"
-					>
-						<button
-							@click="close"
-							type="button"
-							class="text-tc-500 bg-alert-200 hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-						>
-							<svg
-								class="w-5 h-5"
-								fill="currentColor"
-								viewBox="0 0 20 20"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<path
-									fill-rule="evenodd"
-									d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-									clip-rule="evenodd"
-								></path>
-							</svg>
-						</button>
-					</div>
+				<form class="bg-main-200 shadow-md rounded-t-xl px-8 pt-6 pb-8">
 					<!-- 투표 제목 -->
 					<div
 						class="shadow appearance-none border rounded-lg bg-white w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -32,7 +10,7 @@
 						<p>{{ state.voteInfo.voteTopic }}</p>
 					</div>
 				</form>
-				<form class="bg-main-300 shadow-md rounded px-8 pt-4 pb-8 mb-4">
+				<form class="bg-main-300 shadow-md rounded-b-xl px-8 pt-4 pb-8 mb-4">
 					<!-- 투표 항목 -->
 					<ul>
 						<li
@@ -65,9 +43,9 @@
 						</button>
 					</div>
 				</form>
-				<p class="text-center text-gray-500 text-xs">
+				<!-- <p class="text-center text-gray-500 text-xs">
 					&copy;2022 PartyPeople Corp. All rights reserved.
-				</p>
+				</p> -->
 			</div>
 		</div>
 	</base-modal>
@@ -101,6 +79,7 @@ export default {
 
 		const close = () => {
 			baseModal.value.closeModal();
+			emit('closeModal');
 		};
 
 		const sendVoteResult = () => {

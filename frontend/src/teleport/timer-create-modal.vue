@@ -2,7 +2,7 @@
 	<base-modal ref="baseModal">
 		<div class="flex justify-center">
 			<div class="w-full max-w-xs">
-				<form class="bg-main-300 shadow-md rounded px-5 pt-5 pb-8 mb-4">
+				<form class="bg-main-300 shadow-md rounded-xl px-5 pt-5 pb-8 mb-4">
 					<div
 						class="flex justify-between items-start rounded-t border-none bg-main-300"
 					>
@@ -43,7 +43,7 @@
 						<button
 							@click="close()"
 							type="button"
-							class="text-tc-500 bg-alert-200 hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+							class="text-tc-500 bg-alert-200 hover:bg-alert-100 hover:text-tc-500 rounded-full text-sm p-1.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
 						>
 							<svg
 								class="w-5 h-5"
@@ -112,12 +112,13 @@ export default {
 	components: {
 		BaseModal,
 	},
-	setup() {
+	setup(props, { emit }) {
 		const store = useStore();
 		const state = reactive({
 			timerTime: {
-				min: null,
-				sec: null,
+				min: 0,
+				sec: 0,
+				count: true,
 			},
 		});
 		const baseModal = ref(null);
@@ -127,6 +128,7 @@ export default {
 		};
 		const close = () => {
 			baseModal.value.closeModal();
+			emit('closeModal');
 		};
 
 		const timerStart = () => {

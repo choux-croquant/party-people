@@ -3,6 +3,10 @@ export function getIsDesktopPlatform(state) {
 	return state.isDesktopPlatform;
 }
 
+export function getPublisher(state) {
+	return state.publisher;
+}
+
 // 메뉴 객체 가져오기
 export function getMenus(state) {
 	return state.menus;
@@ -34,4 +38,8 @@ export function getVoteInfo(state) {
 
 export function getVoteResult(state) {
 	return state.voteResult;
+}
+
+export function getPage(state) {
+	return state.page
 }

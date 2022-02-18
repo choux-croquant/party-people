@@ -214,7 +214,7 @@ public class RoomController {
 
 		// 이미 세션이 종료된 파티룸에 입장을 시도하는 경우
 		if(roomService.isSessionClosed(roomId))
-			return ResponseEntity.status(404).body(BaseResponseBody.of(403, "세션 생성 금지"));
+			return ResponseEntity.status(404).body(BaseResponseBody.of(404, "세션 생성 금지"));
 
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 		User user = userDetails.getUser();
@@ -222,7 +222,6 @@ public class RoomController {
 		// 이미 세션에 접속한 사용자
 		if (roomService.isUserAccessOtherSession(user.getId()))
 			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "세션 생성 금지"));
-
 
 		Room room = roomService.findByRoomId(roomId);
 		return ResponseEntity.status(200).body(RoomEntryLinkRes.of(200, "Success", room));

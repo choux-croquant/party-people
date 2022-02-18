@@ -3,14 +3,12 @@
 	<base-modal ref="baseModal">
 		<div class="flex justify-center">
 			<div class="w-full max-w-xs">
-				<form class="bg-main-300 shadow-md rounded px-8 pt-6 pb-8 mb-4">
-					<div
-						class="flex justify-between items-start rounded-t border-b bg-main-300"
-					>
+				<form class="bg-main-300 rounded-xl px-8 pt-6 pb-8 mb-4">
+					<div class="flex justify-between items-start rounded-t bg-main-300">
 						<button
 							type="button"
 							@click="close()"
-							class="text-tc-500 bg-alert-200 hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+							class="text-tc-500 bg-alert-200 hover:bg-alert-100 hover:text-tc-500 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
 						>
 							<svg
 								class="w-5 h-5"
@@ -27,9 +25,9 @@
 						</button>
 					</div>
 					<img
-						class="w-40 h-24 mb-4 rounded mx-auto"
+						class="w-40 h-24 mb-4 mx-auto"
 						alt="Vue logo"
-						src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+						src="@/assets/images/partyPeopleLanding.svg"
 					/>
 					<div class="mb-4">
 						<input
@@ -95,9 +93,9 @@
 						</button>
 					</div>
 				</form>
-				<p class="text-center text-gray-500 text-xs">
+				<!-- <p class="text-center text-gray-500 text-xs">
 					&copy;2022 PartyPeople Corp. All rights reserved.
-				</p>
+				</p> -->
 			</div>
 		</div>
 	</base-modal>
@@ -108,6 +106,7 @@ import { reactive, ref } from '@vue/reactivity';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import BaseModal from './base-modal.vue';
+import { swal } from '@/assets/js/common';
 
 export default {
 	name: 'SingupModal',
@@ -154,7 +153,28 @@ export default {
 					state.form.passwordconfirm = '';
 					state.form.email = '';
 					state.form.tel = '';
-					router.push({ name: 'Home' });
+					close();
+
+					swal(
+						true,
+						'top',
+						1500,
+						'success',
+						'회원가입되었습니다. 로그인 후 빠뤼피플을 즐겨보세요!',
+						null,
+					);
+
+					// 회원가입 시 페이지 초기화 후 파티룸 리스트 다시 불러오기
+					store.commit('root/setPage', 1);
+					store
+						.dispatch('root/requestRoomList')
+						.then(res => {
+							store.commit('root/setRoomList', res.data.contents.content);
+						})
+						.catch(err => {
+							console.log(err);
+						});
+					// router.push({ name: 'Home' });
 				})
 				.catch(err => {
 					console.log(err);

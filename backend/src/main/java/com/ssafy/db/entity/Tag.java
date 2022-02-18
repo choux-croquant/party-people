@@ -1,7 +1,6 @@
 package com.ssafy.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,8 +18,13 @@ public class Tag extends BaseEntity{
     private String tagName;
 
     @OneToMany(mappedBy = "tag")
-    private List<UserTag> userTags;
-
-    @OneToMany(mappedBy = "tag")
+    @JsonBackReference
     private List<RoomTag> roomTags;
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "tagName='" + tagName + '\'' +
+                '}';
+    }
 }

@@ -1,8 +1,10 @@
 package com.ssafy.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +18,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User extends BaseEntity{
     private String accountId;
     private String nickname;
@@ -30,7 +33,4 @@ public class User extends BaseEntity{
     @OneToMany(mappedBy = "user")
     private List<Session> sessions;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    private List<UserTag> userTags;
 }

@@ -11,13 +11,27 @@ const ovAxios = $axios.create({
 	},
 });
 
-export function requestRoomList({ state }, payload) {
-	console.log('requestRoomList', state, payload);
-	const url = `/list/room`;
-	return backAxios.get(url);
+export function requestRoomList({ state }) {
+	console.log('requestRoomList', state);
+	if (state.searchValue == null) state.searchValue = '';
+	const url = `/list/roomsearch`;
+
+	return new Promise((resolve, reject) => {
+		backAxios
+			.get(url, {
+				params: {
+					page: state.page,
+					size: 8,
+					word: state.searchValue,
+					include: state.searchOption,
+				},
+			})
+			.then(res => resolve(res))
+			.catch(err => reject(err));
+	});
 }
 
-export function requestRoomUserList({ state }, payload) {
+export async function requestRoomUserList({ state }, payload) {
 	console.log('requestRoomList', state, payload);
 	const url = `/rooms/users/${payload.roomId}`;
 	let token = localStorage.getItem('access_token');
@@ -32,7 +46,7 @@ export function requestRoomUserList({ state }, payload) {
 
 export function roomSearch({ state }, payload) {
 	console.log('roomSearch', state, payload);
-	const url = `/list/roomSearch?include=${payload.include}&word=${payload.word}`;
+	const url = `/list/roomsearch?include=${payload.include}&word=${payload.word}`;
 
 	return backAxios.get(url);
 }
@@ -86,6 +100,44 @@ export function leaveSession({ state }, roomId) {
 	let token = localStorage.getItem('access_token');
 	return backAxios({
 		method: 'PATCH',
+		url: url,
+		headers: {
+			Authorization: 'Bearer ' + token,
+		},
+	});
+}
+
+export async function requestSuggestionList({ state }, payload) {
+	const url = `/list/suggestion`;
+	let token = localStorage.getItem('access_token');
+
+	return backAxios({
+		method: 'GET',
+		url: url,
+		headers: { Authorization: 'Bearer ' + token },
+		params: { include: payload.include, word: payload.word },
+	});
+}
+
+export function requestUserData({ state }) {
+	console.log('requestMyData');
+	const url = 'users/me';
+	let token = localStorage.getItem('access_token');
+	return backAxios({
+		method: 'GET',
+		url: url,
+		headers: {
+			Authorization: 'Bearer ' + token,
+		},
+	});
+}
+
+export function requestNickname({ state }, accountId) {
+	console.log('request users nickname Data');
+	const url = `users/${accountId}`;
+	let token = localStorage.getItem('access_token');
+	return backAxios({
+		method: 'GET',
 		url: url,
 		headers: {
 			Authorization: 'Bearer ' + token,

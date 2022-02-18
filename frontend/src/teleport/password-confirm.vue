@@ -1,16 +1,13 @@
-// 회원 가입 모달 컴포넌트
 <template>
 	<base-modal ref="baseModal">
 		<div class="flex justify-center">
 			<div class="w-full max-w-xs">
-				<form class="bg-main-300 shadow-md rounded px-8 pt-6 pb-8 mb-4">
-					<div
-						class="flex justify-between items-start rounded-t border-b bg-main-300"
-					>
+				<form class="bg-main-300 shadow-md rounded-xl px-8 pt-6 pb-8 mb-4">
+					<div class="flex justify-between items-start rounded-t bg-main-300">
 						<button
 							@click="close()"
 							type="button"
-							class="text-tc-500 bg-alert-200 hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+							class="text-tc-500 bg-alert-200 hover:bg-alert-100 hover:text-tc-500 rounded-full text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
 						>
 							<svg
 								class="w-5 h-5"
@@ -29,11 +26,11 @@
 					<img
 						class="w-40 h-24 mb-4 rounded mx-auto"
 						alt="Vue logo"
-						src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+						src="@/assets/images/partyPeopleLanding.svg"
 					/>
-					<p class="text-center text-black text-xs my-3">
+					<!-- <p class="text-center text-black text-xs my-3">
 						현재 파티룸은 녹화가 허용되어 있습니다.
-					</p>
+					</p> -->
 					<div class="mb-6">
 						<input
 							v-model="state.inputPassword"
@@ -53,9 +50,9 @@
 						</button>
 					</div>
 				</form>
-				<p class="text-center text-gray-500 text-xs">
+				<!-- <p class="text-center text-gray-500 text-xs">
 					&copy;2022 PartyPeople Corp. All rights reserved.
-				</p>
+				</p> -->
 			</div>
 		</div>
 	</base-modal>
@@ -66,6 +63,7 @@ import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import BaseModal from './base-modal.vue';
 import { useStore } from 'vuex';
+import { swal } from '@/assets/js/common';
 
 export default {
 	name: 'PasswordConfirm',
@@ -109,6 +107,17 @@ export default {
 					});
 				})
 				.catch(err => {
+					// 403 Forbidden Error => 비밀번호 오류
+					if (err.response.status === 403) {
+						swal(
+							true,
+							'top',
+							2000,
+							'error',
+							'비밀번호를 다시 확인해주세요.',
+							null,
+						);
+					}
 					console.log(err);
 				});
 		};

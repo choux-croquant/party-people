@@ -2,15 +2,25 @@
 
 <template>
 	<div>
-		<div class="roulette-outer">
+		<div class="roulette-outer rounded-xl bg-main-200">
 			<!-- 룰렛 당첨자 핀 -->
 			<div class="roulette-pin"></div>
 			<!-- 룰렛 원판 -->
 			<div class="roulette" v-bind:style="this.state.rouletteStyle">
 				<!-- 룰렛 아이템(참가자 리스트) -->
-				<div class="item-wrapper">
+				<div v-if="state.items.length < 4" class="item-wrapper text-2xl">
 					<div
-						class="item"
+						class="item pt-20 text-tc-500"
+						:key="item.value"
+						v-for="(item, index) in this.state.items"
+						v-bind:style="this.state.itemStyles[index]"
+					>
+						{{ item.value }}
+					</div>
+				</div>
+				<div v-else class="item-wrapper text-xs">
+					<div
+						class="item pt-8 text-tc-500"
 						:key="item.value"
 						v-for="(item, index) in this.state.items"
 						v-bind:style="this.state.itemStyles[index]"
@@ -122,19 +132,18 @@ export default {
 	height: 500px;
 	margin-left: auto;
 	margin-right: auto;
-	background: cadetblue;
 }
 
 .roulette-outer > .roulette-pin {
 	position: absolute;
-	top: 3%;
+	top: 2%;
 	left: 50%;
 	width: 0;
 	height: 0;
 	border-style: solid;
-	border-width: 25px 5px 0 5px;
-	border-color: chartreuse transparent transparent transparent;
-	margin-left: -5px;
+	border-width: 50px 10px 0 10px;
+	border-color: #f65b65 transparent transparent transparent;
+	margin-left: -10px;
 	z-index: 1;
 }
 
@@ -145,7 +154,7 @@ export default {
 	left: 5%;
 	right: 5%;
 	border-radius: 50%;
-	border: 2px solid black;
+	border: 10px solid white;
 	transition: transform 5s ease-in-out;
 }
 
@@ -155,7 +164,8 @@ export default {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	padding-top: 10%;
+	font-family: Pretendard;
+	font-weight: bold;
 	text-align: center;
 	display: flex;
 	justify-content: center;
@@ -166,9 +176,9 @@ export default {
 	top: 0;
 	bottom: 50%;
 	left: 50%;
-	width: 2px;
-	margin-left: -1px;
-	background: black;
+	width: 6px;
+	margin-left: -3px;
+	background: white;
 	transform-origin: bottom;
 }
 </style>
