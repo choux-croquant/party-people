@@ -80,7 +80,7 @@ UI 라이브러리
     │   │    ├── landing
     │   │    │    └── landing-page.vue /* 랜딩 페이지 컴포넌트*/
     │   │    │
-    │   │    └── home
+    │   │    └── partyroom
     │   │         ├── components /* 파티룸 내부에서 사용될 컴포넌트*/
     │   │         │    ├── ov-video.vue
     │   │         │    ├── room-bottombar.vue
