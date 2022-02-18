@@ -52,15 +52,10 @@
 ### Back-End
 
 * [하윤주](https://lab.ssafy.com/hayj04) - Back-End 리더
-  
   * 파티룸 수정/퇴장 API 개발
-  
 * [박건우](https://lab.ssafy.com/hggygw77) - AWS 서버 리더
-  
   * 파티룸 조회/검색 API 개발
-  
 * [선민기](https://lab.ssafy.com/suns1502) - QA 리더
-  
   * 파티룸 입장/삭제 API 개발
   
   
@@ -131,7 +126,6 @@
   * 메인 로고 모션
   * 기능 설명 페이지
   * Favicon
-
 * 파티룸 외부 기능
   * 파티룸 태그 입력
   * 파티룸 태그 검색
