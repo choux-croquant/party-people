@@ -224,6 +224,6 @@ docker-compose up --build -d nginx # NGINX 재시작
 - [Docker NGINX SSL 인증서 설치/배포](https://velog.io/@fordevelop/Docker-Nginx-Certbot-Lets-Encrypt%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%B4-SSL-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%B0%9C%EA%B8%89)
 
 ## 테스트 코드
-- [방 생성 통합 테스트](https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A106/-/blob/feature/document-testcode/exec/TestCode/RoomServiceImplTest.java)
-- [목록 조회 단위 테스트](https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A106/-/blob/feature/document-testcode/exec/TestCode/ListServiceImplTest.java)
-- [목록 조회 통합 테스트](https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A106/-/blob/feature/document-testcode/exec/TestCode/ListControllerTest.java)
+- [방 생성 통합 테스트](https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A106/-/blob/develop/exec/TestCode/RoomServiceImplTest.java)
+- [목록 조회 단위 테스트](https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A106/-/blob/develop/exec/TestCode/ListServiceImplTest.java)
+- [목록 조회 통합 테스트](https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A106/-/blob/develop/exec/TestCode/ListControllerTest.java)
